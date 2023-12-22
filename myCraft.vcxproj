@@ -140,7 +140,7 @@
     <ClCompile Include="glad.c" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="stb.cpp" />
+    <ClCompile Include="libraries\include\stb\stb.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shaders\EBO.cpp" />
     <ClCompile Include="shaders\shaderClass\shaderClass.cpp" />
@@ -587,6 +587,7 @@
     <Text Include="libraries\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="brick.png" />
     <Image Include="pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

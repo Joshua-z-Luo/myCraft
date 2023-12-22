@@ -39,7 +39,7 @@
     <ClCompile Include="shaders\EBO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="stb.cpp">
+    <ClCompile Include="libraries\include\stb\stb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
@@ -1349,6 +1349,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="pop_cat.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="brick.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
