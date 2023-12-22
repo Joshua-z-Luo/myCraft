@@ -139,6 +139,8 @@
   <ItemGroup>
     <ClCompile Include="glad.c" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
+    <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="stb.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="shaders\EBO.cpp" />
     <ClCompile Include="shaders\shaderClass\shaderClass.cpp" />
@@ -432,6 +434,7 @@
     <ClInclude Include="libraries\include\glm\vec4.hpp" />
     <ClInclude Include="libraries\include\glm\vector_relational.hpp" />
     <ClInclude Include="libraries\include\KHR\khrplatform.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="shaders\EBO.h" />
     <ClInclude Include="shaders\shaderClass\shaderClass.h" />
     <ClInclude Include="shaders\VAO.h" />
@@ -579,6 +582,12 @@
   </ItemGroup>
   <ItemGroup>
     <Library Include="libraries\lib\glfw3.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="libraries\include\stb\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
