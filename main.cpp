@@ -14,20 +14,35 @@
 #include"shaders/EBO.h"
 #include"Camera.h"
 
+#include"entities/header/Block.h"
+#include "entities/header/Map.h"
+
 
 
 const unsigned int width = 800;
 const unsigned int height = 800;
 
 
-// Vertices coordinates
+// Vertices coordinate
+/*
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+	-0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	-0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	 -0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	-0.25f + 1, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f + 1, 0.5f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
 };
 
 // Indices for vertices order
@@ -35,14 +50,64 @@ GLuint indices[] =
 {
 	0, 1, 2,
 	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
-};
+	4, 5, 6,
+	4, 6, 7,
+	0, 7, 3,
+	0, 4, 7,
+	3, 6, 2,
+	3, 7, 6,
+	1, 6, 2,
+	1, 5, 6,
+	1, 0, 4,
+	1, 4, 5,
 
+	0 + 8, 1 + 8, 2 + 8,
+	0 + 8, 2 + 8, 3 + 8,
+	4 + 8, 5 + 8, 6 + 8,
+	4 + 8, 6 + 8, 7 + 8 ,
+	0 + 8, 7 + 8, 3 + 8,
+	0 + 8, 4 + 8, 7 + 8,
+	3 + 8, 6 + 8, 2 + 8,
+	3 + 8, 7 + 8, 6 + 8,
+	1 + 8, 6 + 8, 2 + 8,
+	1 + 8, 5 + 8, 6 + 8,
+	1 + 8, 0 + 8, 4 + 8,
+	1 + 8, 4 + 8, 5 + 8,
+};*/
+/*
+GLfloat * vertices;
 
+// Indices for vertices order
+GLuint * indices;
+void buildCubes(int layers) {
 
+	// Number of blocks
+	int num = (layers * 2 + 1);
+	num = pow(num, 2);
+	int count = 0;
+
+	//Allocate memory
+	vertices = (GLfloat *) malloc(sizeof(GLfloat) * 64 * num);
+	indices = (GLuint*) malloc(sizeof(GLuint) * 48 * num);
+
+	//Origin Index
+	GLfloat posInd = 0.25f;
+	GLfloat negInd = -0.25f;
+
+	// Generate blocks
+	for (int i = 0; i < layers; i++) {
+		if (i == 0){
+			// Generate initial block
+		}
+
+		else {
+			// Generate based on the position of a previously added outer layer block
+			// Then add the corner blocks.
+		}
+
+	}
+}
+*/
 int main()
 {
 	// Initialize GLFW
@@ -81,23 +146,69 @@ int main()
 
 
 
+	/* using raw pointers
+	GLfloat* vecArr = new GLfloat[vec.size()];
+	GLuint* indArr = new GLuint[ind.size()];
+	std::copy(vec.begin(), vec.end(), vecArr);
+	std::copy(ind.begin(), ind.end(), indArr);
+	*/ 
+
+
+	/*
+	fprintf(stdout, "%d\n", vec.size());
+	fprintf(stdout, "%d\n", ind.size());
+	fprintf(stdout, "%d\n", sizeof(vecArr));
+	fprintf(stdout, "%d\n", sizeof(indArr));
+	fprintf(stdout, "%d\n", sizeof(block.vertices));
+	fprintf(stdout, "%d\n", sizeof(block.indices));
+	*/
+
+	Map map;
+	Block block(0, 0, 0);
+	Block block2(0.5, 0.5, 0);
+	map.addBlock(&block);
+	map.addBlock(&block2);
+	std::vector<GLfloat> vec = map.getVerts();
+	std::vector<GLuint> ind = map.getInds();
+
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
 
+	fprintf(stdout, "%d\n", map.getNumBlocks() * 64 * 4);
+	fprintf(stdout, "%d\n", map.getNumBlocks() * 36 * 4);
+
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(vec.data(), vec.size() * sizeof(GLfloat));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	EBO EBO1(ind.data(), ind.size() * sizeof(GLuint));
 
 	// Links VBO attributes such as coordinates and colors to VAO
+	// Do I only need to do this once if I follow th same format?
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
+
+
+	// Dynamic addition of block
+	//VAO1.Bind();
+	// Generates Vertex Buffer Object and links it to vertices
+	//VBO1.updateData(block2.vertices, sizeof(block2.vertices));
+	// Generates Element Buffer Object and links it to indices
+	//EBO1.UpdateData(block2.indices, sizeof(block2.indices));
+
+	// THIS REMOVES THE SHIT :(
+
+	//SOLUTIONS 
+	// CREATE A MAP CLASS THAT HOLDS A VECTOR OF ALL BLOCKS SO YOU CAN ADD, TRACK, REMOVE BLOCKS AND SEND TO VAO
+	//
+
+
 
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
@@ -107,8 +218,8 @@ int main()
 	Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	//popCat.texUnit(shaderProgram, "tex0", 0);
 
-	Texture brickTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	brickTex.texUnit(shaderProgram, "tex0", 0);
+	Texture dirtTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	dirtTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
@@ -123,6 +234,16 @@ int main()
 	double timeDiff;
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
+
+
+
+	Block block3(1, 1, 1);
+	map.addBlock(&block3);
+	vec = map.getVerts();
+	ind = map.getInds();
+
+	VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
+	EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -161,11 +282,13 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 		// Binds texture so that is appears in rendering
-		brickTex.Bind();
+		dirtTex.Bind();
+
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
+		
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, map.getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -178,7 +301,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	brickTex.Delete();
+	dirtTex.Delete();
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
