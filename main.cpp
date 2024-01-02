@@ -163,11 +163,11 @@ int main()
 	fprintf(stdout, "%d\n", sizeof(block.indices));
 	*/
 
-	Map map;
-	Block block(0, 0, 0);
-	Block block2(0.5, 0.5, 0);
-	map.addBlock(&block);
-	map.addBlock(&block2);
+	Map map(100, 100);
+	//Block block(0, 0, 0);
+	//Block block2(0.5, 0.5, 0);
+	//map.addBlock(&block);
+	//map.addBlock(&block2);
 	std::vector<GLfloat> vec = map.getVerts();
 	std::vector<GLuint> ind = map.getInds();
 
@@ -175,8 +175,8 @@ int main()
 	VAO VAO1;
 	VAO1.Bind();
 
-	fprintf(stdout, "%d\n", map.getNumBlocks() * 64 * 4);
-	fprintf(stdout, "%d\n", map.getNumBlocks() * 36 * 4);
+	//fprintf(stdout, "%d\n", map.getNumBlocks() * 64 * 4);
+	//fprintf(stdout, "%d\n", map.getNumBlocks() * 36 * 4);
 
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(vec.data(), vec.size() * sizeof(GLfloat));
@@ -235,10 +235,8 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-
-
-	Block block3(1, 1, 1);
-	map.addBlock(&block3);
+	map.genHeightMap(0, 0);
+	map.generateRandomMap();
 	vec = map.getVerts();
 	ind = map.getInds();
 

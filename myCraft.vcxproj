@@ -137,6 +137,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
     <ClCompile Include="entities\src\Block.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="shaders\VBO.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="entities\header\worldGen\Chunk.h" />
     <ClInclude Include="entities\header\Block.h" />
     <ClInclude Include="libraries\include\glad\glad.h" />
     <ClInclude Include="libraries\include\GLFW\glfw3.h" />
