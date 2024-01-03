@@ -163,13 +163,15 @@ int main()
 	fprintf(stdout, "%d\n", sizeof(block.indices));
 	*/
 
-	Map map(100, 100);
+
+	// INitalize map on heap
+	Map * map = new Map(6);
 	//Block block(0, 0, 0);
 	//Block block2(0.5, 0.5, 0);
 	//map.addBlock(&block);
 	//map.addBlock(&block2);
-	std::vector<GLfloat> vec = map.getVerts();
-	std::vector<GLuint> ind = map.getInds();
+	std::vector<GLfloat> vec = map->getVerts();
+	std::vector<GLuint> ind = map->getInds();
 
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
@@ -235,10 +237,9 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-	map.genHeightMap(0, 0);
-	map.generateRandomMap();
-	vec = map.getVerts();
-	ind = map.getInds();
+	map->generateRandomMap();
+	vec = map->getVerts();
+	ind = map->getInds();
 
 	VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
 	EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
@@ -286,7 +287,7 @@ int main()
 		VAO1.Bind();
 		
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, map.getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, map->getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
