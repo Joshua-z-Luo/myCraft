@@ -17,6 +17,7 @@
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
 
+#include "constants.h"
 
 
 const unsigned int width = 800;
@@ -145,40 +146,16 @@ int main()
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
 
-
-	/* using raw pointers
-	GLfloat* vecArr = new GLfloat[vec.size()];
-	GLuint* indArr = new GLuint[ind.size()];
-	std::copy(vec.begin(), vec.end(), vecArr);
-	std::copy(ind.begin(), ind.end(), indArr);
-	*/ 
-
-
-	/*
-	fprintf(stdout, "%d\n", vec.size());
-	fprintf(stdout, "%d\n", ind.size());
-	fprintf(stdout, "%d\n", sizeof(vecArr));
-	fprintf(stdout, "%d\n", sizeof(indArr));
-	fprintf(stdout, "%d\n", sizeof(block.vertices));
-	fprintf(stdout, "%d\n", sizeof(block.indices));
-	*/
-
-
-	// INitalize map on heap
-	Map * map = new Map(6);
-	//Block block(0, 0, 0);
-	//Block block2(0.5, 0.5, 0);
-	//map.addBlock(&block);
-	//map.addBlock(&block2);
+	// Initalize map on heap
+	Map* map = new Map(1);
+	map->addChunk(0);
+	map->loadMap();
 	std::vector<GLfloat> vec = map->getVerts();
 	std::vector<GLuint> ind = map->getInds();
 
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
-
-	//fprintf(stdout, "%d\n", map.getNumBlocks() * 64 * 4);
-	//fprintf(stdout, "%d\n", map.getNumBlocks() * 36 * 4);
 
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO1(vec.data(), vec.size() * sizeof(GLfloat));
@@ -196,22 +173,6 @@ int main()
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-
-	// Dynamic addition of block
-	//VAO1.Bind();
-	// Generates Vertex Buffer Object and links it to vertices
-	//VBO1.updateData(block2.vertices, sizeof(block2.vertices));
-	// Generates Element Buffer Object and links it to indices
-	//EBO1.UpdateData(block2.indices, sizeof(block2.indices));
-
-	// THIS REMOVES THE SHIT :(
-
-	//SOLUTIONS 
-	// CREATE A MAP CLASS THAT HOLDS A VECTOR OF ALL BLOCKS SO YOU CAN ADD, TRACK, REMOVE BLOCKS AND SEND TO VAO
-	//
-
-
-
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
@@ -228,7 +189,8 @@ int main()
 
 
 	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	// x z y
+	Camera camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -237,16 +199,45 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-	map->generateRandomMap();
-	vec = map->getVerts();
-	ind = map->getInds();
+	//map->generateRandomMap();
+	//vec = map->getVerts();
+	//ind = map->getInds();
 
-	VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
-	EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+	//VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
+	//EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+
+
+
+	int posX = 0;
+	int posY = 0;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+
+		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
+		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
+		if (newX != posX || newY != posY) {
+
+			fprintf(stdout, "%d %d \n", newX, newY);
+			map->playerPositionCord(newX, newY);
+			map->addChunk(-1);
+			map->updateMap(0, 0);
+			map->printChunks();
+			posX = newX;
+			posY = newY;
+
+			std::vector<GLfloat> vec = map->getVerts();
+			std::vector<GLuint> ind = map->getInds();
+			std::cout << "Size of the vector: " << vec.size() << std::endl;
+			std::cout << "Size of the vector: " << ind.size() << std::endl;
+			//VBO1.Bind();
+			//EBO1.Bind();
+			VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
+			EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+		}
+		
+
 		// Updates counter and times
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
@@ -269,7 +260,7 @@ int main()
 		}
 
 		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.68f, 0.85f, 0.9f, 1.0f); 
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
@@ -285,6 +276,7 @@ int main()
 
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
+
 		
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		glDrawElements(GL_TRIANGLES, map->getNumBlocks() * 36, GL_UNSIGNED_INT, 0);

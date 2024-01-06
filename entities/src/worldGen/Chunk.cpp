@@ -7,41 +7,41 @@ Chunk::Chunk(int xID, int yID)
 	posY = yID;
 	numBlocks = 0;
 	
-	for (int x = 0; x < 16; x++) {
-		for (int y = 0; y < 16; y++) {
-			for (int z = 0; z < 16; z++) {
-				BlocksArray[x][y][z] = nullptr;
+	for (int x = 0; x < Constants::CHUNK_SIZE; x++) {
+		for (int y = 0; y < Constants::CHUNK_SIZE; y++) {
+			for (int z = 0; z < Constants::CHUNK_SIZE; z++) {
+				BlocksArray[x][y][z] = -1;
 			}
 		}
 	}
 
 }
 
-void Chunk::addBlock(Block* newBlock, int x, int y, int z)
+void Chunk::addBlock(int id, int x, int y, int z)
 {
-	BlocksArray[x][y][z] = newBlock;
-	//BlocksVec.push_back(newBlock);
-	for (int i = 0; i < 64; i++) {
-		vertices.push_back(newBlock->vertices[i]);
-	}
-	for (int i = 0; i < 36; i++) {
-		indices.push_back(newBlock->indices[i] + (8 * numBlocks));
-	}
+	
+	BlocksArray[x][y][z] = id;
 	numBlocks += 1;
+}
+
+// REPLACE TUPLE WITH SOMETHING BETTER LATTER
+std::vector<compBlock *> Chunk::getBlocks()
+{
+	std::vector<compBlock *> temp;
+	for (int x = 0; x < Constants::CHUNK_SIZE; x++) {
+		for (int y = 0; y < Constants::CHUNK_SIZE; y++) {
+			for (int z = 0; z < Constants::CHUNK_SIZE; z++) {
+				if (BlocksArray[x][y][z] != -1) {
+					compBlock* block = new compBlock(x + (Constants::CHUNK_SIZE * posX), y + (Constants::CHUNK_SIZE * posY), z, BlocksArray[x][y][z]);
+					temp.push_back(block);
+				}
+			}
+		}
+	}
+	return temp;
 }
 
 int Chunk::getNumBlocks()
 {
 	return numBlocks;
-}
-
-std::vector<GLfloat> Chunk::getVerts()
-{
-	
-	return vertices;
-}
-
-std::vector<GLuint> Chunk::getInds()
-{
-	return indices;
 }

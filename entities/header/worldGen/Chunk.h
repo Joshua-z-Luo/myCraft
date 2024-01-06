@@ -1,33 +1,33 @@
 #pragma once
 #include "header/Block.h"
+#include "compBlock.h"
 #include <vector>
+#include "../../../constants.h"
 
 class Chunk
 {
 private:
-	Block* BlocksArray[16][16][16];
-	std::vector<Block*> BlocksVec;
-	std::vector<GLfloat> vertices;
-	std::vector<GLuint> indices;
-	
+	int BlocksArray[Constants::CHUNK_SIZE][Constants::CHUNK_SIZE][Constants::CHUNK_SIZE];
+	// might be able to compress this to reduce byte size and search time
+	// specifically for gathering blocks during updateMap()
+
 	int numBlocks;
-	int posX;
-	int posY;
+	
 	
 public:
 	Chunk(int xID, int yID);
-	void addBlock(Block* newBlock, int x, int y, int z);
+	void addBlock(int id, int x, int y, int z);
+	std::vector<compBlock * > getBlocks();
+
 	int getNumBlocks();
 
-	//If loaded get decompressed verts and inds
-	std::vector<GLfloat> getVerts();;
-	std::vector<GLuint> getInds();
+	int posX;
+	int posY;
 
-	// If not loaded, get compressed verts and inds.
-	// Compression algorithim should only get verticies of top level blocks, side blocks, and bottom blocks.
-	std::vector<GLfloat> getCompressedVerts();
-	std::vector<GLuint> getCompressedInds();
 
 
 };
 
+
+
+// MAP LOADS DATA FROM CHUNK, CHUNK STORES COMPRESSED DATA
