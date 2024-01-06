@@ -206,8 +206,6 @@ int main()
 	//VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
 	//EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
 
-
-
 	int posX = 0;
 	int posY = 0;
 
