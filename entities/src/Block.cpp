@@ -6,6 +6,7 @@
 
 Block::Block(GLfloat x, GLfloat y, GLfloat z)
 {
+	z = round(z);
 	// Vertices coordinates
 	/*
 	vertices[0] = x + -0.25f; 
@@ -82,7 +83,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	*/
 	vertices[0] = x + 0.f;
 	vertices[1] = z + 0.0f;
-	vertices[2] = y + 0.5f;
+	vertices[2] = y + 1.0f;
 	vertices[3] = 0.83f;
 	vertices[4] = 0.70f;
 	vertices[5] = 0.44f;
@@ -98,7 +99,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[14] = 5.0f;
 	vertices[15] = 0.0f;
 
-	vertices[16] = x + 0.5f;
+	vertices[16] = x + 1.0f;
 	vertices[17] = z + 0.0f;
 	vertices[18] = y + 0.0f;
 	vertices[19] = 0.83f;
@@ -107,9 +108,9 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[22] = 5.0f;
 	vertices[23] = 5.0f;
 
-	vertices[24] = x + 0.5f;
+	vertices[24] = x + 1.0f;
 	vertices[25] = z + 0.0f;
-	vertices[26] = y + 0.5f;
+	vertices[26] = y + 1.0f;
 	vertices[27] = 0.83f;
 	vertices[28] = 0.70f;
 	vertices[29] = 0.44f;
@@ -117,8 +118,8 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[31] = 5.0f;
 
 	vertices[32] = x + 0.0f;
-	vertices[33] = z + 0.5f;
-	vertices[34] = y + 0.5f;
+	vertices[33] = z + 1.0f;
+	vertices[34] = y + 1.0f;
 	vertices[35] = 0.83f;
 	vertices[36] = 0.70f;
 	vertices[37] = 0.44f;
@@ -126,7 +127,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[39] = 0.0f;
 
 	vertices[40] = x + 0.0f;
-	vertices[41] = z + 0.5f;
+	vertices[41] = z + 1.0f;
 	vertices[42] = y + 0.0f;
 	vertices[43] = 0.83f;
 	vertices[44] = 0.70f;
@@ -134,8 +135,8 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[46] = 5.0f;
 	vertices[47] = 0.0f;
 
-	vertices[48] = x + 0.5f;
-	vertices[49] = z + 0.5f;
+	vertices[48] = x + 1.0f;
+	vertices[49] = z + 1.0f;
 	vertices[50] = y + 0.0f;
 	vertices[51] = 0.83f;
 	vertices[52] = 0.70f;
@@ -143,9 +144,9 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[54] = 5.0f;
 	vertices[55] = 5.0f;
 
-	vertices[56] = x + 0.5f;
-	vertices[57] = z + 0.5f;
-	vertices[58] = y + 0.5f;
+	vertices[56] = x + 1.0f;
+	vertices[57] = z + 1.0f;
+	vertices[58] = y + 1.0f;
 	vertices[59] = 0.83f;
 	vertices[60] = 0.70f;
 	vertices[61] = 0.44f;
