@@ -14,20 +14,36 @@
 #include"shaders/EBO.h"
 #include"Camera.h"
 
+#include"entities/header/Block.h"
+#include "entities/header/Map.h"
+
+#include "constants.h"
 
 
 const unsigned int width = 800;
 const unsigned int height = 800;
 
 
-// Vertices coordinates
+// Vertices coordinate
+/*
 GLfloat vertices[] =
 { //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.5f, 0.0f, -0.5f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	 0.5f, 0.0f,  0.5f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.0f, 0.8f,  0.0f,     0.92f, 0.86f, 0.76f,	2.5f, 5.0f
+	-0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	-0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	 -0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+	-0.25f + 1, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
+	-0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
+	 0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
+	 0.25f + 1, 0.5f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
 };
 
 // Indices for vertices order
@@ -35,14 +51,64 @@ GLuint indices[] =
 {
 	0, 1, 2,
 	0, 2, 3,
-	0, 1, 4,
-	1, 2, 4,
-	2, 3, 4,
-	3, 0, 4
-};
+	4, 5, 6,
+	4, 6, 7,
+	0, 7, 3,
+	0, 4, 7,
+	3, 6, 2,
+	3, 7, 6,
+	1, 6, 2,
+	1, 5, 6,
+	1, 0, 4,
+	1, 4, 5,
 
+	0 + 8, 1 + 8, 2 + 8,
+	0 + 8, 2 + 8, 3 + 8,
+	4 + 8, 5 + 8, 6 + 8,
+	4 + 8, 6 + 8, 7 + 8 ,
+	0 + 8, 7 + 8, 3 + 8,
+	0 + 8, 4 + 8, 7 + 8,
+	3 + 8, 6 + 8, 2 + 8,
+	3 + 8, 7 + 8, 6 + 8,
+	1 + 8, 6 + 8, 2 + 8,
+	1 + 8, 5 + 8, 6 + 8,
+	1 + 8, 0 + 8, 4 + 8,
+	1 + 8, 4 + 8, 5 + 8,
+};*/
+/*
+GLfloat * vertices;
 
+// Indices for vertices order
+GLuint * indices;
+void buildCubes(int layers) {
 
+	// Number of blocks
+	int num = (layers * 2 + 1);
+	num = pow(num, 2);
+	int count = 0;
+
+	//Allocate memory
+	vertices = (GLfloat *) malloc(sizeof(GLfloat) * 64 * num);
+	indices = (GLuint*) malloc(sizeof(GLuint) * 48 * num);
+
+	//Origin Index
+	GLfloat posInd = 0.25f;
+	GLfloat negInd = -0.25f;
+
+	// Generate blocks
+	for (int i = 0; i < layers; i++) {
+		if (i == 0){
+			// Generate initial block
+		}
+
+		else {
+			// Generate based on the position of a previously added outer layer block
+			// Then add the corner blocks.
+		}
+
+	}
+}
+*/
 int main()
 {
 	// Initialize GLFW
@@ -80,20 +146,28 @@ int main()
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
 
+	// Initalize map on heap
+	Map* map = new Map(1);
+	map->addChunk(0);
+	map->loadMap();
+	std::vector<GLfloat> vec = map->getVerts();
+	std::vector<GLuint> ind = map->getInds();
 
 	// Generates Vertex Array Object and binds it
 	VAO VAO1;
 	VAO1.Bind();
 
 	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vertices, sizeof(vertices));
+	VBO VBO1(vec.data(), vec.size() * sizeof(GLfloat));
 	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(indices, sizeof(indices));
+	EBO EBO1(ind.data(), ind.size() * sizeof(GLuint));
 
 	// Links VBO attributes such as coordinates and colors to VAO
+	// Do I only need to do this once if I follow th same format?
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -107,15 +181,16 @@ int main()
 	Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	//popCat.texUnit(shaderProgram, "tex0", 0);
 
-	Texture brickTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	brickTex.texUnit(shaderProgram, "tex0", 0);
+	Texture dirtTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	dirtTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
 
 	// Creates camera object
-	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
+	// x z y
+	Camera camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -124,9 +199,43 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
+	//map->generateRandomMap();
+	//vec = map->getVerts();
+	//ind = map->getInds();
+
+	//VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
+	//EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+
+	int posX = 0;
+	int posY = 0;
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+
+		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
+		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
+		if (newX != posX || newY != posY) {
+
+			fprintf(stdout, "%d %d \n", newX, newY);
+			map->playerPositionCord(newX, newY);
+			map->addChunk(-1);
+			map->updateMap(0, 0);
+			map->printChunks();
+			posX = newX;
+			posY = newY;
+
+			std::vector<GLfloat> vec = map->getVerts();
+			std::vector<GLuint> ind = map->getInds();
+			std::cout << "Size of the vector: " << vec.size() << std::endl;
+			std::cout << "Size of the vector: " << ind.size() << std::endl;
+			//VBO1.Bind();
+			//EBO1.Bind();
+			VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
+			EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+		}
+		
+
 		// Updates counter and times
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
@@ -137,7 +246,7 @@ int main()
 			// Creates new title
 			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
 			std::string ms = std::to_string((timeDiff / counter) * 1000);
-			std::string newTitle = "YoutubeOpenGL - " + FPS + "FPS / " + ms + "ms";
+			std::string newTitle = "MyCraft - " + FPS + "FPS / " + ms + "ms";
 			glfwSetWindowTitle(window, newTitle.c_str());
 
 			// Resets times and counter
@@ -149,7 +258,7 @@ int main()
 		}
 
 		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.68f, 0.85f, 0.9f, 1.0f); 
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		// Tell OpenGL which Shader Program we want to use
@@ -161,11 +270,14 @@ int main()
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 		// Binds texture so that is appears in rendering
-		brickTex.Bind();
+		dirtTex.Bind();
+
 		// Bind the VAO so OpenGL knows to use it
 		VAO1.Bind();
+
+		
 		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, map->getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -178,7 +290,7 @@ int main()
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
-	brickTex.Delete();
+	dirtTex.Delete();
 	shaderProgram.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);

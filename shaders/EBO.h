@@ -17,6 +17,7 @@ public:
 	void Unbind();
 	// Deletes the EBO
 	void Delete();
+	void UpdateData(GLuint* newIndices, GLsizeiptr size);
 };
 
 #endif
