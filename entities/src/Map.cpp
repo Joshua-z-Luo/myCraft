@@ -402,7 +402,7 @@ void Map::playerPosition(int newX, int newY)
 }
 
 void Map::playerPositionCord(int newX, int newY)
-{
+{ 
 	// USES PLAYER COORDINATES RATHER THEN PLAYER POSITION IN CHUNKSARRAY
 
 	playerChunkX = originX + newX;
