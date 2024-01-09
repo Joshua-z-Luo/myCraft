@@ -200,13 +200,6 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-	//map->generateRandomMap();
-	//vec = map->getVerts();
-	//ind = map->getInds();
-
-	//VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
-	//EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
-
 	int posX = 0;
 	int posY = 0;
 
@@ -286,6 +279,9 @@ int main()
 			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
 			// but currently there is no way for us to recieve a list of triangles from main when p is pressed from inputs.
 			// We could potentially send a vector of blocks to check to Camera.inputs(window) in the future each tick.
+
+			//Current solution checks all verticies/triangle faces of current chunk.
+			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
 			
 			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
 			std::vector<glm::vec3> playerVerts = map->getPlayerChunk();

@@ -76,8 +76,8 @@ void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 		y = 0;
 	}
 	// xID + originX, yID + originY IS NOT THE CORRECT CALCULATION (NEEDS TO BE FIXED)
-	// Currently using maps check of player position to find chunk to remove block
-	// needs to depend on given xID, yID instead for extendability of method.
+	// Currently using Map class member variable of player position to find chunk to remove block
+	// In future, needs to depend on given xID, yID instead of member varaible, for extendability of method.
 
 	fprintf(stdout, " remove: x: %d y: %d \n", x, y);
 	(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
