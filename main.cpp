@@ -182,7 +182,7 @@ int main()
 	Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	//popCat.texUnit(shaderProgram, "tex0", 0);
 
-	Texture dirtTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	Texture dirtTex("grass.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	dirtTex.texUnit(shaderProgram, "tex0", 0);
 
 	// Enables the Depth Buffer
@@ -305,7 +305,8 @@ int main()
 			
 		}
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.Matrix(shaderProgram, "camMatrix");
 
 		// Binds texture so that is appears in rendering
 		dirtTex.Bind();

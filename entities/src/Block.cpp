@@ -7,7 +7,6 @@
 Block::Block(GLfloat x, GLfloat y, GLfloat z)
 {
 	z = round(z);
-	// Front face
 	vertices[0] = x - 0.5f;
 	vertices[1] = z - 0.5f;
 	vertices[2] = y + 0.5f;

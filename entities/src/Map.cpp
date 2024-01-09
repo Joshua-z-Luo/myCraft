@@ -35,11 +35,11 @@ int Map::getNumBlocks()
 void Map::addBlock(Block * newBlock)
 {
 	BlocksVec.push_back(newBlock);
-	for (int i = 0; i < 64; i++) {
+	for (int i = 0; i < 192; i++) {
 		vertices.push_back(newBlock->vertices[i]);
 	}
 	for (int i = 0; i < 36; i++) {
-		indices.push_back(newBlock->indices[i] + (8 * numBlocks));
+		indices.push_back(newBlock->indices[i] + (24 * numBlocks));
 	}
 	numBlocks += 1;
 }
