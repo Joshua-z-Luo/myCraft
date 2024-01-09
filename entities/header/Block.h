@@ -24,7 +24,7 @@ public:
 	GLuint* getInd();
 	glm::vec3* getTriangles();
 
-	GLfloat vertices[64];
+	GLfloat vertices[192];
 	GLuint indices[36];
 };
 
