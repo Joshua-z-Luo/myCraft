@@ -9,7 +9,9 @@
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
 
-#include"shaders/shaderClass/shaderClass.h"
+#include"../shaders/shaderClass/shaderClass.h"
+#include "Ray.h"
+#include "vector"
 
 class Camera
 {
@@ -37,5 +39,15 @@ public:
 	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window);
+	
+	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
+	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);
+	Ray GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+	void GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY);
+	glm::mat4 getView();
+	glm::mat4 getProjection(float FOVdeg, float nearPlane, float farPlane);
+
 };
+
+
 #endif

@@ -50,7 +50,37 @@ Adds a block the the specified chunk.
 */
 void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 {
+	// xID + originX, yID + originY IS NOT THE CORRECT CALCULATION (NEEDS TO BE FIXED)
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
+}
+
+void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
+{	
+	if (x < 0) {
+		x = Constants::CHUNK_SIZE + (x % (Constants::CHUNK_SIZE));
+	}
+	else {
+		x = x % Constants::CHUNK_SIZE;
+	}
+	if (y < 0) {
+		y = Constants::CHUNK_SIZE + (y % (Constants::CHUNK_SIZE));
+		
+	}
+	else {
+		y = y % Constants::CHUNK_SIZE;
+	}
+	if (x == 32) {
+		x = 0;
+	}
+	if (y == 32) {
+		y = 0;
+	}
+	// xID + originX, yID + originY IS NOT THE CORRECT CALCULATION (NEEDS TO BE FIXED)
+	// Currently using maps check of player position to find chunk to remove block
+	// needs to depend on given xID, yID instead for extendability of method.
+
+	fprintf(stdout, " remove: x: %d y: %d \n", x, y);
+	(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
 }
 
 /*
@@ -413,6 +443,27 @@ void Map::playerPositionCord(int newX, int newY)
 int Map::getNumChunks()
 {
 	return numChunks;
+}
+
+/*
+Returns all the triangles within the player chunk. Used for ray casting.
+Resulting vector is formatted such that, every 37 indicies is a block. 
+First index of each 36 is the position of the block in the world, while the last 36 are its vertex positions.
+*/
+std::vector<glm::vec3> Map::getPlayerChunk()
+{
+	std::vector<glm::vec3> result;
+	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+	for (int i = 0; i < temp.size(); i++) {
+		Block block(temp[i]->x, temp[i]->y, temp[i]->z);
+		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
+		glm::vec3 * array = block.getTriangles();
+		for (int num = 0; num < 36; num++) {
+			result.push_back(array[num]);
+		}
+		delete[] array;
+	}
+	return result;
 }
 
 void Map::genHeightMap(int xCord, int yCord)
