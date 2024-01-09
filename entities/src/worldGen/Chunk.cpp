@@ -24,6 +24,18 @@ void Chunk::addBlock(int id, int x, int y, int z)
 	numBlocks += 1;
 }
 
+void Chunk::removeBlock(int x, int y, int z)
+{
+	if (BlocksArray[x][y][z] == -1) {
+		printf("u removed nothing \n");
+	}
+	else {
+		printf("removed block \n");
+	}
+	BlocksArray[x][y][z] = -1;
+	numBlocks -= 1;
+}
+
 // REPLACE TUPLE WITH SOMETHING BETTER LATTER
 std::vector<compBlock *> Chunk::getBlocks()
 {

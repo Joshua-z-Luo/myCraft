@@ -17,9 +17,11 @@ private:
 public:
 	Chunk(int xID, int yID);
 	void addBlock(int id, int x, int y, int z);
+	void removeBlock(int x, int y, int z);
 	std::vector<compBlock * > getBlocks();
 
 	int getNumBlocks();
+
 
 	int posX;
 	int posY;

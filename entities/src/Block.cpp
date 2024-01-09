@@ -232,3 +232,15 @@ GLuint* Block::getInd()
 {
 	return indices;
 }
+
+glm::vec3* Block::getTriangles()
+{
+	glm::vec3 * result = new glm::vec3[36];
+	for (int i = 0; i < 12; i++) {
+		for (int x = i * 3; x < (i * 3) + 3; x++) {
+			glm::vec3 temp(vertices[(indices[x] * 8)], vertices[(indices[x] * 8) + 1], vertices[(indices[x] * 8) + 2]);
+			result[x] = temp;
+		}
+	}
+	return result;
+}

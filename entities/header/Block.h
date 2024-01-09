@@ -7,6 +7,8 @@
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
+#include <tuple>
+#include <vector>
 
 class Block
 {
@@ -20,6 +22,7 @@ public:
 	// CAN'T RETURN AN ARRAY IN C++ ONLY POINTER TO FIRST ELEMENT ITS JOEVER
 	GLfloat* getVert();
 	GLuint* getInd();
+	glm::vec3* getTriangles();
 
 	GLfloat vertices[64];
 	GLuint indices[36];
