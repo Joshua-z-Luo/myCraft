@@ -110,3 +110,69 @@ void Camera::Inputs(GLFWwindow* window)
 		firstClick = true;
 	}
 }
+
+void Camera::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY)
+{
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+}
+
+
+bool Camera::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
+{
+	
+	for (int i = 0; i < triangles.size(); i += 3)
+	{
+		glm::vec3 v0 = triangles[i];
+		glm::vec3 v1 = triangles[i + 1];
+		glm::vec3 v2 = triangles[i + 2];
+
+		//glm::vec3 v0 = triangles[i] + blockPosition;
+		//glm::vec3 v1 = triangles[i + 1] + blockPosition;
+		//glm::vec3 v2 = triangles[i + 2] + blockPosition;
+
+		float t;
+		if (ray.rayIntersectsBlock(v0, v1, v2, t))
+		{
+			// Intersection found with this triangle
+			return true;
+		}
+	}
+
+	// No intersection with any triangle
+	return false;
+}
+
+Ray Camera::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+	double mouseX, mouseY;
+	GetMouseCoordinates(window, mouseX, mouseY);
+
+	// Convert mouse coordinates to normalized device coordinates
+	float x = (2.0f * mouseX) / width - 1.0f;
+	float y = 1.0f - (2.0f * mouseY) / height;
+
+	glm::mat4 inverseProjection = glm::inverse(projectionMatrix);
+	glm::mat4 inverseView = glm::inverse(viewMatrix);
+
+	glm::vec4 rayClip = glm::vec4(x, y, -1.0, 1.0);
+	glm::vec4 rayEye = inverseProjection * rayClip;
+	rayEye = glm::vec4(rayEye.x, rayEye.y, -1.0, 0.0);
+
+	glm::vec4 rayWorld = inverseView * rayEye;
+	glm::vec3 rayDirection = glm::normalize(glm::vec3(rayWorld));
+
+	return Ray(Position, rayDirection);
+}
+
+glm::mat4 Camera::getView()
+{
+	glm::mat4 view = glm::mat4(1.0f);
+	view = glm::lookAt(Position, Position + Orientation, Up);
+	return view;
+}
+
+glm::mat4 Camera::getProjection(float FOVdeg, float nearPlane, float farPlane)
+{
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
+	return projection;
+}

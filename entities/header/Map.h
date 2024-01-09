@@ -5,8 +5,10 @@
 #include "header/worldGen/compBlock.h"
 #include <glm/gtc/noise.hpp>
 #include <vector>
+#include "tuple"
 #include "deque"
 #include "../../constants.h"
+#include <cstdlib>
 
 
 
@@ -49,6 +51,7 @@ public:
 
 	void addBlock(Block* newBlock);
 	void addBlockToChunk(int xID, int yID, int x, int y, int z, int id);
+	void removeBlockFromChunk(int xID, int yID, int x, int y, int z);
 	void populateChunk(Chunk * chunk, int xID, int yID);
 
 	void loadMap();
@@ -61,6 +64,8 @@ public:
 	std::vector<GLfloat> getVerts();;
 	std::vector<GLuint> getInds();
 	int getNumChunks();
+
+	std::vector<glm::vec3> getPlayerChunk();
 
 };
 

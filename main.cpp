@@ -12,10 +12,11 @@
 #include"shaders/VAO.h"
 #include"shaders/VBO.h"
 #include"shaders/EBO.h"
-#include"Camera.h"
+#include"player/Camera.h"
 
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
+#include "gameLogic/UpdatePacket.h"
 
 #include "constants.h"
 
@@ -199,19 +200,24 @@ int main()
 	// Keeps track of the amount of frames in timeDiff
 	unsigned int counter = 0;
 
-	//map->generateRandomMap();
-	//vec = map->getVerts();
-	//ind = map->getInds();
-
-	//VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
-	//EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
-
 	int posX = 0;
 	int posY = 0;
+
+	std::deque<UpdatePacket> updateQue;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		bool updateFlag = false;
+		while (updateQue.size() > 0) {
+			UpdatePacket target = updateQue[0];
+			glm::vec3 deleteBlock = target.getTargetBlock();
+
+			map->removeBlockFromChunk(target.getChunkX(), target.getChunkY(), deleteBlock.x, deleteBlock.y, deleteBlock.z);
+			updateQue.pop_front();
+			updateFlag = true;
+		}
+
 
 		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
 		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
@@ -220,17 +226,19 @@ int main()
 			fprintf(stdout, "%d %d \n", newX, newY);
 			map->playerPositionCord(newX, newY);
 			map->addChunk(-1);
-			map->updateMap(0, 0);
 			map->printChunks();
 			posX = newX;
 			posY = newY;
 
-			std::vector<GLfloat> vec = map->getVerts();
-			std::vector<GLuint> ind = map->getInds();
 			std::cout << "Size of the vector: " << vec.size() << std::endl;
 			std::cout << "Size of the vector: " << ind.size() << std::endl;
-			//VBO1.Bind();
-			//EBO1.Bind();
+			updateFlag = true;
+		}
+
+		if (updateFlag == true) {
+			map->updateMap(0, 0);
+			std::vector<GLfloat> vec = map->getVerts();
+			std::vector<GLuint> ind = map->getInds();
 			VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
 			EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
 		}
@@ -266,6 +274,36 @@ int main()
 
 		// Handles camera inputs
 		camera.Inputs(window);
+		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
+			// destroy block
+			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
+			// but currently there is no way for us to recieve a list of triangles from main when p is pressed from inputs.
+			// We could potentially send a vector of blocks to check to Camera.inputs(window) in the future each tick.
+
+			//Current solution checks all verticies/triangle faces of current chunk.
+			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
+			
+			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
+			std::vector<glm::vec3> playerVerts = map->getPlayerChunk();
+			for (int i = 0; i < playerVerts.size()/ 37; i++) {
+				std::vector<glm::vec3> temp;
+				glm::vec3 startBlock = playerVerts[i * 37];
+				for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
+					temp.push_back(playerVerts[j]);
+				}
+				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
+					// currently not detecing blocks.
+
+					//IF FOUND CALL MAP TO DELETE BLOCK AT playerVerts[i].
+					std::cout << "P key pressed!" << std::endl;
+					fprintf(stdout, "x:%f y:%f z:%f", startBlock.x, startBlock.y, startBlock.z);
+					UpdatePacket newPacket(startBlock, posX, posY);
+					updateQue.push_back(newPacket);
+					break;
+				}
+			}
+			
+		}
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
