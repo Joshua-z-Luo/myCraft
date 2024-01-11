@@ -1,3 +1,3 @@
 # myCraft
 
-C++ OpenGL clone
+C++ OpenGL
