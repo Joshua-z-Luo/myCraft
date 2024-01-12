@@ -24,11 +24,7 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-      </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
     <li><a href="#contact">Contact</a></li>
   </ol>
 </details>
@@ -60,37 +56,6 @@ This project uses the Flight Radar API and Cesium to get a list of commerical fl
 
 Run the executeable on your local machine! The executable and related dependencies are on a google drive because they are too big for github.
 [https://drive.google.com/file/d/1h9Bx-AVxqdDTafehtBKragmWHrkEOzId/view?usp=drive_link](https://drive.google.com/file/d/1w_CoKEwNK_weQQN3VnP6MvNODK52QkoQ/view?usp=sharing)
-
-### Prerequisites
-
-You will need to install these python dependencies
-* pip
-  ```sh
-  pip install FlightRadarAPI
-  ```
-  ```sh
-  pip install pandas
-  ```
-  ```sh
-  pip install sqlalchemy
-  ```
-  ```sh
-  pip install sqlite3
-  ```
-  
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-Press F to interact with the Menu. WASD, C and SPACEBAR to move the camera.
-There are two ways to interact with the program. You can enter in the long/lat coords, or choose from a database that is updated on application launch using an Airlines ICAO code.
-
-![gif1](./images/Animation.gif)
-![gif2](./images/Animation2.gif)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTACT -->
