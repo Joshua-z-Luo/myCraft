@@ -51,16 +51,13 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Run the executeable on your local machine! The executable and related dependencies are on a google drive because they are too big for github.
-[https://drive.google.com/file/d/1h9Bx-AVxqdDTafehtBKragmWHrkEOzId/view?usp=drive_link](https://drive.google.com/file/d/1w_CoKEwNK_weQQN3VnP6MvNODK52QkoQ/view?usp=sharing)
-
 
 <!-- CONTACT -->
 ## Contact
 Feel free to contact us at:
 
 @Kevin Chen - kevinz.chen@mail.utoronto.ca\
-@Joshua Luo - jla818@sfu.ca\
+@Joshua Luo - jla818@sfu.ca
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
