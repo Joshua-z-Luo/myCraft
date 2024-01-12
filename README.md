@@ -34,13 +34,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-This is a personal learning project to help us familiarize ourselves with GPU API's such as OpenGL and continue to further our skill as game developers.\
+This is a personal learning project to help us familiarize ourselves with GPU API's such as OpenGL and continue to further our skill as game developers.
 
 The game is a Minecraft style, procedurally generated voxel sandbox.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
 
 ### Built With
 
