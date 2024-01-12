@@ -33,11 +33,10 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-This project uses the Flight Radar API and Cesium to get a list of commerical flights and create a world accurate view of an in flight aircraft. Use the simple UI to see active flights and view them.
 
-![pic1](./images/Screenshot(191).png)
-![pic2](./images/Screenshot(192).png)
-![pic3](./images/Screenshot(195).png)
+This is a personal learning project to help us familiarize ourselves with GPU API's such as OpenGL and continue to further our skill as game developers.\
+
+The game is a Minecraft style, procedurally generated voxel sandbox.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -62,8 +61,8 @@ Run the executeable on your local machine! The executable and related dependenci
 ## Contact
 Feel free to contact us at:
 
-@Joshua Luo - jla818@sfu.ca\
 @Kevin Chen - kevinz.chen@mail.utoronto.ca\
+@Joshua Luo - jla818@sfu.ca\
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
