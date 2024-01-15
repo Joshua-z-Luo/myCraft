@@ -13,6 +13,7 @@
 #include"shaders/VBO.h"
 #include"shaders/EBO.h"
 #include"player/Camera.h"
+#include"player/Player.h"
 
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
@@ -191,7 +192,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Camera camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -273,9 +274,33 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
-		// Handles camera inputs
+
 		camera.updateBoundingBox();
-		camera.Inputs(window);
+		// Collision detection via AABB
+		// Check if colliding with currently loaded blocks
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+		for (int i = 0; i < blockCords.size(); i++) {
+			glm::vec3 block = blockCords[i];
+			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
+				if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE && camera.playerMaxZ >= block.y) {
+
+					// need to determine how to stop horizontal collisions.
+
+
+					// Check if in Air
+					if (camera.playerMinY <= block.z + (Constants::BLOCK_SIZE * 2) && camera.playerMaxY >= block.z + Constants::BLOCK_SIZE) {
+						camera.inAir = false;
+						printf("on ground \n");
+					}
+					else {
+						camera.inAir = true;
+					}
+
+				}
+			}
+		}
+		// Handles camera inputs
+		camera.Inputs(window, timeDiff);
 		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
@@ -305,21 +330,7 @@ int main()
 			
 		}
 		
-		// Collision detection via AABB
-		// Check if colliding with currently loaded blocks
-		//fprintf(stdout, "%f %f %f \n", Constants::BLOCK_SIZE, camera.playerMinY, camera.Position.x);
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-		for (int i = 0; i < blockCords.size(); i++) { 
-			glm::vec3 block = blockCords[i];
-			if (camera.playerMinX < block.x + Constants::BLOCK_SIZE && camera.playerMaxX > block.x) {
-				if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
-					if (camera.playerMinZ < block.y + Constants::BLOCK_SIZE && camera.playerMaxZ > block.y ) {
-						printf("collided \n");
-					}
 
-				}
-			}
-		}
 		
 		
 
