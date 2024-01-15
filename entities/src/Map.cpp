@@ -35,6 +35,7 @@ int Map::getNumBlocks()
 void Map::addBlock(Block * newBlock)
 {
 	BlocksVec.push_back(newBlock);
+	Block * temp = BlocksVec[BlocksVec.size() -1 ];
 	for (int i = 0; i < 64; i++) {
 		vertices.push_back(newBlock->vertices[i]);
 	}
@@ -130,8 +131,8 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				Block block(temp[id]->x, temp[id]->y, temp[id]->z);
-				addBlock(&block);
+				Block * block = new Block(temp[id]->x, temp[id]->y, temp[id]->z);
+				addBlock(block);
 			}
 		}
 	}
@@ -462,6 +463,22 @@ std::vector<glm::vec3> Map::getPlayerChunk()
 			result.push_back(array[num]);
 		}
 		delete[] array;
+	}
+	return result;
+}
+
+/*
+Technically, we could just loop through use getVerts and loop through the verticies directly, 
+which would reduce runtime by n/2
+However, this is a lot easier to work with espcially if we have to change the number of verticies in the future.
+*/
+
+std::vector<glm::vec3> Map::getBlockCordinates()
+{
+	std::vector<glm::vec3> result;
+	for (int i = 0; i < BlocksVec.size(); i++) {
+
+		result.push_back(BlocksVec[i]->getBlockCords());
 	}
 	return result;
 }

@@ -204,6 +204,7 @@ int main()
 	int posY = 0;
 
 	std::deque<UpdatePacket> updateQue;
+	std::vector<glm::vec3> playerVerts;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -273,7 +274,9 @@ int main()
 		shaderProgram.Activate();
 
 		// Handles camera inputs
+		camera.updateBoundingBox();
 		camera.Inputs(window);
+		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
 			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
@@ -284,7 +287,7 @@ int main()
 			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
 			
 			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
-			std::vector<glm::vec3> playerVerts = map->getPlayerChunk();
+			
 			for (int i = 0; i < playerVerts.size()/ 37; i++) {
 				std::vector<glm::vec3> temp;
 				glm::vec3 startBlock = playerVerts[i * 37];
@@ -292,11 +295,8 @@ int main()
 					temp.push_back(playerVerts[j]);
 				}
 				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
-					// currently not detecing blocks.
 
-					//IF FOUND CALL MAP TO DELETE BLOCK AT playerVerts[i].
-					std::cout << "P key pressed!" << std::endl;
-					fprintf(stdout, "x:%f y:%f z:%f", startBlock.x, startBlock.y, startBlock.z);
+					//IF FOUND CALL MAP SEND TO UPDATEQUE
 					UpdatePacket newPacket(startBlock, posX, posY);
 					updateQue.push_back(newPacket);
 					break;
@@ -304,6 +304,26 @@ int main()
 			}
 			
 		}
+		
+		// Collision detection via AABB
+		// Check if colliding with currently loaded blocks
+		//fprintf(stdout, "%f %f %f \n", Constants::BLOCK_SIZE, camera.playerMinY, camera.Position.x);
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+		for (int i = 0; i < blockCords.size(); i++) { 
+			glm::vec3 block = blockCords[i];
+			if (camera.playerMinX < block.x + Constants::BLOCK_SIZE && camera.playerMaxX > block.x) {
+				if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
+					if (camera.playerMinZ < block.y + Constants::BLOCK_SIZE && camera.playerMaxZ > block.y ) {
+						printf("collided \n");
+					}
+
+				}
+			}
+		}
+		
+		
+
+
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 

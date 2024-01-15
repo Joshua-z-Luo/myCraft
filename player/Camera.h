@@ -13,9 +13,20 @@
 #include "Ray.h"
 #include "vector"
 
+#include "../constants.h"
+
 class Camera
 {
 public:
+	// Axis-Aligned Bounding Box
+	GLfloat playerMaxX;
+	GLfloat playerMaxY;
+	GLfloat playerMaxZ;
+	GLfloat playerMinX;
+	GLfloat playerMinY;
+	GLfloat playerMinZ;
+
+
 	// Stores the main vectors of the camera
 	glm::vec3 Position;
 	glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -46,6 +57,9 @@ public:
 	void GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY);
 	glm::mat4 getView();
 	glm::mat4 getProjection(float FOVdeg, float nearPlane, float farPlane);
+
+	// update bounding box on move
+	void updateBoundingBox();
 
 };
 

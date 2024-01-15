@@ -4,6 +4,7 @@
 
 namespace Constants {
     const int CHUNK_SIZE = 32;
+    const GLfloat BLOCK_SIZE = 1.0f;
 }
 
 #endif // CONSTANTS_H
