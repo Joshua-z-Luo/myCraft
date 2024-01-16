@@ -7,7 +7,9 @@ Ray::Ray(const glm::vec3 origin, const glm::vec3 direction)
 
 }
 
-
+/*
+Checks if ray intersects block.
+*/
 bool Ray::rayIntersectsBlock(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t)
 {
     const float EPSILON = 0.1f;

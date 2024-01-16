@@ -66,6 +66,7 @@ public:
 	int getNumChunks();
 
 	std::vector<glm::vec3> getPlayerChunk();
+	std::vector<glm::vec3> getBlockCordinates();
 
 };
 
