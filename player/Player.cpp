@@ -9,6 +9,11 @@ Player::Player(int width, int height, glm::vec3 position)
 	updateBoundingBox();
 }
 
+void Player::setCollision(float x, float y, float z)
+{
+	collision = glm::vec3(x, z, y);
+}
+
 void Player::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
 {
 	// Initializes matrices since otherwise they will be the null matrix
@@ -27,7 +32,8 @@ void Player::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 
 void Player::MovePlayer(float frameSpeed, glm::vec3 direction)
 {
-	Position += frameSpeed * direction;
+	fprintf(stdout, "%f %f %f \n", direction.x, direction.y, direction.z);
+	Position += (frameSpeed * direction) + (frameSpeed * collision * direction);
 }
 
 
@@ -69,8 +75,8 @@ void Player::Inputs(GLFWwindow* window, double delta)
 	if (inAir == true) {
 		float velocityChange = delta * gravity;
 		airSpeed = (airSpeed + velocityChange);
-		if (airSpeed < -1.0f) {
-			airSpeed = -1.0f;
+		if (airSpeed < -3.0f) {
+			airSpeed = -3.0f;
 		}
 		fprintf(stdout, "%f \n", airSpeed);
 		MovePlayer(airSpeed * delta, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -112,7 +118,7 @@ void Player::Inputs(GLFWwindow* window, double delta)
 		{
 			Orientation = newOrientation;
 		}
-
+		 
 		// Rotates the Orientation left and right
 		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
 
@@ -198,9 +204,9 @@ void Player::updateBoundingBox()
 {
 	//fprintf(stdout, "%f %f %f \n", playerMaxX, Position.x, Position.x + Constants::BLOCK_SIZE);
 	playerMaxX = Position.x + Constants::PLAYER_WIDTH;
-	playerMaxY = Position.y + Constants::PLAYER_WIDTH;
-	playerMaxZ = Position.z;
+	playerMaxY = Position.y;
+	playerMaxZ = Position.z + Constants::PLAYER_WIDTH;
 	playerMinX = Position.x - Constants::PLAYER_WIDTH;
-	playerMinY = Position.y - Constants::PLAYER_WIDTH;
-	playerMinZ = Position.z - Constants::BLOCK_SIZE - Constants::BLOCK_SIZE;
+	playerMinY = Position.y - Constants::BLOCK_SIZE;
+	playerMinZ = Position.z - Constants::PLAYER_WIDTH;
 }

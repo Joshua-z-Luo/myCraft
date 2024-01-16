@@ -278,27 +278,51 @@ int main()
 		camera.updateBoundingBox();
 		// Collision detection via AABB
 		// Check if colliding with currently loaded blocks
+		bool flag = false;
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+
+		float x = 0.0f;
+		float y = 0.0f;
 		for (int i = 0; i < blockCords.size(); i++) {
 			glm::vec3 block = blockCords[i];
 			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
 				if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE && camera.playerMaxZ >= block.y) {
 
-					// need to determine how to stop horizontal collisions.
-
-
 					// Check if in Air
 					if (camera.playerMinY <= block.z + (Constants::BLOCK_SIZE * 2) && camera.playerMaxY >= block.z + Constants::BLOCK_SIZE) {
 						camera.inAir = false;
-						printf("on ground \n");
+						flag = true;
+						//printf("on ground \n");
 					}
 					else {
 						camera.inAir = true;
 					}
 
+					// check horizontal collision
+					if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
+						printf("Horizontal collision \n");
+						if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE) {
+							x = -1.0f;
+						}
+						else if (camera.playerMaxX <= block.x) {
+							x = 1.0f;
+						}
+							
+						if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE) {
+							y = -1.0f;
+						}
+						else if (camera.playerMaxZ <= block.y){
+							y = 1.0f;
+						}
+						flag = true;
+					}
 				}
 			}
 		}
+
+		// Set Collision
+		camera.setCollision(x, y, 0.0f);
+
 		// Handles camera inputs
 		camera.Inputs(window, timeDiff);
 		playerVerts = map->getPlayerChunk();

@@ -56,8 +56,13 @@ public:
 	bool inAir = true;
 	bool spacePressed = false;
 
+	// REPLACE inAir WITH COLLISION LOGIC IN FUTURE
+	glm::vec3 collision = glm::vec3(0.0f, 0.0f, 0.0f);
+
 	// Camera constructor to set up initial values
 	Player(int width, int height, glm::vec3 position);
+
+	void setCollision(float x, float y, float z);
 
 	// Updates and exports the camera matrix to the Vertex Shader
 	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
