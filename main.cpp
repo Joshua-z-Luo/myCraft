@@ -197,8 +197,10 @@ int main()
 		bool flag = false;
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 
-		float x = 0.0f;
-		float y = 0.0f;
+		float up = 0.0f;
+		float down = 0.0f;
+		float left = 0.0f;
+		float right = 0.0f;
 		for (int i = 0; i < blockCords.size(); i++) {
 			glm::vec3 block = blockCords[i];
 			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
@@ -213,23 +215,24 @@ int main()
 					else {
 						camera.inAir = true;
 					}
-
+						
 					// check horizontal collision
 					if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
-						printf("Horizontal collision \n");
-						if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE) {
-							x = -1.0f;
+
+
+						if (camera.playerMinX < block.x) {
+							up = -1.0f;
 						}
-						else if (camera.playerMaxX <= block.x) {
-							x = 1.0f;
+						else if (camera.playerMinX > block.x) {
+							down = 1.0f;
 						}
-							
-						if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE) {
-							y = -1.0f;
+						if (camera.playerMinZ < block.y) {
+							left = -1.0f;
 						}
-						else if (camera.playerMaxZ <= block.y){
-							y = 1.0f;
+						else if (camera.playerMaxZ > block.y){
+							right = 1.0f;
 						}
+						
 						flag = true;
 					}
 				}
@@ -237,7 +240,7 @@ int main()
 		}
 
 		// Set Collision
-		camera.setCollision(x, y, 0.0f);
+		camera.setCollision(up, down, left, right);
 
 		// Handles camera inputs
 		camera.Inputs(window, timeDiff);

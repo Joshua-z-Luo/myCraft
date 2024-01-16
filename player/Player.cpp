@@ -9,9 +9,9 @@ Player::Player(int width, int height, glm::vec3 position)
 	updateBoundingBox();
 }
 
-void Player::setCollision(float x, float y, float z)
+void Player::setCollision(float up, float down, float left, float right)
 {
-	collision = glm::vec3(x, z, y);
+	collision = glm::vec4(up, down,left, right);
 }
 
 void Player::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
@@ -32,8 +32,27 @@ void Player::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 
 void Player::MovePlayer(float frameSpeed, glm::vec3 direction)
 {
-	fprintf(stdout, "%f %f %f \n", direction.x, direction.y, direction.z);
-	Position += (frameSpeed * direction) + (frameSpeed * collision * direction);
+	if (collision.x != 0.0f) {
+		if (direction.x > 0) {
+			direction.x = 0.0f;
+		}
+	}
+	else if (collision.y != 0.0f) {
+		if (direction.x < 0) {
+			direction.x = 0.0f;
+		}
+	}
+	if (collision.z != 0.0f) {
+		if (direction.z > 0) {
+			direction.z = 0.0f;
+		}
+	}
+	else if (collision.w != 0.0f) {
+		if (direction.z < 0) {
+			direction.z = 0.0f;
+		}
+	}
+	Position += (frameSpeed * direction);
 }
 
 
@@ -42,7 +61,7 @@ void Player::Inputs(GLFWwindow* window, double delta)
 {
 	// Binds speed to real time not frames per second.
 	float frameSpeed = delta * speed;
-
+	
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
