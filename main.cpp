@@ -13,6 +13,7 @@
 #include"shaders/VBO.h"
 #include"shaders/EBO.h"
 #include"player/Camera.h"
+#include"player/Player.h"
 
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
@@ -191,7 +192,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Camera camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -204,6 +205,7 @@ int main()
 	int posY = 0;
 
 	std::deque<UpdatePacket> updateQue;
+	std::vector<glm::vec3> playerVerts;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -272,8 +274,58 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
+
+		camera.updateBoundingBox();
+		// Collision detection via AABB
+		// Check if colliding with currently loaded blocks
+		bool flag = false;
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+
+		float x = 0.0f;
+		float y = 0.0f;
+		for (int i = 0; i < blockCords.size(); i++) {
+			glm::vec3 block = blockCords[i];
+			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
+				if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE && camera.playerMaxZ >= block.y) {
+
+					// Check if in Air
+					if (camera.playerMinY <= block.z + (Constants::BLOCK_SIZE * 2) && camera.playerMaxY >= block.z + Constants::BLOCK_SIZE) {
+						camera.inAir = false;
+						flag = true;
+						//printf("on ground \n");
+					}
+					else {
+						camera.inAir = true;
+					}
+
+					// check horizontal collision
+					if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
+						printf("Horizontal collision \n");
+						if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE) {
+							x = -1.0f;
+						}
+						else if (camera.playerMaxX <= block.x) {
+							x = 1.0f;
+						}
+							
+						if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE) {
+							y = -1.0f;
+						}
+						else if (camera.playerMaxZ <= block.y){
+							y = 1.0f;
+						}
+						flag = true;
+					}
+				}
+			}
+		}
+
+		// Set Collision
+		camera.setCollision(x, y, 0.0f);
+
 		// Handles camera inputs
-		camera.Inputs(window);
+		camera.Inputs(window, timeDiff);
+		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
 			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
@@ -284,7 +336,7 @@ int main()
 			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
 			
 			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
-			std::vector<glm::vec3> playerVerts = map->getPlayerChunk();
+			
 			for (int i = 0; i < playerVerts.size()/ 37; i++) {
 				std::vector<glm::vec3> temp;
 				glm::vec3 startBlock = playerVerts[i * 37];
@@ -292,11 +344,8 @@ int main()
 					temp.push_back(playerVerts[j]);
 				}
 				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
-					// currently not detecing blocks.
 
-					//IF FOUND CALL MAP TO DELETE BLOCK AT playerVerts[i].
-					std::cout << "P key pressed!" << std::endl;
-					fprintf(stdout, "x:%f y:%f z:%f", startBlock.x, startBlock.y, startBlock.z);
+					//IF FOUND CALL MAP SEND TO UPDATEQUE
 					UpdatePacket newPacket(startBlock, posX, posY);
 					updateQue.push_back(newPacket);
 					break;
@@ -304,6 +353,12 @@ int main()
 			}
 			
 		}
+		
+
+		
+		
+
+
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 

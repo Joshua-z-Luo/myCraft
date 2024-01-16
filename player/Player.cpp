@@ -1,16 +1,20 @@
-#include"Camera.h"
+#include"Player.h"
 
 
-
-Camera::Camera(int width, int height, glm::vec3 position)
+Player::Player(int width, int height, glm::vec3 position)
 {
-	Camera::width = width;
-	Camera::height = height;
+	Player::width = width;
+	Player::height = height;
 	Position = position;
 	updateBoundingBox();
 }
 
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Player::setCollision(float x, float y, float z)
+{
+	collision = glm::vec3(x, z, y);
+}
+
+void Player::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
 {
 	// Initializes matrices since otherwise they will be the null matrix
 	glm::mat4 view = glm::mat4(1.0f);
@@ -26,41 +30,59 @@ void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shade
 }
 
 
-
-void Camera::Inputs(GLFWwindow* window)
+void Player::MovePlayer(float frameSpeed, glm::vec3 direction)
 {
+	fprintf(stdout, "%f %f %f \n", direction.x, direction.y, direction.z);
+	Position += (frameSpeed * direction) + (frameSpeed * collision * direction);
+}
+
+
+
+void Player::Inputs(GLFWwindow* window, double delta)
+{
+	// Binds speed to real time not frames per second.
+	float frameSpeed = delta * speed;
+
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
-		Position += speed * Orientation;
+		MovePlayer(frameSpeed, glm::vec3(Orientation.x, 0.0f, Orientation.z));
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
 	{
-		Position += speed * -glm::normalize(glm::cross(Orientation, Up));
+		MovePlayer(frameSpeed, -glm::normalize(glm::cross(Orientation, Up)));
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
 	{
-		Position += speed * -Orientation;
+		MovePlayer(frameSpeed, -glm::vec3(Orientation.x, 0.0f, Orientation.z));
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		Position += speed * glm::normalize(glm::cross(Orientation, Up));
+	{	
+		MovePlayer(frameSpeed, glm::normalize(glm::cross(Orientation, Up)));
 	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+
+	// Jump logic
+	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && inAir == false)
 	{
-		Position += speed * Up;
+		spacePressed = true;
+		inAir = true;
+		airSpeed = 10.0f;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS || glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
-	{
-		Position += speed * -Up;
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+		spacePressed = false;
 	}
-	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-	{
-		speed = 0.1f;
+
+	if (inAir == true) {
+		float velocityChange = delta * gravity;
+		airSpeed = (airSpeed + velocityChange);
+		if (airSpeed < -3.0f) {
+			airSpeed = -3.0f;
+		}
+		fprintf(stdout, "%f \n", airSpeed);
+		MovePlayer(airSpeed * delta, glm::vec3(0.0f, 1.0f, 0.0f));
 	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
-	{
-		speed = 0.03f;
+	else {
+		airSpeed = 0.0f;
 	}
 
 
@@ -96,7 +118,7 @@ void Camera::Inputs(GLFWwindow* window)
 		{
 			Orientation = newOrientation;
 		}
-
+		 
 		// Rotates the Orientation left and right
 		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
 
@@ -112,15 +134,15 @@ void Camera::Inputs(GLFWwindow* window)
 	}
 }
 
-void Camera::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY)
+void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY)
 {
 	glfwGetCursorPos(window, &mouseX, &mouseY);
 }
 
 
-bool Camera::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
+bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
 {
-	
+
 	for (int i = 0; i < triangles.size(); i += 3)
 	{
 		glm::vec3 v0 = triangles[i];
@@ -143,7 +165,7 @@ bool Camera::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 	return false;
 }
 
-Ray Camera::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
+Ray Player::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
 	double mouseX, mouseY;
 	GetMouseCoordinates(window, mouseX, mouseY);
 
@@ -164,27 +186,27 @@ Ray Camera::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const g
 	return Ray(Position, rayDirection);
 }
 
-glm::mat4 Camera::getView()
+glm::mat4 Player::getView()
 {
 	glm::mat4 view = glm::mat4(1.0f);
 	view = glm::lookAt(Position, Position + Orientation, Up);
 	return view;
 }
 
-glm::mat4 Camera::getProjection(float FOVdeg, float nearPlane, float farPlane)
+glm::mat4 Player::getProjection(float FOVdeg, float nearPlane, float farPlane)
 {
 	glm::mat4 projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
 	return projection;
 }
 
-void Camera::updateBoundingBox()
+void Player::updateBoundingBox()
 {
 	//fprintf(stdout, "%f %f %f \n", playerMaxX, Position.x, Position.x + Constants::BLOCK_SIZE);
-	playerMaxX = Position.x + Constants::BLOCK_SIZE;
-	playerMaxY = Position.y + Constants::BLOCK_SIZE;
-	playerMaxZ = Position.z + Constants::BLOCK_SIZE;
-	playerMinX = Position.x - Constants::BLOCK_SIZE;
+	playerMaxX = Position.x + Constants::PLAYER_WIDTH;
+	playerMaxY = Position.y;
+	playerMaxZ = Position.z + Constants::PLAYER_WIDTH;
+	playerMinX = Position.x - Constants::PLAYER_WIDTH;
 	playerMinY = Position.y - Constants::BLOCK_SIZE;
-	playerMinZ = Position.z - Constants::BLOCK_SIZE;
+	playerMinZ = Position.z - Constants::PLAYER_WIDTH;
 }

@@ -17,9 +17,11 @@ protected:
 public:
 	Block(GLfloat x, GLfloat y, GLfloat z);
 
+	glm::vec3 getBlockCords();
+	GLfloat x;
+	GLfloat y;
+	GLfloat z;
 
-	// NEED UPDATE
-	// CAN'T RETURN AN ARRAY IN C++ ONLY POINTER TO FIRST ELEMENT ITS JOEVER
 	GLfloat* getVert();
 	GLuint* getInd();
 	glm::vec3* getTriangles();
