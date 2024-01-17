@@ -14,40 +14,40 @@ GLfloat z = 0;
 Vertex vertices[] =
 {
 	// Top face
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-	
-	// Bottom face
-	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
 	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
 	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Bottom face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
 
 	// Front face
 	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
 	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
 
 	// Right face
-	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
 
 	// Back face
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(1.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
 
 	// Left face
-	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 0.0f)}
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)}
 };
 
 // Indices for vertices order
@@ -166,7 +166,7 @@ int main()
 
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 lightPos = glm::vec3(2.0f, 2.0f, 0.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
