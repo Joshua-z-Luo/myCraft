@@ -73,16 +73,15 @@ GLint indices[] =
 };
 
 Vertex lightVertices[] =
-{
-	// COORDINATES //
-	Vertex{glm::vec3(-0.1f, 0.9f, 0.1f)},
-	Vertex{glm::vec3(-0.1f, 0.9f, -0.1f)},
-	Vertex{glm::vec3(0.1f, 0.9f, -0.1f)},
-	Vertex{glm::vec3(0.1f, 0.9f, 0.1f)},
-	Vertex{glm::vec3(-0.1f, 1.1f, 0.1f)},
-	Vertex{glm::vec3(-0.1f, 1.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, 1.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, 1.1f, 0.1f)}
+{ //     COORDINATES     //
+	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
+	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
 };
 
 GLuint lightIndices[] =
@@ -138,8 +137,8 @@ int main()
 	// Texture data
 	Texture textures[]
 	{
-		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE)//,
-		//Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
 
@@ -167,7 +166,7 @@ int main()
 
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::vec3 lightPos = glm::vec3(0.0f, 1.0f, 0.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
