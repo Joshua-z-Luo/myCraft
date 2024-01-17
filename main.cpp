@@ -20,96 +20,42 @@
 
 #include "constants.h"
 
+#include"entities/header/Mesh.h"
+
 
 const unsigned int width = 800;
 const unsigned int height = 800;
 
 
-// Vertices coordinate
-/*
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	 -0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f + 1, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.5f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
+
+GLfloat lightVertices[] =
+{ //     COORDINATES     //
+	-0.1f, -0.1f,  0.1f,
+	-0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f,  0.1f,
+	-0.1f,  0.1f,  0.1f,
+	-0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f,  0.1f
 };
 
-// Indices for vertices order
-GLuint indices[] =
+GLuint lightIndices[] =
 {
 	0, 1, 2,
 	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
-	0, 7, 3,
 	0, 4, 7,
-	3, 6, 2,
+	0, 7, 3,
 	3, 7, 6,
-	1, 6, 2,
-	1, 5, 6,
-	1, 0, 4,
-	1, 4, 5,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
+};
 
-	0 + 8, 1 + 8, 2 + 8,
-	0 + 8, 2 + 8, 3 + 8,
-	4 + 8, 5 + 8, 6 + 8,
-	4 + 8, 6 + 8, 7 + 8 ,
-	0 + 8, 7 + 8, 3 + 8,
-	0 + 8, 4 + 8, 7 + 8,
-	3 + 8, 6 + 8, 2 + 8,
-	3 + 8, 7 + 8, 6 + 8,
-	1 + 8, 6 + 8, 2 + 8,
-	1 + 8, 5 + 8, 6 + 8,
-	1 + 8, 0 + 8, 4 + 8,
-	1 + 8, 4 + 8, 5 + 8,
-};*/
-/*
-GLfloat * vertices;
-
-// Indices for vertices order
-GLuint * indices;
-void buildCubes(int layers) {
-
-	// Number of blocks
-	int num = (layers * 2 + 1);
-	num = pow(num, 2);
-	int count = 0;
-
-	//Allocate memory
-	vertices = (GLfloat *) malloc(sizeof(GLfloat) * 64 * num);
-	indices = (GLuint*) malloc(sizeof(GLuint) * 48 * num);
-
-	//Origin Index
-	GLfloat posInd = 0.25f;
-	GLfloat negInd = -0.25f;
-
-	// Generate blocks
-	for (int i = 0; i < layers; i++) {
-		if (i == 0){
-			// Generate initial block
-		}
-
-		else {
-			// Generate based on the position of a previously added outer layer block
-			// Then add the corner blocks.
-		}
-
-	}
-}
-*/
 int main()
 {
 	// Initialize GLFW
@@ -168,11 +114,40 @@ int main()
 	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
 	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 3, 3, GL_FLOAT, 8 * sizeof(float), (void*)(8 * sizeof(float)));
 
 	// Unbind all to prevent accidentally modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
+
+	// Shader for light cube
+	Shader lightShader("shaders/light.vert", "shaders/light.frag");
+	// Generates Vertex Array Object and binds it
+	VAO lightVAO;
+	lightVAO.Bind();
+	// Generates Vertex Buffer Object and links it to vertices
+	VBO lightVBO(lightVertices, sizeof(lightVertices));
+	// Generates Element Buffer Object and links it to indices
+	EBO lightEBO(lightIndices, sizeof(lightIndices));
+	// Links VBO attributes such as coordinates and colors to VAO
+	lightVAO.LinkAttrib(lightVBO, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+	// Unbind all to prevent accidentally modifying them
+	lightVAO.Unbind();
+	lightVBO.Unbind();
+	lightEBO.Unbind();
+
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, lightPos);
+
+	lightShader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	shaderProgram.Activate();
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	// Gets ID of uniform called "scale"
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
@@ -217,7 +192,6 @@ int main()
 			updateQue.pop_front();
 			updateFlag = true;
 		}
-
 
 		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
 		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
@@ -317,6 +291,18 @@ int main()
 		
 		// Draw primitives, number of indices, datatype of indices, index of indices
 		glDrawElements(GL_TRIANGLES, map->getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
+
+
+		// Tells OpenGL which Shader Program we want to use
+		lightShader.Activate();
+		// Export the camMatrix to the Vertex Shader of the light cube
+		camera.Matrix(lightShader, "camMatrix");
+		// Bind the VAO so OpenGL knows to use it
+		lightVAO.Bind();
+		// Draw primitives, number of indices, datatype of indices, index of indices
+		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events

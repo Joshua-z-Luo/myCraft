@@ -230,45 +230,45 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 
 
 	// Indices for vertices order
+// Top face
+	indices[0] = 16;
+	indices[1] = 17;
+	indices[2] = 18;
+	indices[3] = 18;
+	indices[4] = 19;
+	indices[5] = 16;
+
 	// Front face
-	indices[0] = 0;
-	indices[1] = 1;
-	indices[2] = 2;
-	indices[3] = 2;
-	indices[4] = 3;
-	indices[5] = 0;
-
-	// Back face
-	indices[6] = 4;
-	indices[7] = 5;
-	indices[8] = 6;
-	indices[9] = 6;
-	indices[10] = 7;
-	indices[11] = 4;
-
-	// Right face
-	indices[12] = 8;
-	indices[13] = 9;
-	indices[14] = 10;
-	indices[15] = 10;
-	indices[16] = 11;
-	indices[17] = 8;
+	indices[6] = 0;
+	indices[7] = 1;
+	indices[8] = 2;
+	indices[9] = 2;
+	indices[10] = 3;
+	indices[11] = 0;
 
 	// Left face
-	indices[18] = 12;
-	indices[19] = 13;
-	indices[20] = 14;
-	indices[21] = 14;
-	indices[22] = 15;
-	indices[23] = 12;
+	indices[12] = 12;
+	indices[13] = 13;
+	indices[14] = 14;
+	indices[15] = 14;
+	indices[16] = 15;
+	indices[17] = 12;
 
-	// Top face
-	indices[24] = 16;
-	indices[25] = 17;
-	indices[26] = 18;
-	indices[27] = 18;
-	indices[28] = 19;
-	indices[29] = 16;
+	// Back face
+	indices[18] = 4;
+	indices[19] = 5;
+	indices[20] = 6;
+	indices[21] = 6;
+	indices[22] = 7;
+	indices[23] = 4;
+
+	// Right face
+	indices[24] = 8;
+	indices[25] = 9;
+	indices[26] = 10;
+	indices[27] = 10;
+	indices[28] = 11;
+	indices[29] = 8;
 
 	// Bottom face
 	indices[30] = 20;

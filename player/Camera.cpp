@@ -15,6 +15,9 @@ void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 projection = glm::mat4(1.0f);
 
+	// Ensure the Orientation vector is normalized
+	Orientation = glm::normalize(Orientation);
+
 	// Makes camera look in the right direction from the right position
 	view = glm::lookAt(Position, Position + Orientation, Up);
 	// Adds perspective to the scene
