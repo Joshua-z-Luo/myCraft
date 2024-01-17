@@ -12,6 +12,7 @@
 #include"../shaders/shaderClass/shaderClass.h"
 #include "Ray.h"
 #include "vector"
+#include <limits>
 
 #include "../constants.h"
 
@@ -36,6 +37,7 @@ public:
 	glm::vec3 Position;
 	glm::vec3 Orientation = glm::vec3(0.0f, 0.0f, -1.0f);
 	glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 Down = glm::vec3(0.0f, -1.0f, 0.0f);
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
@@ -45,7 +47,8 @@ public:
 	int height;
 
 	// Player movement properties
-	float speed = 5.0f;
+	float speed = 0.0f;
+	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
 	float airSpeed = 0.0f;
 	float gravity = -9.0f;
 	
@@ -68,10 +71,23 @@ public:
 	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
 
 	// Split movement into inputs and move function for better organization
-	void MovePlayer(float frameSpeed, glm::vec3 direction);
+	void MovePlayer(glm::vec3 displacement);
+
+
+	// Set player movement for collision detection
+	void setPlayerMovement(float frameSpeed, glm::vec3 direction, float newAirSpeed);
+	glm::vec3 getDirection();
+	float getSpeed();
+
+	// Collision Detection
+	/*
+	Use broadSweep to filter out unimportant blocks for sweptAABB and reduce computational load
+	*/
+	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords);
+	float sweeptAABB(std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, double delta);
+	void Inputs(GLFWwindow* window, double delta, std::vector<glm::vec3> blockCords);
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);

@@ -108,7 +108,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 20.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -194,11 +194,9 @@ int main()
 		camera.updateBoundingBox();
 		// Collision detection via AABB
 		// Check if colliding with currently loaded blocks
+		/*
 		bool flag = false;
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-
-		float x = 0.0f;
-		float y = 0.0f;
 		for (int i = 0; i < blockCords.size(); i++) {
 			glm::vec3 block = blockCords[i];
 			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
@@ -213,34 +211,17 @@ int main()
 					else {
 						camera.inAir = true;
 					}
-
-					// check horizontal collision
-					if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
-						printf("Horizontal collision \n");
-						if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE) {
-							x = -1.0f;
-						}
-						else if (camera.playerMaxX <= block.x) {
-							x = 1.0f;
-						}
-							
-						if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE) {
-							y = -1.0f;
-						}
-						else if (camera.playerMaxZ <= block.y){
-							y = 1.0f;
-						}
-						flag = true;
-					}
 				}
 			}
 		}
-
-		// Set Collision
-		camera.setCollision(x, y, 0.0f);
-
+		*/
+		
 		// Handles camera inputs
-		camera.Inputs(window, timeDiff);
+		// Collision self contained with player class.
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+		camera.Inputs(window, timeDiff, blockCords);
+
+
 		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
