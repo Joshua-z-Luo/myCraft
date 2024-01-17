@@ -6,34 +6,83 @@
 const unsigned int width = 800;
 const unsigned int height = 800;
 
+GLfloat x = 0;
+GLfloat y = 0;
+GLfloat z = 0;
 
 
-// Vertices coordinates
 Vertex vertices[] =
-{ //               COORDINATES           /            COLORS          /           NORMALS         /       TEXTURE COORDINATES    //
-	Vertex{glm::vec3(-1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 0.0f)},
-	Vertex{glm::vec3(-1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(0.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 1.0f)},
-	Vertex{glm::vec3(1.0f, 0.0f,  1.0f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 1.0f, 1.0f), glm::vec2(1.0f, 0.0f)}
+{
+	// Top face
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+	
+	// Bottom face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Front face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Right face
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 0.0f)},
+
+	// Back face
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.92f, 0.86f, 0.76f), glm::vec2(1.0f, 0.0f)},
+
+	// Left face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.76f, 0.45f, 0.12f), glm::vec2(1.0f, 0.0f)}
 };
 
 // Indices for vertices order
-GLuint indices[] =
+GLint indices[] =
 {
-	0, 1, 2,
-	0, 2, 3
+	// Top face
+	16, 17, 18, 18, 19, 16,
+
+	// Front face
+	0, 1, 2, 2, 3, 0,
+
+	// Left face
+	12, 13, 14, 14, 15, 12,
+
+	// Back face
+	4, 5, 6, 6, 7, 4,
+
+	// Right face
+	8, 9, 10, 10, 11, 8,
+
+	// Bottom face
+	20, 21, 22, 22, 23, 20
 };
 
 Vertex lightVertices[] =
-{ //     COORDINATES     //
-	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
+{
+	// COORDINATES //
+	Vertex{glm::vec3(-0.1f, 0.9f, 0.1f)},
+	Vertex{glm::vec3(-0.1f, 0.9f, -0.1f)},
+	Vertex{glm::vec3(0.1f, 0.9f, -0.1f)},
+	Vertex{glm::vec3(0.1f, 0.9f, 0.1f)},
+	Vertex{glm::vec3(-0.1f, 1.1f, 0.1f)},
+	Vertex{glm::vec3(-0.1f, 1.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, 1.1f, -0.1f)},
+	Vertex{glm::vec3(0.1f, 1.1f, 0.1f)}
 };
 
 GLuint lightIndices[] =
@@ -89,8 +138,8 @@ int main()
 	// Texture data
 	Texture textures[]
 	{
-		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE)//,
+		//Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
 
