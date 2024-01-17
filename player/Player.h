@@ -56,7 +56,6 @@ public:
 	float sensitivity = 100.0f;
 
 	// player status logic
-	bool inAir = true;
 	bool spacePressed = false;
 
 	// REPLACE inAir WITH COLLISION LOGIC IN FUTURE
@@ -83,11 +82,11 @@ public:
 	/*
 	Use broadSweep to filter out unimportant blocks for sweptAABB and reduce computational load
 	*/
-	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords);
-	float sweeptAABB(std::vector<glm::vec3> blockCords);
+	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords, float delta);
+	float sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalForces, float delta);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, double delta, std::vector<glm::vec3> blockCords);
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords);
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);

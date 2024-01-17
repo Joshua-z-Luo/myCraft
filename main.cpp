@@ -108,7 +108,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 20.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
