@@ -244,10 +244,14 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 
 }
 
+
+/*
+Implements swept AABB for collision detection. 
+Note that we need to run the detection 3 times, once for each possible axis of collision after sliding.
+*/
 void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 {
 
-	// NEED TO SET AIR SPEED TO 0 ON GROUND COLLISION\
 	// Collision Logic for player.
 	std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
 	glm::vec3 normalForces;
