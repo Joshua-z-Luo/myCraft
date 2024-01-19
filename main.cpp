@@ -26,91 +26,7 @@ const unsigned int width = 800;
 const unsigned int height = 800;
 
 
-// Vertices coordinate
-/*
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	 -0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f + 1, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.5f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-};
 
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
-	0, 7, 3,
-	0, 4, 7,
-	3, 6, 2,
-	3, 7, 6,
-	1, 6, 2,
-	1, 5, 6,
-	1, 0, 4,
-	1, 4, 5,
-
-	0 + 8, 1 + 8, 2 + 8,
-	0 + 8, 2 + 8, 3 + 8,
-	4 + 8, 5 + 8, 6 + 8,
-	4 + 8, 6 + 8, 7 + 8 ,
-	0 + 8, 7 + 8, 3 + 8,
-	0 + 8, 4 + 8, 7 + 8,
-	3 + 8, 6 + 8, 2 + 8,
-	3 + 8, 7 + 8, 6 + 8,
-	1 + 8, 6 + 8, 2 + 8,
-	1 + 8, 5 + 8, 6 + 8,
-	1 + 8, 0 + 8, 4 + 8,
-	1 + 8, 4 + 8, 5 + 8,
-};*/
-/*
-GLfloat * vertices;
-
-// Indices for vertices order
-GLuint * indices;
-void buildCubes(int layers) {
-
-	// Number of blocks
-	int num = (layers * 2 + 1);
-	num = pow(num, 2);
-	int count = 0;
-
-	//Allocate memory
-	vertices = (GLfloat *) malloc(sizeof(GLfloat) * 64 * num);
-	indices = (GLuint*) malloc(sizeof(GLuint) * 48 * num);
-
-	//Origin Index
-	GLfloat posInd = 0.25f;
-	GLfloat negInd = -0.25f;
-
-	// Generate blocks
-	for (int i = 0; i < layers; i++) {
-		if (i == 0){
-			// Generate initial block
-		}
-
-		else {
-			// Generate based on the position of a previously added outer layer block
-			// Then add the corner blocks.
-		}
-
-	}
-}
-*/
 int main()
 {
 	// Initialize GLFW
@@ -192,7 +108,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -274,57 +190,16 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
-
+		// update current position of player hitbox
 		camera.updateBoundingBox();
-		// Collision detection via AABB
-		// Check if colliding with currently loaded blocks
-		bool flag = false;
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 
-		float x = 0.0f;
-		float y = 0.0f;
-		for (int i = 0; i < blockCords.size(); i++) {
-			glm::vec3 block = blockCords[i];
-			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
-				if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE && camera.playerMaxZ >= block.y) {
-
-					// Check if in Air
-					if (camera.playerMinY <= block.z + (Constants::BLOCK_SIZE * 2) && camera.playerMaxY >= block.z + Constants::BLOCK_SIZE) {
-						camera.inAir = false;
-						flag = true;
-						//printf("on ground \n");
-					}
-					else {
-						camera.inAir = true;
-					}
-
-					// check horizontal collision
-					if (camera.playerMinY < block.z + Constants::BLOCK_SIZE && camera.playerMaxY > block.z) {
-						printf("Horizontal collision \n");
-						if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE) {
-							x = -1.0f;
-						}
-						else if (camera.playerMaxX <= block.x) {
-							x = 1.0f;
-						}
-							
-						if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE) {
-							y = -1.0f;
-						}
-						else if (camera.playerMaxZ <= block.y){
-							y = 1.0f;
-						}
-						flag = true;
-					}
-				}
-			}
-		}
-
-		// Set Collision
-		camera.setCollision(x, y, 0.0f);
-
+		
 		// Handles camera inputs
-		camera.Inputs(window, timeDiff);
+		// Collision self contained with player class.
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+		camera.Inputs(window, timeDiff, blockCords);
+
+
 		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
