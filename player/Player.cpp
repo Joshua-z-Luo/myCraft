@@ -39,7 +39,7 @@ void Player::setPlayerMovement(float frameSpeed, glm::vec3 direction, float newA
 	Direction = direction;
 	speed = frameSpeed;
 	airSpeed = newAirSpeed;
-	//fprintf(stdout, "setting: %f %f \n", Direction.y, airSpeed);
+	fprintf(stdout, "setting: %f %f \n", Direction.y, airSpeed);
 }
 
 glm::vec3 Player::getDirection()
@@ -58,15 +58,15 @@ std::vector<glm::vec3> Player::broadSweep(std::vector<glm::vec3> blockCords, flo
 	std::vector<glm::vec3> result;
 	for (int i = blockCords.size() - 1; i >= 0; i--) {
 		glm::vec3 block = blockCords[i];
-		if (playerMinX + (Direction.x * speed * delta) <= block.x + Constants::BLOCK_SIZE && playerMaxX + (Direction.x * speed * delta) >= block.x) {
-			if (playerMinZ + (Direction.z * speed * delta) <= block.y + Constants::BLOCK_SIZE && playerMaxZ + (Direction.z * speed * delta) >= block.y) {
+		if (playerMinX + (Direction.x * speed * delta) < block.x + Constants::BLOCK_SIZE && playerMaxX + (Direction.x * speed * delta) > block.x) {
+			if (playerMinZ + (Direction.z * speed * delta) < block.y + Constants::BLOCK_SIZE && playerMaxZ + (Direction.z * speed * delta) > block.y) {
 				// Check if in Air
 				
 				/*
 				if (playerMinY + (Direction.y * airSpeed) <= block.z + (Constants::BLOCK_SIZE * 2) && playerMaxY + (Direction.y * airSpeed) >= block.z + Constants::BLOCK_SIZE) {
 					result.push_back(block);
 				}*/
-				if (playerMinY + (Direction.y * airSpeed * delta) <= block.z + (Constants::BLOCK_SIZE) && playerMaxY + (Direction.y * airSpeed * delta) >= block.z) {
+				if (playerMinY + (Direction.y * airSpeed * delta) < block.z + (Constants::BLOCK_SIZE) && playerMaxY + (Direction.y * airSpeed * delta) > block.z) {
 					result.push_back(block);
 				}
 			}
@@ -165,7 +165,7 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 		else
 		{
 			zEntry = zInvEntry / (Direction.y * airSpeed * delta);
-			zExit = zInvExit / (Direction.y * airSpeed) * delta;
+			zExit = zInvExit / (Direction.y * airSpeed * delta);
 		}
 		
 
@@ -178,7 +178,7 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 		if (entryTime <= exitTime && (xEntry >= 0.0f || yEntry >= 0.0f || zEntry >= 0.0f) && xEntry <= 1.0f && yEntry <= 1.0f && zEntry <= 1.0f)
 		{
 			// Track minimum collision time
-			if (entryTime < minTime) {
+			if (entryTime <= minTime) {
 				minTime = entryTime;
 
 				// Check if we collision is on top of block
@@ -186,31 +186,51 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 
 				// For testing purposes
 				minBlock = i;
-				if (xEntry > yEntry)
+				if (entryTime == xEntry)
 				{
 					if (xInvEntry < 0.0f)
 					{
 						normalForces.x = 1.0f;
 						normalForces.z = 0.0f;
+						normalForces.y = 0.0f;
 					}
 					else
 					{
 						normalForces.x = -1.0f;
 						normalForces.z = 0.0f;
+						normalForces.y = 0.0f;
 					}
 				}
-				else if (yEntry > xEntry)
+				else if (entryTime == yEntry)
 				{
 					if (yInvEntry < 0.0f)
 					{
 						normalForces.x = 0.0f;
 						normalForces.z = 1.0f;
+						normalForces.y = 0.0f;
 					}
 					else
 					{
 						normalForces.x = 0.0f;
 						normalForces.z = -1.0f;
+						normalForces.y = 0.0f;
 					}
+				}
+				else {
+					printf("z collison z collison z collison z collisonz collison \n");
+					if (zInvEntry < 0.0f)
+					{
+						normalForces.x = 0.0f;
+						normalForces.z = 0.0f;
+						normalForces.y = 1.0f;
+					}
+					else
+					{
+						normalForces.x = 0.0f;
+						normalForces.z = 0.0f;
+						normalForces.y = -1.0f;
+					}
+
 				}
 			}
 		}
@@ -218,6 +238,10 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 	}
 	if (minBlock != NULL) {
 		glm::vec3 small = blockCords[minBlock];
+		fprintf(stdout, "BLOCK COLLIDED: %f %f %f \n ", small.x, small.z, small.y);
+	}
+	else {
+		//printf("no CLLISION \n");
 	}
 	return minTime;
 
@@ -230,7 +254,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	// Binds speed to real time not frames per second.
 	speed = 0.0f;
 	float newAirSpeed = 0.0f;
-	glm::vec3 movementVector(0.0f, Direction.y, 0.0f);
+	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
 	float frameSpeed = 5.0f;
 
 	// Handles key inputs
@@ -256,22 +280,29 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
 	{
 		spacePressed = true;
-		movementVector += Up;
-		airSpeed = 15.0f;
+		Direction.y = 1.0f;
+		airSpeed = 10.0f;
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 		spacePressed = false;
 	}
-	if (airSpeed > 0.0f) {
+	if (Direction.y != 0.0f) {
 		float velocityChange = delta * gravity;
-		newAirSpeed = (airSpeed + velocityChange);
-		if (newAirSpeed < -2.0f) {
-			newAirSpeed = -2.0f;
-		}
+		newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
+		fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
 
 		if (newAirSpeed < 0.0f) {
 			movementVector.y = Down.y;
+			if (newAirSpeed < -10.0f) {
+				newAirSpeed = -10.0f;
+			}
 		}
+		else if (newAirSpeed > 0.0f){
+			movementVector.y = Up.y;
+		}
+	}
+	else {
+
 	}
 	
 	// NEED SOME WAY TO CHECK IF THE BLOCK IS IN THE AIR.
@@ -325,40 +356,50 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
+	
 
 
+	// NEED TO SET AIR SPEED TO 0 ON GROUND COLLISION\
+	// Collision Logic for player.
 	std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
 	glm::vec3 normalForces;
 	float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 	// calculate movement
 	glm::vec3 displacement = (speed * delta) * Direction;
-	//displacement.y = airSpeed * Direction.y * delta;
-	Direction.y *= 0;
+	displacement.y = (airSpeed * delta) * Direction.y;
 	displacement = displacement * collisiontime;
 	MovePlayer(displacement);
 
 	// Slide
-	float remainingtime = 1.0 - collisiontime;
+	
+	float remainingtime = 1.0f - collisiontime;
 	if (remainingtime > 0.0f) {
-		// Get new direction
-		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
+
+		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x) + (Direction.y * normalForces.y));
+		fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
 		Direction.x = dotprod * normalForces.z;
 		Direction.z = dotprod * normalForces.x;
+		Direction.y = Direction.y + normalForces.y;
+		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 		// remainingtime * delta is the time left in the game tick.
 		delta = remainingtime * delta;
 		broadPhase = broadSweep(blockCords, delta);
 		collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 		displacement = (speed * delta) * Direction;
-		//displacement.y = airSpeed * Direction.y;
-		//displacement.y = 0;
-		/*
-		if (collisiontime < 1.0 && collisiontime > 0.0) {
-			fprintf(stdout, "%f %f %f \n", collisiontime, displacement.x, displacement.z);
-			displacement = displacement * collisiontime;
-		}*/
+		displacement.y = (airSpeed * delta) * Direction.y;
+		remainingtime = 1.0f - collisiontime;
+
+		// If we have a secondary collision during sliding
+		if (collisiontime < 1.0 && collisiontime >= 0.0) {
+			fprintf(stdout, "collided %f %f %f \n", collisiontime, displacement.x, displacement.z);
+			displacement = displacement * collisiontime; // this sometimes causes an error
+			fprintf(stdout, "after 2nd collision : %f %f %f %f direction x: %f z: %f \n", displacement.x, displacement.z, displacement.y, airSpeed, Direction.x, Direction.z);
+		}	
+		
 		MovePlayer(displacement);
 	}
+	
 }
 
 void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY)
@@ -375,10 +416,6 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 		glm::vec3 v0 = triangles[i];
 		glm::vec3 v1 = triangles[i + 1];
 		glm::vec3 v2 = triangles[i + 2];
-
-		//glm::vec3 v0 = triangles[i] + blockPosition;
-		//glm::vec3 v1 = triangles[i + 1] + blockPosition;
-		//glm::vec3 v2 = triangles[i + 2] + blockPosition;
 
 		float t;
 		if (ray.rayIntersectsBlock(v0, v1, v2, t))
@@ -434,6 +471,6 @@ void Player::updateBoundingBox()
 	playerMaxY = Position.y;
 	playerMaxZ = Position.z + Constants::PLAYER_WIDTH;
 	playerMinX = Position.x - Constants::PLAYER_WIDTH;
-	playerMinY = Position.y - Constants::BLOCK_SIZE;
+	playerMinY = Position.y - Constants::BLOCK_SIZE * 2;
 	playerMinZ = Position.z - Constants::PLAYER_WIDTH;
 }
