@@ -84,6 +84,7 @@ public:
 	*/
 	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords, float delta);
 	float sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalForces, float delta);
+	void detectCollison(float delta, std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords);

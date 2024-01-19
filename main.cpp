@@ -190,31 +190,9 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
-
+		// update current position of player hitbox
 		camera.updateBoundingBox();
-		// Collision detection via AABB
-		// Check if colliding with currently loaded blocks
-		/*
-		bool flag = false;
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-		for (int i = 0; i < blockCords.size(); i++) {
-			glm::vec3 block = blockCords[i];
-			if (camera.playerMinX <= block.x + Constants::BLOCK_SIZE && camera.playerMaxX >= block.x) {
-				if (camera.playerMinZ <= block.y + Constants::BLOCK_SIZE && camera.playerMaxZ >= block.y) {
 
-					// Check if in Air
-					if (camera.playerMinY <= block.z + (Constants::BLOCK_SIZE * 2) && camera.playerMaxY >= block.z + Constants::BLOCK_SIZE) {
-						camera.inAir = false;
-						flag = true;
-						//printf("on ground \n");
-					}
-					else {
-						camera.inAir = true;
-					}
-				}
-			}
-		}
-		*/
 		
 		// Handles camera inputs
 		// Collision self contained with player class.
