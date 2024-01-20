@@ -1,3 +1,24 @@
+#include<iostream>
+#include<glad/glad.h>
+#include<GLFW/glfw3.h>
+#include<stb/stb_image.h>
+#include<glm/glm.hpp>
+#include<glm/gtc/matrix_transform.hpp>
+#include<glm/gtc/type_ptr.hpp>
+
+
+#include"Texture.h"
+#include"shaders/shaderClass/shaderClass.h"
+#include"shaders/VAO.h"
+#include"shaders/VBO.h"
+#include"shaders/EBO.h"
+#include"player/Camera.h"
+
+#include"entities/header/Block.h"
+#include "entities/header/Map.h"
+#include "gameLogic/UpdatePacket.h"
+
+#include "constants.h"
 
 #include"entities/header/Mesh.h"
 
@@ -151,6 +172,13 @@ int main()
 	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	// Create floor mesh
 	Mesh floor(verts, ind, tex);
+
+	// Initalize map on heap
+	Map* map = new Map(1);
+	map->addChunk(0);
+	map->loadMap();
+	std::vector<GLfloat> vect = map->getVerts();
+	std::vector<GLuint> indi = map->getInds();
 
 
 	// Shader for light cube
