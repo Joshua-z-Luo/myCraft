@@ -8,14 +8,8 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 {
 	z = round(z);
 
-	for (const auto& baseVertex : baseVertices) {
-		Vertex vertex{};
-		vertex.position = baseVertex.position + glm::vec3(x, y, z);
-		vertex.normal = baseVertex.normal;
-		vertex.color = baseVertex.color;
-		vertex.texUV = vertex.texUV;
-
-		verticesAdjusted.push_back(vertex);
+	for (auto& baseVertex : baseVertices) {
+		baseVertex.position += glm::vec3(x, y, z);
 	}
 	vertices[0] = x - 0.5f;
 	vertices[1] = z - 0.5f;
@@ -287,31 +281,11 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	indices[33] = 22;
 	indices[34] = 23;
 	indices[35] = 20;
-
-	/*
-	// Generates Vertex Array Object and binds it
-	VAO1.Bind();
-
-	// Generates Vertex Buffer Object and links it to vertices
-	VBO1(vertices, sizeof(vertices));
-	// Generates Element Buffer Object and links it to indices
-	EBO1(indices, sizeof(indices));
-
-
-	// Links VBO attributes such as coordinates and colors to VAO
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	// Unbind all to prevent accidentally modifying them
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
-	*/
 }
 
-GLfloat* Block::getVert()
+Vertex* Block::getVert()
 {
-	return vertices;
+	return baseVertices;
 }
 
 GLuint* Block::getInd()

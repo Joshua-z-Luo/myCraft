@@ -21,7 +21,7 @@ public:
 
 	// NEED UPDATE
 	// CAN'T RETURN AN ARRAY IN C++ ONLY POINTER TO FIRST ELEMENT ITS JOEVER
-	GLfloat* getVert();
+    Vertex* getVert();
 	GLuint* getInd();
 	glm::vec3* getTriangles();
 
