@@ -1,7 +1,5 @@
 #include "header/Block.h"
-#include "../../shaders/EBO.h"
-#include "../../shaders/VBO.h"
-#include "../../shaders/VAO.h"
+
 
 
 Block::Block(GLfloat x, GLfloat y, GLfloat z)
@@ -281,6 +279,15 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	indices[33] = 22;
 	indices[34] = 23;
 	indices[35] = 20;
+
+	// Might have to move this to heap
+	texture[0] = Texture("brick.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = Texture("brick.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
+
+	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));
+	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(texture, texture + sizeof(texture) / sizeof(Texture));
+	mesh = std::make_unique<Mesh>(verts, ind, tex);
 }
 
 Vertex* Block::getVert()
@@ -303,4 +310,9 @@ glm::vec3* Block::getTriangles()
 		}
 	}
 	return result;
+}
+
+void Block::drawMesh(Shader& shader, Camera& camera)
+{
+	mesh->Draw(shader, camera);
 }

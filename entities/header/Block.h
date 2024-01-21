@@ -10,23 +10,29 @@
 #include <tuple>
 #include <vector>
 #include"header/Mesh.h"
+#include "../../shaders/EBO.h"
+#include "../../shaders/VBO.h"
+#include "../../shaders/VAO.h"
+#include <utility> 
+#include <memory>
+#include "../../Texture.h"
+
 
 class Block
 {
 protected:
+    std::unique_ptr<Mesh> mesh;
 	
 public:
 	Block(GLfloat x, GLfloat y, GLfloat z);
 
 
-	// NEED UPDATE
-	// CAN'T RETURN AN ARRAY IN C++ ONLY POINTER TO FIRST ELEMENT ITS JOEVER
     Vertex* getVert();
 	GLuint* getInd();
 	glm::vec3* getTriangles();
+    void drawMesh(Shader& shader, Camera& camera);
 
 	GLfloat vertices[192];
-    std::vector<Vertex> verticesAdjusted;
     Vertex baseVertices[24] = {
         // Top face
         {glm::vec3(-0.5f, 0.5f, -0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
@@ -65,5 +71,6 @@ public:
         { glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f) },
     };
 	GLuint indices[36];
+    Texture texture[2];
 };
 
