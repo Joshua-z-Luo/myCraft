@@ -281,8 +281,8 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	indices[35] = 20;
 
 	// Might have to move this to heap
-	texture[0] = Texture("brick.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture[1] = Texture("brick.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
+	//texture[0] = Texture("brick.png", "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	//texture[1] = Texture("brick.png", "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
 
 	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));
 	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));

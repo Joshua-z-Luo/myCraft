@@ -158,7 +158,7 @@ int main()
 	// Texture data
 	Texture textures[]
 	{
-		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
 		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
@@ -170,8 +170,8 @@ int main()
 	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-	// Create floor mesh
-	Mesh floor(verts, ind, tex);
+	// Create block mesh
+	Mesh block(verts, ind, tex);
 
 	// Initalize map on heap
 	Map* map = new Map(1);
@@ -237,7 +237,7 @@ int main()
 
 
 		// Draws different meshes
-		floor.Draw(shaderProgram, camera);
+		block.Draw(shaderProgram, camera);
 		light.Draw(lightShader, camera);
 
 

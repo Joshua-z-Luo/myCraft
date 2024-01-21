@@ -32,6 +32,13 @@ public:
 	glm::vec3* getTriangles();
     void drawMesh(Shader& shader, Camera& camera);
 
+    Texture texture[2]
+    {
+        Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+        Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+    };
+    
+
 	GLfloat vertices[192];
     Vertex baseVertices[24] = {
         // Top face
@@ -71,6 +78,6 @@ public:
         { glm::vec3(-0.5f, 0.5f, 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f) },
     };
 	GLuint indices[36];
-    Texture texture[2];
+    //Texture texture[2];
 };
 
