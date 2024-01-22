@@ -32,7 +32,7 @@ int Map::getNumBlocks()
 	return numBlocks;
 }
 
-void Map::addBlock(Block * newBlock)
+void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
 	BlocksVec.push_back(newBlock);
 	for (int i = 0; i < 192; i++) {
@@ -106,8 +106,8 @@ void Map::loadMap()
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
-			Block block(temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(&block);
+			std::unique_ptr<Block>  block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z);
+			addBlock(block);
 		}
 	} 
 }

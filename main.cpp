@@ -159,7 +159,7 @@ int main()
 	Texture textures[]
 	{
 		Texture(("brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture(("brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
 
@@ -177,8 +177,8 @@ int main()
 	Map* map = new Map(1);
 	map->addChunk(0);
 	map->loadMap();
-	std::vector<GLfloat> vect = map->getVerts();
-	std::vector<GLuint> indi = map->getInds();
+	//std::vector<GLfloat> vect = map->getVerts();
+	//std::vector<GLuint> indi =->getInds();
 
 
 	// Shader for light cube

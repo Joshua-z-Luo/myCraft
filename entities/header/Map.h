@@ -9,14 +9,14 @@
 #include "deque"
 #include "../../constants.h"
 #include <cstdlib>
-
+#include "memory"
 
 
 class Map
 {
 private:
 	// To be moved to chunk
-	std::vector<Block*> BlocksVec;
+	std::vector<std::unique_ptr<Block>> BlocksVec;
 	int numBlocks;
 
 	std::vector<GLfloat> vertices;
@@ -49,7 +49,7 @@ public:
 
 	int getNumBlocks();
 
-	void addBlock(Block* newBlock);
+	void addBlock(std::unique_ptr<Block> newBlock);
 	void addBlockToChunk(int xID, int yID, int x, int y, int z, int id);
 	void removeBlockFromChunk(int xID, int yID, int x, int y, int z);
 	void populateChunk(Chunk * chunk, int xID, int yID);
