@@ -29,6 +29,10 @@
   </ol>
 </details>
 
+## History of Development
+![pic1](./images/Screenshot(191).png)
+![pic2](./images/Screenshot(192).png)
+![pic3](./images/Screenshot(195).png)
 
 
 <!-- ABOUT THE PROJECT -->
