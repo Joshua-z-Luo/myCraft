@@ -33,9 +33,12 @@
 </details>
 
 ## History of Development
-![pic1](./images/Screenshot(191).png)
-![pic2](./images/Screenshot(192).png)
-![pic3](./images/Screenshot(195).png)
+![pic1](./images/image1.png)
+![pic2](./images/image2.png)
+![pic3](./images/image3.png)
+![pic4](./images/image4.png)
+![pic5](./images/image5.png)
+![pic6](./images/image6.png)
 
 
 <!-- ABOUT THE PROJECT -->
