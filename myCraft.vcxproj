@@ -141,6 +141,7 @@
     <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
     <ClCompile Include="entities\src\Block.cpp" />
     <ClCompile Include="glad.c" />
+    <ClCompile Include="images\test.cpp" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
     <ClCompile Include="player\Camera.cpp" />
     <ClCompile Include="entities\src\Map.cpp" />
