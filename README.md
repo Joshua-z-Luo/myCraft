@@ -34,7 +34,7 @@
 
 ## History of Development
 ![pic6](./images/image6.png)
-![pic5](./images/image5.png)
+![pic5](./images/image5_1.png)
 ![pic4](./images/image4.png)
 ![pic3](./images/image3.png)
 ![pic2](./images/image2.png)
