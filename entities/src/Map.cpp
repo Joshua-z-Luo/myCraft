@@ -34,16 +34,18 @@ int Map::getNumBlocks()
 
 void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
-	BlocksVec.push_back(newBlock);
-	for (int i = 0; i < 192; i++) {
-		vertices.push_back(newBlock->vertices[i]);
-	}
-	for (int i = 0; i < 36; i++) {
-		indices.push_back(newBlock->indices[i] + (24 * numBlocks));
-	}
+	
+	
 	numBlocks += 1;
 }
-
+//BlocksVec.push_back(std::move(newBlock));
+/*
+	for (int i = 0; i < 192; i++) {
+		vertices.push_back(BlocksVec.back()->vertices[i]);
+	}
+	for (int i = 0; i < 36; i++) {
+		indices.push_back(BlocksVec.back()->indices[i] + (24 * numBlocks));
+	}*/
 
 /*
 Adds a block the the specified chunk.
@@ -106,8 +108,10 @@ void Map::loadMap()
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
-			std::unique_ptr<Block>  block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(&block);
+			fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
+			//Block* block = new Block(temp[id]->x, temp[id]->y, temp[id]->z);
+			//std::unique_ptr<Block> blockPtr(new Block(float(temp[id]->x), float(temp[id]->y), float(temp[id]->z)));
+			std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z);
 		}
 	} 
 }
@@ -130,8 +134,9 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				std::unique_ptr<Block> block(temp[id]->x, temp[id]->y, temp[id]->z);
-				addBlock(&block);
+				//std::unique_ptr<Block> block = std::make_unique<Block>();
+				//BlocksVec.push_back(std::move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z)));
+				//addBlock(std::move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z)));
 			}
 		}
 	}
