@@ -34,18 +34,17 @@ int Map::getNumBlocks()
 
 void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
-	
-	
-	numBlocks += 1;
-}
-//BlocksVec.push_back(std::move(newBlock));
-/*
+	BlocksVec.push_back(std::move(newBlock));
+	/*
 	for (int i = 0; i < 192; i++) {
 		vertices.push_back(BlocksVec.back()->vertices[i]);
 	}
 	for (int i = 0; i < 36; i++) {
 		indices.push_back(BlocksVec.back()->indices[i] + (24 * numBlocks));
-	}*/
+}*/
+	numBlocks += 1;
+}
+
 
 /*
 Adds a block the the specified chunk.
@@ -109,9 +108,7 @@ void Map::loadMap()
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
 			fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
-			//Block* block = new Block(temp[id]->x, temp[id]->y, temp[id]->z);
-			//std::unique_ptr<Block> blockPtr(new Block(float(temp[id]->x), float(temp[id]->y), float(temp[id]->z)));
-			std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z);
+			addBlock(move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[i]->id)));
 		}
 	} 
 }
@@ -134,13 +131,20 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				//std::unique_ptr<Block> block = std::make_unique<Block>();
-				//BlocksVec.push_back(std::move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z)));
-				//addBlock(std::move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z)));
+				addBlock(move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id)));
 			}
 		}
 	}
 
+}
+
+void Map::drawMap(Shader& shader, Camera& camera)
+{
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		printf("check 1 \n");
+		BlocksVec[i]->getID();
+		BlocksVec[i]->drawMesh(shader, camera);
+	}
 }
 
 
@@ -460,7 +464,7 @@ std::vector<glm::vec3> Map::getPlayerChunk()
 	std::vector<glm::vec3> result;
 	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
 	for (int i = 0; i < temp.size(); i++) {
-		Block block(temp[i]->x, temp[i]->y, temp[i]->z);
+		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
 		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
 		glm::vec3 * array = block.getTriangles();
 		for (int num = 0; num < 36; num++) {

@@ -75,7 +75,7 @@
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>libraries\lib;libraries\include;entities;$(IncludePath)</IncludePath>
+    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;$(IncludePath)</IncludePath>
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -608,8 +608,8 @@
     <Text Include="libraries\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="brick.png" />
-    <Image Include="entities\src\brick.png" />
+    <Image Include="textures\brick.png" />
+    <Image Include="textures\grass.png" />
     <Image Include="pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

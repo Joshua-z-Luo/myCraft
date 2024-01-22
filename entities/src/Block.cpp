@@ -2,13 +2,14 @@
 
 
 
-Block::Block(GLfloat x, GLfloat y, GLfloat z)
+Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 {
+	this->id = id;
 	z = round(z);
-
 	for (auto& baseVertex : baseVertices) {
 		baseVertex.position += glm::vec3(x, y, z);
 	}
+	/*
 	vertices[0] = x - 0.5f;
 	vertices[1] = z - 0.5f;
 	vertices[2] = y + 0.5f;
@@ -229,10 +230,10 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	vertices[189] = 0.45f;
 	vertices[190] = 0.0f;
 	vertices[191] = 1.0f;
-
+	*/
 
 	// Indices for vertices order
-// Top face
+	// Top face
 	indices[0] = 16;
 	indices[1] = 17;
 	indices[2] = 18;
@@ -280,11 +281,11 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z)
 	indices[34] = 23;
 	indices[35] = 20;
 
+}
 
-	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));
-	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex(texture, texture + sizeof(texture) / sizeof(Texture));
-	mesh = std::make_unique<Mesh>(verts, ind, tex);
+int Block::getID()
+{
+	return id;
 }
 
 Vertex* Block::getVert()
@@ -299,14 +300,25 @@ GLuint* Block::getInd()
 
 glm::vec3* Block::getTriangles()
 {
+
+	// need update for new class
+	/*
 	glm::vec3 * result = new glm::vec3[36];
 	for (int i = 0; i < 12; i++) {
 		for (int x = i * 3; x < (i * 3) + 3; x++) {
-			glm::vec3 temp(vertices[(indices[x] * 8)], vertices[(indices[x] * 8) + 1], vertices[(indices[x] * 8) + 2]);
+			glm::vec3 temp(baseVertices[(indices[x] * 8)], baseVertices[(indices[x] * 8) + 1], baseVertices[(indices[x] * 8) + 2]);
 			result[x] = temp;
 		}
-	}
-	return result;
+	}*/
+	return nullptr;
+}
+
+void Block::createMesh(Texture texture[2])
+{
+	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));
+	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(texture, texture + sizeof(texture) / sizeof(Texture));
+	mesh = std::make_unique<Mesh>(verts, ind, tex);
 }
 
 void Block::drawMesh(Shader& shader, Camera& camera)

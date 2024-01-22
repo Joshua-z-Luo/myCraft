@@ -156,10 +156,11 @@ int main()
 
 
 	// Texture data
+
 	Texture textures[]
 	{
-		Texture(("brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture(("brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
 
@@ -239,7 +240,7 @@ int main()
 		// Draws different meshes
 		block.Draw(shaderProgram, camera);
 		light.Draw(lightShader, camera);
-
+		map->drawMap(shaderProgram, camera);
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);

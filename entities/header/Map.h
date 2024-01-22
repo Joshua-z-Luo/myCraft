@@ -11,10 +11,18 @@
 #include <cstdlib>
 #include "memory"
 
-
 class Map
 {
 private:
+	Texture texture[4]
+	{
+		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE),
+
+		Texture(("block.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("block.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
 	// To be moved to chunk
 	std::vector<std::unique_ptr<Block>> BlocksVec;
 	int numBlocks;
@@ -56,6 +64,7 @@ public:
 
 	void loadMap();
 	void updateMap(int oldX, int oldY);
+	void drawMap(Shader& shader, Camera& camera);
 
 	void addChunk(int code);
 
