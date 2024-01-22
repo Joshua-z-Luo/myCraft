@@ -13,6 +13,7 @@
 #include"shaders/VBO.h"
 #include"shaders/EBO.h"
 #include"player/Camera.h"
+#include"player/Player.h"
 
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
@@ -25,91 +26,7 @@ const unsigned int width = 800;
 const unsigned int height = 800;
 
 
-// Vertices coordinate
-/*
-GLfloat vertices[] =
-{ //     COORDINATES     /        COLORS      /   TexCoord  //
-	-0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.0f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.0f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f, 0.5f, -0.25f,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	 -0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.0f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.0f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-	-0.25f + 1, 0.5f,  0.25f,     0.83f, 0.70f, 0.44f,	0.0f, 0.0f,
-	-0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 0.0f,
-	 0.25f + 1, 0.5f, -0.25f + 1,     0.83f, 0.70f, 0.44f,	5.0f, 5.0f,
-	 0.25f + 1, 0.5f,  0.25f + 1,     0.83f, 0.70f, 0.44f,	0.0f, 5.0f,
-};
 
-// Indices for vertices order
-GLuint indices[] =
-{
-	0, 1, 2,
-	0, 2, 3,
-	4, 5, 6,
-	4, 6, 7,
-	0, 7, 3,
-	0, 4, 7,
-	3, 6, 2,
-	3, 7, 6,
-	1, 6, 2,
-	1, 5, 6,
-	1, 0, 4,
-	1, 4, 5,
-
-	0 + 8, 1 + 8, 2 + 8,
-	0 + 8, 2 + 8, 3 + 8,
-	4 + 8, 5 + 8, 6 + 8,
-	4 + 8, 6 + 8, 7 + 8 ,
-	0 + 8, 7 + 8, 3 + 8,
-	0 + 8, 4 + 8, 7 + 8,
-	3 + 8, 6 + 8, 2 + 8,
-	3 + 8, 7 + 8, 6 + 8,
-	1 + 8, 6 + 8, 2 + 8,
-	1 + 8, 5 + 8, 6 + 8,
-	1 + 8, 0 + 8, 4 + 8,
-	1 + 8, 4 + 8, 5 + 8,
-};*/
-/*
-GLfloat * vertices;
-
-// Indices for vertices order
-GLuint * indices;
-void buildCubes(int layers) {
-
-	// Number of blocks
-	int num = (layers * 2 + 1);
-	num = pow(num, 2);
-	int count = 0;
-
-	//Allocate memory
-	vertices = (GLfloat *) malloc(sizeof(GLfloat) * 64 * num);
-	indices = (GLuint*) malloc(sizeof(GLuint) * 48 * num);
-
-	//Origin Index
-	GLfloat posInd = 0.25f;
-	GLfloat negInd = -0.25f;
-
-	// Generate blocks
-	for (int i = 0; i < layers; i++) {
-		if (i == 0){
-			// Generate initial block
-		}
-
-		else {
-			// Generate based on the position of a previously added outer layer block
-			// Then add the corner blocks.
-		}
-
-	}
-}
-*/
 int main()
 {
 	// Initialize GLFW
@@ -191,7 +108,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Camera camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -204,6 +121,7 @@ int main()
 	int posY = 0;
 
 	std::deque<UpdatePacket> updateQue;
+	std::vector<glm::vec3> playerVerts;
 
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
@@ -272,8 +190,17 @@ int main()
 		// Tell OpenGL which Shader Program we want to use
 		shaderProgram.Activate();
 
+		// update current position of player hitbox
+		camera.updateBoundingBox();
+
+		
 		// Handles camera inputs
-		camera.Inputs(window);
+		// Collision self contained with player class.
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+		camera.Inputs(window, timeDiff, blockCords);
+
+
+		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
 			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
@@ -284,7 +211,7 @@ int main()
 			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
 			
 			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
-			std::vector<glm::vec3> playerVerts = map->getPlayerChunk();
+			
 			for (int i = 0; i < playerVerts.size()/ 37; i++) {
 				std::vector<glm::vec3> temp;
 				glm::vec3 startBlock = playerVerts[i * 37];
@@ -292,11 +219,8 @@ int main()
 					temp.push_back(playerVerts[j]);
 				}
 				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
-					// currently not detecing blocks.
 
-					//IF FOUND CALL MAP TO DELETE BLOCK AT playerVerts[i].
-					std::cout << "P key pressed!" << std::endl;
-					fprintf(stdout, "x:%f y:%f z:%f", startBlock.x, startBlock.y, startBlock.z);
+					//IF FOUND CALL MAP SEND TO UPDATEQUE
 					UpdatePacket newPacket(startBlock, posX, posY);
 					updateQue.push_back(newPacket);
 					break;
@@ -304,6 +228,12 @@ int main()
 			}
 			
 		}
+		
+
+		
+		
+
+
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 

@@ -7,6 +7,7 @@ Camera::Camera(int width, int height, glm::vec3 position)
 	Camera::width = width;
 	Camera::height = height;
 	Position = position;
+	updateBoundingBox();
 }
 
 void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
@@ -175,4 +176,15 @@ glm::mat4 Camera::getProjection(float FOVdeg, float nearPlane, float farPlane)
 	glm::mat4 projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
 	return projection;
+}
+
+void Camera::updateBoundingBox()
+{
+	//fprintf(stdout, "%f %f %f \n", playerMaxX, Position.x, Position.x + Constants::BLOCK_SIZE);
+	playerMaxX = Position.x + Constants::BLOCK_SIZE;
+	playerMaxY = Position.y + Constants::BLOCK_SIZE;
+	playerMaxZ = Position.z + Constants::BLOCK_SIZE;
+	playerMinX = Position.x - Constants::BLOCK_SIZE;
+	playerMinY = Position.y - Constants::BLOCK_SIZE;
+	playerMinZ = Position.z - Constants::BLOCK_SIZE;
 }
