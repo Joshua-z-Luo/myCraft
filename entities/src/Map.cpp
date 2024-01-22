@@ -107,7 +107,7 @@ void Map::loadMap()
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
 			std::unique_ptr<Block>  block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(block);
+			addBlock(&block);
 		}
 	} 
 }
@@ -130,7 +130,7 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				Block block(temp[id]->x, temp[id]->y, temp[id]->z);
+				std::unique_ptr<Block> block(temp[id]->x, temp[id]->y, temp[id]->z);
 				addBlock(&block);
 			}
 		}
