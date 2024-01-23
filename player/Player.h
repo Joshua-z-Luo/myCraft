@@ -72,9 +72,6 @@ public:
 
 	void setCollision(float x, float y, float z);
 
-	// Updates and exports the camera matrix to the Vertex Shader
-	void Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform);
-
 	// Split movement into inputs and move function for better organization
 	void MovePlayer(glm::vec3 displacement);
 
@@ -107,8 +104,10 @@ public:
 
 	// Updates and exports the camera matrix to the Vertex Shader
 	void updateMatrix(float FOVdeg, float nearPlane, float farPlane);
+
 	// Exports the camera matrix to a shader
 	void Matrix(Shader& shader, const char* uniform);
+
 };
 
 #endif

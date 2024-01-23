@@ -306,34 +306,6 @@ int main()
 		// Collision self contained with player class.
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();	
 		playerVerts = map->getPlayerChunk();
-		/*
-		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
-			// destroy block
-			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
-			// but currently there is no way for us to recieve a list of triangles from main when p is pressed from inputs.
-			// We could potentially send a vector of blocks to check to Camera.inputs(window) in the future each tick.
-
-			//Current solution checks all verticies/triangle faces of current chunk.
-			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
-			
-			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
-			
-			for (int i = 0; i < playerVerts.size()/ 37; i++) {
-				std::vector<glm::vec3> temp;
-				glm::vec3 startBlock = playerVerts[i * 37];
-				for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
-					temp.push_back(playerVerts[j]);
-				}
-				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
-
-					//IF FOUND CALL MAP SEND TO UPDATEQUE
-					UpdatePacket newPacket(startBlock, posX, posY);
-					updateQue.push_back(newPacket);
-					break;
-				}
-			}
-			
-		}*/
 		camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
 		
 
