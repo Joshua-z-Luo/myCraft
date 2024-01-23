@@ -307,7 +307,7 @@ int main()
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 		camera.Inputs(window, timeDiff, blockCords);
 
-		/*
+		
 		playerVerts = map->getPlayerChunk();
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
@@ -336,7 +336,7 @@ int main()
 			}
 			
 		}
-		*/
+		
 
 		
 		

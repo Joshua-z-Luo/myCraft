@@ -8,7 +8,7 @@
 #include"../shaders/VAO.h"
 #include"../shaders/VBO.h"
 #include"../shaders/EBO.h"
-#include"../player/Camera.h"
+#include"../player/player.h"
 
 class Mesh
 {
@@ -23,6 +23,6 @@ public:
 	Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures);
 
 	// Draws the mesh
-	void Draw(Shader& shader, Camera& camera);
+	void Draw(Shader& shader, Player& camera);
 };
 #endif

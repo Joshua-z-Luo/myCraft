@@ -10,6 +10,7 @@
 #include "../../constants.h"
 #include <cstdlib>
 #include "memory"
+#include "../../player/Player.h"
 
 class Map
 {
@@ -63,7 +64,7 @@ public:
 
 	void loadMap();
 	void updateMap(int oldX, int oldY);
-	void drawMap(Shader& shader, Camera& camera);
+	void drawMap(Shader& shader, Player& camera);
 
 	void addChunk(int code);
 

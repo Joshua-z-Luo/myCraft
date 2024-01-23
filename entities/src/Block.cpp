@@ -6,7 +6,9 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 {
 	this->id = id;
 	z = round(z);
-	
+	this->x = x;
+	this->y = y;
+	this->z = z;
 	for (auto& baseVertex : baseVertices) {
 		baseVertex.position += glm::vec3(x, z, y);
 	}
@@ -66,6 +68,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 int Block::getID()
 {
 	return id;
+}
 glm::vec3 Block::getBlockCords()
 {
 	//fprintf(stdout, "%f %f %f \n", this->x, this->y, this->z);
@@ -105,7 +108,7 @@ void Block::createMesh(Texture * texture[2])
 	mesh = std::make_unique<Mesh>(verts, ind, tex);
 }
 
-void Block::drawMesh(Shader& shader, Camera& camera)
+void Block::drawMesh(Shader& shader, Player& camera)
 {
 	mesh->Draw(shader, camera);
 }

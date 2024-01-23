@@ -39,7 +39,7 @@ void Player::setPlayerMovement(float frameSpeed, glm::vec3 direction, float newA
 	Direction = direction;
 	speed = frameSpeed;
 	airSpeed = newAirSpeed;
-	fprintf(stdout, "setting: %f %f \n", Direction.y, airSpeed);
+	//fprintf(stdout, "setting: %f %f \n", Direction.y, airSpeed);
 }
 
 glm::vec3 Player::getDirection()
@@ -526,4 +526,28 @@ void Player::updateBoundingBox()
 	playerMinX = Position.x - Constants::PLAYER_WIDTH;
 	playerMinY = Position.y - Constants::BLOCK_SIZE * 2;
 	playerMinZ = Position.z - Constants::PLAYER_WIDTH;
+}
+
+void Player::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
+{
+	// Initializes matrices since otherwise they will be the null matrix
+	glm::mat4 view = glm::mat4(1.0f);
+	glm::mat4 projection = glm::mat4(1.0f);
+
+	// Ensure the Orientation vector is normalized
+	Orientation = glm::normalize(Orientation);
+
+	// Makes camera look in the right direction from the right position
+	view = glm::lookAt(Position, Position + Orientation, Up);
+	// Adds perspective to the scene
+	projection = glm::perspective(glm::radians(FOVdeg), (float)width / height, nearPlane, farPlane);
+
+	// Sets new camera matrix
+	cameraMatrix = projection * view;
+}
+
+void Player::Matrix(Shader& shader, const char* uniform)
+{
+	// Exports camera matrix
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }
