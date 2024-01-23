@@ -464,10 +464,13 @@ Returns all the triangles within the player chunk. Used for ray casting.
 Resulting vector is formatted such that, every 37 indicies is a block. 
 First index of each 36 is the position of the block in the world, while the last 36 are its vertex positions.
 */
-std::vector<glm::vec3> Map::getPlayerChunk()
+std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock)
 {
+	
 	std::vector<glm::vec3> result;
 	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+
+
 	for (int i = 0; i < temp.size(); i++) {
 		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
 		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
@@ -477,6 +480,23 @@ std::vector<glm::vec3> Map::getPlayerChunk()
 		}
 		delete[] array;
 	}
+	
+	//std::vector<glm::vec3> result;
+	//std::vector<compBlock*> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+	//convert 3d index to 1d index
+	//int index = round((playerBlock.z * Constants::CHUNK_SIZE * Constants::CHUNK_SIZE) + (playerBlock.x * Constants::CHUNK_SIZE) + playerBlock.y);
+
+	//fprintf(stdout, "%d, %d %d \n", BlocksVec[index]->x, BlocksVec[index]->x , BlocksVec[index]->x)
+	/*
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		//Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
+		result.push_back(glm::vec3(BlocksVec[i]->x, BlocksVec[i]->y, BlocksVec[i]->z));
+		glm::vec3* array = BlocksVec[i]->getTriangles();
+		for (int num = 0; num < 36; num++) {
+			result.push_back(array[num]);
+		}
+		delete[] array;
+	}*/
 	return result;
 }
 

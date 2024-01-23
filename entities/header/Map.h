@@ -74,7 +74,7 @@ public:
 	std::vector<GLuint> getInds();
 	int getNumChunks();
 
-	std::vector<glm::vec3> getPlayerChunk();
+	std::vector<glm::vec3> getPlayerChunk(glm::vec3 playerBlock);
 	std::vector<glm::vec3> getBlockCordinates();
 
 };

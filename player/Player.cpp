@@ -45,11 +45,6 @@ std::vector<glm::vec3> Player::broadSweep(std::vector<glm::vec3> blockCords, flo
 		if (playerMinX + (Direction.x * speed * delta) < block.x + Constants::BLOCK_SIZE && playerMaxX + (Direction.x * speed * delta) > block.x) {
 			if (playerMinZ + (Direction.z * speed * delta) < block.y + Constants::BLOCK_SIZE && playerMaxZ + (Direction.z * speed * delta) > block.y) {
 				// Check if in Air
-				
-				/*
-				if (playerMinY + (Direction.y * airSpeed) <= block.z + (Constants::BLOCK_SIZE * 2) && playerMaxY + (Direction.y * airSpeed) >= block.z + Constants::BLOCK_SIZE) {
-					result.push_back(block);
-				}*/
 				if (playerMinY + (Direction.y * airSpeed * delta) < block.z + (Constants::BLOCK_SIZE) && playerMaxY + (Direction.y * airSpeed * delta) > block.z) {
 					result.push_back(block);
 				}
@@ -292,7 +287,15 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 			}
 			remainingtime = remainingtime - collisiontime;
 			MovePlayer(displacement);
+		
 		}
+	}
+	if (normalForces.y == -1) {
+		inAir = false;
+		
+	}
+	else {
+		inAir = true;
 	}
 }
 
@@ -304,7 +307,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	speed = 0.0f;
 	float newAirSpeed = 0.0f;
 	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
-	float frameSpeed = 5.0f;
+	float frameSpeed = 7.0f;
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -331,11 +334,12 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		spacePressed = true;
 		Direction.y = 1.0f;
 		airSpeed = 10.0f;
+		inAir = true;
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 		spacePressed = false;
 	}
-	if (Direction.y != 0.0f) {
+	if (Direction.y != 0.0f || inAir == true) {
 		float velocityChange = delta * gravity;
 		newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
 		//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
@@ -349,9 +353,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		else if (newAirSpeed > 0.0f){
 			movementVector.y = Up.y;
 		}
-	}
-	else {
-
 	}
 	
 	// NEED SOME WAY TO CHECK IF THE BLOCK IS IN THE AIR.

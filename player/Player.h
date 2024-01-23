@@ -64,7 +64,9 @@ public:
 	// player status logic
 	bool spacePressed = false;
 
+
 	// REPLACE inAir WITH COLLISION LOGIC IN FUTURE
+	bool inAir = true;
 	glm::vec3 collision = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	// Camera constructor to set up initial values

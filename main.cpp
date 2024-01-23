@@ -219,7 +219,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 15.0f, 0.0f));
+	Player camera(width, height, glm::vec3(0.0f, 50.0f, 0.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -305,7 +305,7 @@ int main()
 		// Handles camera inputs
 		// Collision self contained with player class.
 		std::vector<glm::vec3> blockCords = map->getBlockCordinates();	
-		playerVerts = map->getPlayerChunk();
+		playerVerts = map->getPlayerChunk(camera.Position);
 		camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
 		
 

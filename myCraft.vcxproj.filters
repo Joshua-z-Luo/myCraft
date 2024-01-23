@@ -72,6 +72,12 @@
     <ClCompile Include="entities\src\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="images\test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="player\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaders\shaderClass\shaderClass.h">
@@ -974,6 +980,9 @@
     <ClInclude Include="entities\header\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="player\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\default.frag">
@@ -1401,10 +1410,10 @@
     <Image Include="pop_cat.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="brick.png">
+    <Image Include="textures\brick.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="entities\src\brick.png">
+    <Image Include="textures\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

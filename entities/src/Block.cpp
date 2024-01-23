@@ -87,15 +87,6 @@ GLuint* Block::getInd()
 
 glm::vec3* Block::getTriangles()
 {
-	/*
-	// need update for new class
-	glm::vec3 * result = new glm::vec3[36];
-	for (int i = 0; i < 12; i++) {
-		for (int x = i * 3; x < (i * 3) + 3; x++) {
-			glm::vec3 temp(baseVertices[(indices[x] * 8)], baseVertices[(indices[x] * 8) + 1], baseVertices[(indices[x] * 8) + 2]);
-			result[x] = temp;
-		}
-	}*/
 	glm::vec3* result = new glm::vec3[36];
 	for (int i = 0; i < 12; i++) {
 		for (int x = i * 3; x < (i * 3) + 3; x++) {
