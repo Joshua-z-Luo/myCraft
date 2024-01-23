@@ -313,11 +313,11 @@ glm::vec3* Block::getTriangles()
 	return nullptr;
 }
 
-void Block::createMesh(Texture texture[2])
+void Block::createMesh(Texture * texture[2])
 {
 	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));
 	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex(texture, texture + sizeof(texture) / sizeof(Texture));
+	std::vector <Texture> tex(*texture, *texture + sizeof(*texture) / sizeof(Texture));
 	mesh = std::make_unique<Mesh>(verts, ind, tex);
 }
 

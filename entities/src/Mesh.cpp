@@ -5,7 +5,7 @@ Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::v
 	Mesh::vertices = vertices;
 	Mesh::indices = indices;
 	Mesh::textures = textures;
-
+	
 	VAO.Bind();
 	// Generates Vertex Buffer Object and links it to vertices
 	VBO VBO(vertices);
@@ -54,4 +54,5 @@ void Mesh::Draw(Shader& shader, Camera& camera)
 
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	VAO.Unbind();
 }

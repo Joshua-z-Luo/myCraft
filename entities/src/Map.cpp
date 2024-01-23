@@ -14,6 +14,8 @@ Map::Map(int chunk)
 	for (int i = 0; i < width; i++) {
 		heightMap[i] = new GLfloat[width];
 	}
+	texture[0] = new Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = new Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
 }
 
 std::vector<GLfloat> Map::getVerts()
@@ -108,7 +110,9 @@ void Map::loadMap()
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
 			fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[i]->id)));
+			std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+			block->createMesh(texture);
+			addBlock(move(block));
 		}
 	} 
 }
@@ -131,7 +135,9 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				addBlock(move(std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id)));
+				std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+				block->createMesh(texture);
+				addBlock(move(block));
 			}
 		}
 	}
@@ -141,8 +147,7 @@ void Map::updateMap(int oldX, int oldY)
 void Map::drawMap(Shader& shader, Camera& camera)
 {
 	for (int i = 0; i < BlocksVec.size(); i++) {
-		printf("check 1 \n");
-		BlocksVec[i]->getID();
+		//BlocksVec[i]->getID();
 		BlocksVec[i]->drawMesh(shader, camera);
 	}
 }

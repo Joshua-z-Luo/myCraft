@@ -167,12 +167,6 @@ int main()
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
-	// Store mesh data in vectors for the mesh
-	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
-	// Create block mesh
-	Mesh block(verts, ind, tex);
 
 	// Initalize map on heap
 	Map* map = new Map(1);
@@ -180,6 +174,16 @@ int main()
 	map->loadMap();
 	//std::vector<GLfloat> vect = map->getVerts();
 	//std::vector<GLuint> indi =->getInds();
+
+
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	// Create block mesh
+	Mesh block(verts, ind, tex);
+
+
 
 
 	// Shader for light cube
@@ -193,7 +197,7 @@ int main()
 
 
 
-
+	
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(2.0f, 2.0f, 2.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
@@ -202,8 +206,9 @@ int main()
 	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
 	glm::mat4 objectModel = glm::mat4(1.0f);
 	objectModel = glm::translate(objectModel, objectPos);
+	
 
-
+	
 	lightShader.Activate();
 	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
 	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
@@ -211,20 +216,52 @@ int main()
 	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
-
-
-
-
-
+	
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
 	// Creates camera object
 	Camera camera(width, height, glm::vec3(0.0f, 0.0f, 2.0f));
 
+	int posX = 0;
+	int posY = 0;
+
+	std::deque<UpdatePacket> updateQue;
+	std::vector<glm::vec3> playerVerts;
+
+	// Enables the Depth Buffer
+	glEnable(GL_DEPTH_TEST);
+
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
+		bool updateFlag = false;
+		while (updateQue.size() > 0) {
+			UpdatePacket target = updateQue[0];
+			glm::vec3 deleteBlock = target.getTargetBlock();
+
+			map->removeBlockFromChunk(target.getChunkX(), target.getChunkY(), deleteBlock.x, deleteBlock.y, deleteBlock.z);
+			updateQue.pop_front();
+			updateFlag = true;
+		}
+
+
+		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
+		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
+		if (newX != posX || newY != posY) {
+
+			//fprintf(stdout, "%d %d \n", newX, newY);
+			map->playerPositionCord(newX, newY);
+			map->addChunk(-1);
+			map->printChunks();
+			posX = newX;
+			posY = newY;
+			updateFlag = true;
+		}
+
+		if (updateFlag == true) {
+			map->updateMap(0, 0);
+		}
 		// Specify the color of the background
 		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 		// Clean the back buffer and depth buffer
@@ -239,9 +276,8 @@ int main()
 
 		// Draws different meshes
 		block.Draw(shaderProgram, camera);
-		light.Draw(lightShader, camera);
+		//light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
-
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events

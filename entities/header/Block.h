@@ -72,7 +72,7 @@ public:
 	GLuint* getInd();
 	glm::vec3* getTriangles();
 
-    void createMesh(Texture texture[2]);
+    void createMesh(Texture * texture[2]);
     void drawMesh(Shader& shader, Camera& camera);
     
 
