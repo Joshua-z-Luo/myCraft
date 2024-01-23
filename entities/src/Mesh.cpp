@@ -45,6 +45,7 @@ void Mesh::Draw(Shader& shader, Player& camera)
 		{
 			num = std::to_string(numSpecular++);
 		}
+
 		textures[i].texUnit(shader, (type + num).c_str(), i);
 		textures[i].Bind();
 	}
@@ -54,5 +55,6 @@ void Mesh::Draw(Shader& shader, Player& camera)
 
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+
 	
 }

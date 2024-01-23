@@ -95,15 +95,16 @@ GLint indices[] =
 };
 
 Vertex lightVertices[] =
-{ //     COORDINATES     //
-	Vertex{glm::vec3(-0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f, -0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f,  0.1f)},
-	Vertex{glm::vec3(-0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f, -0.1f)},
-	Vertex{glm::vec3(0.1f,  0.1f,  0.1f)}
+{
+	// Updated coordinates to make the light block 0.5 times in size
+	Vertex{glm::vec3(-0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f,  0.5f)}
 };
 
 GLuint lightIndices[] =
@@ -160,6 +161,12 @@ int main()
 
 	Texture textures[]
 	{
+		Texture(("textures/grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
+	Texture texturesBrick[]
+	{
 		Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
 		Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
@@ -178,11 +185,11 @@ int main()
 
 
 	// Store mesh data in vectors for the mesh
-	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
+	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex1(textures, textures + sizeof(textures) / sizeof(Texture));
 	// Create block mesh
-	Mesh block(verts, ind, tex);
+	//Mesh block(verts, ind, tex);
 
 
 
@@ -193,10 +200,10 @@ int main()
 	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	// Create light mesh
-	Mesh light(lightVerts, lightInd, tex);
+	Mesh light(lightVerts, lightInd, tex1);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(2.0f, 2.0f, 2.0f);
+	glm::vec3 lightPos = glm::vec3(2.0f, 20.0f, 2.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -293,8 +300,7 @@ int main()
 		}
 
 		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
-
+		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -320,8 +326,8 @@ int main()
 
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
-		block.Draw(shaderProgram, camera);
-		//light.Draw(lightShader, camera);
+		//block.Draw(shaderProgram, camera);
+		light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
