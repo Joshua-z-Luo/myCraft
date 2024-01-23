@@ -8,10 +8,11 @@
 #include<glm/gtc/type_ptr.hpp>
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
-
+#include "../gameLogic/UpdatePacket.h"
 #include"../shaders/shaderClass/shaderClass.h"
 #include "Ray.h"
 #include "vector"
+#include "deque"
 #include <limits>
 
 #include "../constants.h"
@@ -23,7 +24,11 @@ Player class. Replaces Camera class.
 */
 class Player
 {
-public:
+private:
+	// Stores the width and height of the window
+	int width;
+	int height;
+
 	// Axis-Aligned Bounding Box values
 	GLfloat playerMaxX;
 	GLfloat playerMaxY;
@@ -31,6 +36,10 @@ public:
 	GLfloat playerMinX;
 	GLfloat playerMinY;
 	GLfloat playerMinZ;
+
+	// p Pressed?
+	bool pPressed = false;
+public:
 
 
 	// Stores the main vectors of the camera
@@ -42,10 +51,6 @@ public:
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
-
-	// Stores the width and height of the window
-	int width;
-	int height;
 
 	// Player movement properties
 	float speed = 0.0f;
@@ -88,7 +93,7 @@ public:
 	void detectCollison(float delta, std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords);
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);

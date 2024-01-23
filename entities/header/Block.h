@@ -23,7 +23,6 @@ class Block
 {
 protected:
     std::unique_ptr<Mesh> mesh;
-    Mesh* extra;
     int id;
     Vertex baseVertices[24] = {
         // Top face 

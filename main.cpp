@@ -304,11 +304,9 @@ int main()
 		
 		// Handles camera inputs
 		// Collision self contained with player class.
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-		camera.Inputs(window, timeDiff, blockCords);
-
-		/*
+		std::vector<glm::vec3> blockCords = map->getBlockCordinates();	
 		playerVerts = map->getPlayerChunk();
+		/*
 		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
 			// destroy block
 			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
@@ -335,8 +333,9 @@ int main()
 				}
 			}
 			
-		}
-		*/
+		}*/
+		camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		
 
 		
 		

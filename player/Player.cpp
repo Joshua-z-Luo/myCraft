@@ -217,7 +217,7 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 					}
 				}
 				else {
-					printf("z collison z collison z collison z collisonz collison \n");
+					//printf("z collison z collison z collison z collisonz collison \n");
 					if (zInvEntry < 0.0f)
 					{
 						normalForces.x = 0.0f;
@@ -238,7 +238,7 @@ float Player::sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalFor
 	}
 	if (minBlock != NULL) {
 		glm::vec3 small = blockCords[minBlock];
-		fprintf(stdout, "BLOCK COLLIDED: %f %f %f \n ", small.x, small.z, small.y);
+		//fprintf(stdout, "BLOCK COLLIDED: %f %f %f \n ", small.x, small.z, small.y);
 	}
 	return minTime;
 
@@ -267,39 +267,12 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 	float remainingtime = 1.0f - collisiontime;
 	if (remainingtime > 0.0f) {
 
-		/*
-		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x) + );
-		fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
-		Direction.x = dotprod * normalForces.z;
-		Direction.z = dotprod * normalForces.x;
-		Direction.y = Direction.y + normalForces.y;
-		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
-
-		// remainingtime * delta is the time left in the game tick.
-		delta = remainingtime * delta;
-		broadPhase = broadSweep(blockCords, delta);
-		collisiontime = sweeptAABB(broadPhase, normalForces, delta);
-		displacement = (speed * delta) * Direction;
-		displacement.y = (airSpeed * delta) * Direction.y;
-		remainingtime = 1.0f - collisiontime;
-
-		// If we have a secondary collision during sliding
-		if (collisiontime < 1.0 && collisiontime >= 0.0) {
-			fprintf(stdout, "collided %f %f %f \n", collisiontime, displacement.x, displacement.z);
-			displacement = displacement * collisiontime; // this sometimes causes an error
-			fprintf(stdout, "after 2nd collision : %f %f %f %f direction x: %f z: %f \n", displacement.x, displacement.z, displacement.y, airSpeed, Direction.x, Direction.z);
-		}
-
-		*/
-
-
-
 		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
-		fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
+		//fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
 		Direction.x = dotprod * normalForces.z;
 		Direction.z = dotprod * normalForces.x;
 		Direction.y = dotprod * normalForces.y;
-		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
+		//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 		// remainingtime * delta is the time left in the game tick.
 		delta = remainingtime * delta;
@@ -317,11 +290,11 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 		// Handle 3d slide.
 		if (remainingtime > 0.0f) {
 			float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
-			fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
+			//fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
 			Direction.x = dotprod * normalForces.z;
 			Direction.z = dotprod * normalForces.x;
 			Direction.y = dotprod * normalForces.y;
-			fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
+			//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 			// remainingtime * delta is the time left in the game tick.
 			delta = remainingtime * delta;
@@ -341,7 +314,7 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 
 
 
-void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords)
+void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3>* playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY)
 {
 	// Binds speed to real time not frames per second.
 	speed = 0.0f;
@@ -381,7 +354,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (Direction.y != 0.0f) {
 		float velocityChange = delta * gravity;
 		newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
-		fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
+		//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
 
 		if (newAirSpeed < 0.0f) {
 			movementVector.y = Down.y;
@@ -401,6 +374,36 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 
 	setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
 
+	// Handles editing
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && pPressed == false) {
+		// destroy block
+		//Current solution checks all verticies/triangle faces of current chunk.
+		// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
+
+		pPressed = true;
+		Ray ray = GetMouseRay(window, getView(), getProjection(45.0f, 0.1f, 100.0f));
+
+		for (int i = 0; i < playerVerts->size() / 37; i++) {
+			std::vector<glm::vec3> temp;
+			glm::vec3 startBlock = (*playerVerts)[i * 37];
+			for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
+				temp.push_back((*playerVerts)[j]);
+			}
+			if (castRayForBlock(window, ray, startBlock, temp)) {
+
+				//IF FOUND CALL MAP SEND TO UPDATEQUE
+				UpdatePacket newPacket(startBlock, posX, posY);
+				updateQue->push_back(newPacket);
+				break;
+			}
+		}
+
+	}
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE) {
+		pPressed = false;
+	}
 
 	// Handles mouse inputs
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
