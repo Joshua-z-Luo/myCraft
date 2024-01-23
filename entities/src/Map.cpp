@@ -14,6 +14,8 @@ Map::Map(int chunk)
 	for (int i = 0; i < width; i++) {
 		heightMap[i] = new GLfloat[width];
 	}
+	texture[0] = new Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = new Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
 }
 
 std::vector<GLfloat> Map::getVerts()
@@ -32,16 +34,16 @@ int Map::getNumBlocks()
 	return numBlocks;
 }
 
-void Map::addBlock(Block * newBlock)
+void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
-	BlocksVec.push_back(newBlock);
-	Block * temp = BlocksVec[BlocksVec.size() -1 ];
-	for (int i = 0; i < 64; i++) {
-		vertices.push_back(newBlock->vertices[i]);
+	BlocksVec.push_back(std::move(newBlock));
+	/*
+	for (int i = 0; i < 192; i++) {
+		vertices.push_back(BlocksVec.back()->vertices[i]);
 	}
 	for (int i = 0; i < 36; i++) {
-		indices.push_back(newBlock->indices[i] + (8 * numBlocks));
-	}
+		indices.push_back(BlocksVec.back()->indices[i] + (24 * numBlocks));
+}*/
 	numBlocks += 1;
 }
 
@@ -107,8 +109,10 @@ void Map::loadMap()
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
-			Block block(temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(&block);
+			fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
+			std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+			block->createMesh(texture);
+			addBlock(move(block));
 		}
 	} 
 }
@@ -131,12 +135,21 @@ void Map::updateMap(int oldX, int oldY)
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				Block * block = new Block(temp[id]->x, temp[id]->y, temp[id]->z);
-				addBlock(block);
+				std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+				block->createMesh(texture);
+				addBlock(move(block));
 			}
 		}
 	}
 
+}
+
+void Map::drawMap(Shader& shader, Camera& camera)
+{
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		//BlocksVec[i]->getID();
+		BlocksVec[i]->drawMesh(shader, camera);
+	}
 }
 
 
@@ -456,7 +469,7 @@ std::vector<glm::vec3> Map::getPlayerChunk()
 	std::vector<glm::vec3> result;
 	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
 	for (int i = 0; i < temp.size(); i++) {
-		Block block(temp[i]->x, temp[i]->y, temp[i]->z);
+		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
 		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
 		glm::vec3 * array = block.getTriangles();
 		for (int num = 0; num < 36; num++) {

@@ -9,14 +9,21 @@
 #include "deque"
 #include "../../constants.h"
 #include <cstdlib>
-
-
+#include "memory"
 
 class Map
 {
 private:
+	/*
+	Texture texture[2]
+	{
+		Texture(("grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE),
+	};*/
+	Texture * texture[2];
+
 	// To be moved to chunk
-	std::vector<Block*> BlocksVec;
+	std::vector<std::unique_ptr<Block>> BlocksVec;
 	int numBlocks;
 
 	std::vector<GLfloat> vertices;
@@ -49,13 +56,14 @@ public:
 
 	int getNumBlocks();
 
-	void addBlock(Block* newBlock);
+	void addBlock(std::unique_ptr<Block> newBlock);
 	void addBlockToChunk(int xID, int yID, int x, int y, int z, int id);
 	void removeBlockFromChunk(int xID, int yID, int x, int y, int z);
 	void populateChunk(Chunk * chunk, int xID, int yID);
 
 	void loadMap();
 	void updateMap(int oldX, int oldY);
+	void drawMap(Shader& shader, Camera& camera);
 
 	void addChunk(int code);
 
