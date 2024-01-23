@@ -194,10 +194,6 @@ int main()
 	// Create light mesh
 	Mesh light(lightVerts, lightInd, tex);
 
-
-
-
-	
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(2.0f, 2.0f, 2.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
@@ -275,6 +271,7 @@ int main()
 
 
 		// Draws different meshes
+		// ok not drawing the block apparently jsut ruins the shader, no block no shader
 		block.Draw(shaderProgram, camera);
 		//light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
