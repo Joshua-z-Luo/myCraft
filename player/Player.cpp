@@ -290,11 +290,12 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 		
 		}
 	}
+	//fprintf(stdout, "%d \n", inAir);
 	if (normalForces.y == -1) {
 		inAir = false;
 		
 	}
-	else {
+	else if (airSpeed != 0.0f){
 		inAir = true;
 	}
 }
