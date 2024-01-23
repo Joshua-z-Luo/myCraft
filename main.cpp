@@ -165,6 +165,12 @@ int main()
 		Texture(("textures/grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
+	Texture texturesBrick[]
+	{
+		Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
 
 
 	// Generates Shader object using shaders default.vert and default.frag
