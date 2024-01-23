@@ -96,15 +96,15 @@ GLint indices[] =
 
 Vertex lightVertices[] =
 {
-	// Updated coordinates to make the light block 10 times bigger
-	Vertex{glm::vec3(-1.0f, -1.0f,  1.0f)},
-	Vertex{glm::vec3(-1.0f, -1.0f, -1.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f, -1.0f)},
-	Vertex{glm::vec3(1.0f, -1.0f,  1.0f)},
-	Vertex{glm::vec3(-1.0f,  1.0f,  1.0f)},
-	Vertex{glm::vec3(-1.0f,  1.0f, -1.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f, -1.0f)},
-	Vertex{glm::vec3(1.0f,  1.0f,  1.0f)}
+	// Updated coordinates to make the light block 0.5 times in size
+	Vertex{glm::vec3(-0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f,  0.5f)}
 };
 
 GLuint lightIndices[] =
@@ -161,8 +161,8 @@ int main()
 
 	Texture textures[]
 	{
-		Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
-		Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+		Texture(("textures/grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
 	};
 
 
@@ -197,7 +197,7 @@ int main()
 	Mesh light(lightVerts, lightInd, tex1);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(2.0f, 25.0f, 2.0f);
+	glm::vec3 lightPos = glm::vec3(2.0f, 20.0f, 2.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -294,7 +294,7 @@ int main()
 		}
 
 		// Specify the color of the background
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
+		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
