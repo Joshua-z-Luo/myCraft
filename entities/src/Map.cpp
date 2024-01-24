@@ -37,13 +37,6 @@ int Map::getNumBlocks()
 void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
 	BlocksVec.push_back(std::move(newBlock));
-	/*
-	for (int i = 0; i < 192; i++) {
-		vertices.push_back(BlocksVec.back()->vertices[i]);
-	}
-	for (int i = 0; i < 36; i++) {
-		indices.push_back(BlocksVec.back()->indices[i] + (24 * numBlocks));
-}*/
 	numBlocks += 1;
 }
 
@@ -109,7 +102,7 @@ void Map::loadMap()
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
 		for (int id = 0; id < temp.size(); id++) {
-			fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
+			//fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
 			std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
 			block->createMesh(texture);
 			addBlock(move(block));
@@ -126,8 +119,8 @@ SHOULD BE OPTIMIZED TO KEEP CHUNK DATA THAT CAN BE RECYCLED, SINCE MOVEMENT IS P
 void Map::updateMap(int oldX, int oldY)
 {
 	BlocksVec.clear();
-	indices.clear();
-	vertices.clear();
+	//indices.clear();
+	//vertices.clear();
 	loadOrder.clear();
 	numBlocks = 0;
 	for (int x = playerChunkX - 1; x <= playerChunkX + 1; x++) {
