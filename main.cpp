@@ -244,6 +244,8 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+
+	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 	// Main while loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -277,6 +279,7 @@ int main()
 
 		if (updateFlag == true) {
 			map->updateMap(0, 0);
+			blockCords = map->getBlockCordinates();
 		}
 		// Updates counter and times
 		crntTime = glfwGetTime();
@@ -307,21 +310,18 @@ int main()
 
 		// update current position of player hitbox
 		camera.updateBoundingBox();
-
-		
 		// Handles camera inputs
 		// Collision self contained with player class.
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();	
-		playerVerts = map->getPlayerChunk(camera.Position);
-		camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		if (updateFlag != true) {
+			playerVerts = map->getPlayerChunk(camera.Position);
+			camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		}
+		//%TODO: Player is gets stuck in blocks when a frame where new chunks must be loaded occurs.
+		// Why is this happening? We get the new block coordinates on chunk updates, so collision should carry over?
+		// Current work around is to NOT update the players position during a chunk loading frame.
 		
-
-		
-		
-
-
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+		camera.updateMatrix(90.0f, 0.1f, 100.0f);
 
 
 		// Draws different meshes

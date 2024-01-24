@@ -14,7 +14,9 @@
 #include "vector"
 
 #include "../constants.h"
-
+/*
+Depreciated class, use player class from now on.
+*/
 class Camera
 {
 public:

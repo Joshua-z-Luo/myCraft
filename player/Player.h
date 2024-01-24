@@ -37,8 +37,26 @@ private:
 	GLfloat playerMinY;
 	GLfloat playerMinZ;
 
+
+	// Prevents the camera from jumping around when first clicking left click
+	bool firstClick = true;
+
+	// Player movement properties
+	float speed = 0.0f;
+	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
+	float airSpeed = 0.0f;
+	float gravity = -9.0f;
+
+	// Camera look speed
+	float sensitivity = 100.0f;
+
+	// player status logic
+	bool spacePressed = false;
+	bool inAir = true;
 	// p Pressed?
 	bool pPressed = false;
+
+
 public:
 
 
@@ -49,30 +67,8 @@ public:
 	glm::vec3 Down = glm::vec3(0.0f, -1.0f, 0.0f);
 	glm::mat4 cameraMatrix = glm::mat4(1.0f);
 
-	// Prevents the camera from jumping around when first clicking left click
-	bool firstClick = true;
-
-	// Player movement properties
-	float speed = 0.0f;
-	glm::vec3 Direction = glm::vec3(0.0f, 0.0f, 0.0f);
-	float airSpeed = 0.0f;
-	float gravity = -9.0f;
-	
-	// Camera look speed
-	float sensitivity = 100.0f;
-
-	// player status logic
-	bool spacePressed = false;
-
-
-	// REPLACE inAir WITH COLLISION LOGIC IN FUTURE
-	bool inAir = true;
-	glm::vec3 collision = glm::vec3(0.0f, 0.0f, 0.0f);
-
 	// Camera constructor to set up initial values
 	Player(int width, int height, glm::vec3 position);
-
-	void setCollision(float x, float y, float z);
 
 	// Split movement into inputs and move function for better organization
 	void MovePlayer(glm::vec3 displacement);
@@ -90,6 +86,7 @@ public:
 	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords, float delta);
 	float sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalForces, float delta);
 	void detectCollison(float delta, std::vector<glm::vec3> blockCords);
+	void detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords, glm::vec3 normalForces, float remainingtime);
 
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);

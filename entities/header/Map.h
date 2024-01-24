@@ -12,6 +12,9 @@
 #include "memory"
 #include "../../player/Player.h"
 
+/*
+Map class responsible for all game logic regarding world generation.
+*/
 class Map
 {
 private:
