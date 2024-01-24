@@ -233,7 +233,7 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 
 	// Collision Logic for player.
 	std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
-	glm::vec3 normalForces;
+	glm::vec3 normalForces(0.0f, 0.0f, 0.0f);
 	float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 	// calculate movement
 	glm::vec3 displacement = (speed * delta) * Direction;
@@ -242,10 +242,15 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 	MovePlayer(displacement);
 
 	// Slide
-
 	float remainingtime = 1.0f - collisiontime;
+	// define multiple branches
 	if (remainingtime > 0.0f) {
+		detectCollisonHelper(delta * remainingtime, blockCords, normalForces, remainingtime);
+	}
 
+
+	/*
+	if (remainingtime > 0.0f) {
 		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
 		//fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
 		Direction.x = dotprod * normalForces.z;
@@ -265,14 +270,14 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 		}
 		remainingtime = remainingtime - collisiontime;
 		MovePlayer(displacement);
-
+		
 		// Handle 3d slide.
 		if (remainingtime > 0.0f) {
-			float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
+			float dotprod = ((Direction.y * normalForces.z) + (Direction.z * normalForces.y));
 			//fprintf(stdout, "y values : %f %f %f direction \n", airSpeed, normalForces.y, Direction.y);
-			Direction.x = dotprod * normalForces.z;
-			Direction.z = dotprod * normalForces.x;
-			Direction.y = dotprod * normalForces.y;
+			Direction.x = dotprod * normalForces.x;
+			Direction.z = dotprod * normalForces.y;
+			Direction.y = dotprod * normalForces.z;
 			//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 			// remainingtime * delta is the time left in the game tick.
@@ -283,20 +288,90 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 			displacement.y = (airSpeed * delta) * Direction.y;
 			// If we have a secondary collision during sliding
 			if (collisiontime < remainingtime && collisiontime >= 0.0) {
-				displacement = displacement * collisiontime; // this sometimes causes an error
+				displacement = displacement * collisiontime; 
 			}
 			remainingtime = remainingtime - collisiontime;
 			MovePlayer(displacement);
 		
 		}
-	}
+	}*/
 	//fprintf(stdout, "%d \n", inAir);
-	if (normalForces.y == -1) {
-		inAir = false;
-		
+
+}
+
+void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords, glm::vec3 normalForces, float remainingtime)
+{
+	fprintf(stdout, "%f, %f, %f normals \n", normalForces.x, normalForces.z, normalForces.y );
+	if (normalForces.x != 0.0f) {
+		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
+		float dotprody = ((Direction.x * normalForces.y) + (Direction.y * normalForces.x));
+		Direction.x = (dotprod * normalForces.z) + (dotprody * normalForces.y);
+		Direction.z = dotprod * normalForces.x;
+		Direction.y = dotprody * normalForces.x;
+
+
+		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
+
+		// remainingtime * delta is the time left in the game tick.
+		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
+		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
+		glm::vec3 displacement = (speed * delta) * Direction;
+		displacement.y = (airSpeed * delta) * Direction.y;
+		fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
+		// If we have a secondary collision during sliding
+		if (collisiontime < remainingtime && collisiontime >= 0.0) {
+			displacement = displacement * collisiontime; // this sometimes causes an error
+		}
+		remainingtime = remainingtime - collisiontime;
+		MovePlayer(displacement);
 	}
-	else if (airSpeed != 0.0f){
-		inAir = true;
+	else if (normalForces.y != 0.0f) {
+		float dotprod = ((Direction.y * normalForces.z) + (Direction.z * normalForces.y));
+		float dotprodx = ((Direction.y * normalForces.x) + (Direction.x * normalForces.y));
+		Direction.y = (dotprod * normalForces.z) + (dotprodx * normalForces.x);
+		Direction.z = dotprod * normalForces.y;
+		Direction.x = dotprodx * normalForces.y;
+		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
+
+		// remainingtime * delta is the time left in the game tick.
+		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
+		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
+		glm::vec3 displacement = (speed * delta) * Direction;
+		displacement.y = (airSpeed * delta) * Direction.y;
+		fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
+		// If we have a secondary collision during sliding
+		if (collisiontime < remainingtime && collisiontime >= 0.0) {
+			displacement = displacement * collisiontime; // this sometimes causes an error
+		}
+		remainingtime = remainingtime - collisiontime;
+		MovePlayer(displacement);
+	}
+	else if (normalForces.z != 0.0f) {
+		float dotprod = ((Direction.y * normalForces.z) + (Direction.z * normalForces.y));
+		float dotprodx = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
+		//Direction.x = dotprod * normalForces.z;
+		Direction.z = (dotprod * normalForces.y) + (dotprodx * normalForces.x);
+		Direction.y = dotprod * normalForces.z;
+		Direction.x = dotprodx * normalForces.z;
+		fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
+
+		// remainingtime * delta is the time left in the game tick.
+		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
+		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
+		glm::vec3 displacement = (speed * delta) * Direction;
+		displacement.y = (airSpeed * delta) * Direction.y;
+		fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
+		// If we have a secondary collision during sliding
+		if (collisiontime < remainingtime && collisiontime >= 0.0) {
+			displacement = displacement * collisiontime; // this sometimes causes an error
+		}
+		remainingtime = remainingtime - collisiontime;
+		MovePlayer(displacement);
+	}
+
+
+	if (remainingtime > 0.0f) {
+		detectCollisonHelper(remainingtime * delta, blockCords, normalForces, remainingtime);
 	}
 }
 
@@ -335,7 +410,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		spacePressed = true;
 		Direction.y = 1.0f;
 		airSpeed = 10.0f;
-		inAir = true;
+
 	}
 	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 		spacePressed = false;

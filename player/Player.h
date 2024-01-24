@@ -66,7 +66,7 @@ public:
 
 
 	// REPLACE inAir WITH COLLISION LOGIC IN FUTURE
-	bool inAir = true;
+	bool inAir = false;
 	glm::vec3 collision = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	// Camera constructor to set up initial values
@@ -90,6 +90,7 @@ public:
 	std::vector<glm::vec3> broadSweep(std::vector<glm::vec3> blockCords, float delta);
 	float sweeptAABB(std::vector<glm::vec3> blockCords, glm::vec3& normalForces, float delta);
 	void detectCollison(float delta, std::vector<glm::vec3> blockCords);
+	void detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords, glm::vec3 normalForces, float remainingtime);
 
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
