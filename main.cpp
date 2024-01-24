@@ -226,7 +226,7 @@ int main()
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 50.0f, 0.0f));
+	Player camera(width, height, glm::vec3(10.0f, 50.0f, 10.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -253,6 +253,8 @@ int main()
 		timeDiff = crntTime - prevTime;
 		counter++;
 
+		// Update que
+		// %TODO: change in future to only due X number of actions per frame for performance purposes.
 		bool updateFlag = false;
 		while (updateQue.size() > 0) {
 			UpdatePacket target = updateQue[0];
@@ -263,7 +265,7 @@ int main()
 			updateFlag = true;
 		}
 
-
+		// World Logic
 		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
 		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
 		if (newX != posX || newY != posY) {
@@ -276,7 +278,9 @@ int main()
 			posY = newY;
 			updateFlag = true;
 		}
-
+		// Update que
+		// % TODO: Chunks should not be all loading in one frame, this causes stutters.
+		// Chunk loading should be done block by block via the update que.
 		if (updateFlag == true) {
 			map->updateMap(0, 0);
 			blockCords = map->getBlockCordinates();
@@ -316,6 +320,8 @@ int main()
 			playerVerts = map->getPlayerChunk(camera.Position);
 			camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
 		}
+		//playerVerts = map->getPlayerChunk(camera.Position);
+		//camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
 		//%TODO: Player is gets stuck in blocks when a frame where new chunks must be loaded occurs.
 		// Why is this happening? We get the new block coordinates on chunk updates, so collision should carry over?
 		// Current work around is to NOT update the players position during a chunk loading frame.

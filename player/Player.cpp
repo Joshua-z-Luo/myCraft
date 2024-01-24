@@ -34,7 +34,6 @@ float Player::getSpeed()
 
 std::vector<glm::vec3> Player::broadSweep(std::vector<glm::vec3> blockCords, float delta)
 {
-	bool flag = false;
 	std::vector<glm::vec3> result;
 	for (int i = blockCords.size() - 1; i >= 0; i--) {
 		glm::vec3 block = blockCords[i];
@@ -46,7 +45,6 @@ std::vector<glm::vec3> Player::broadSweep(std::vector<glm::vec3> blockCords, flo
 				}
 			}
 		}
-		//blockCords.pop_back();
 	}
 	return result;
 }
@@ -233,12 +231,6 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 	if (remainingtime > 0.0f) {
 		detectCollisonHelper(delta * remainingtime, blockCords, normalForces, remainingtime);
 	}
-	if (normalForces.y == 0.0f) {
-		inAir = false;
-	}
-	else {
-		inAir = true;
-	}
 
 }
 
@@ -265,6 +257,13 @@ void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords
 		}
 		remainingtime = remainingtime - collisiontime;
 		MovePlayer(displacement);
+		/*
+		if (normalForces.y != 0.0f && inAir == true) {
+			inAir = false;
+		}
+		else {
+			inAir = true;
+		}*/
 	}
 	else if (normalForces.x != 0.0f) {
 		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
@@ -311,16 +310,41 @@ void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords
 		remainingtime = remainingtime - collisiontime;
 		MovePlayer(displacement);
 	}
+	/*
 	if (normalForces.y == 0.0f) {
 		inAir = false;
 	}
 	else {
 		inAir = true;
-	}
+	}*/
 
 	if (remainingtime > 0.0f) {
 		detectCollisonHelper(remainingtime * delta, blockCords, normalForces, remainingtime);
 	}
+}
+
+
+// Temporary method to check if player is grounded
+// Really bad, checks every block to see if player is standing on one.
+// Will replace grounded with faster method once getBlockCordinates using a fixed size array.
+// That will we will be able to check all IMMEDIATE blocks under player.
+void Player::grounded(std::vector<glm::vec3> blockCords)
+{
+	for (int i = blockCords.size() - 1; i >= 0; i--) {
+		glm::vec3 block = blockCords[i];
+		if (playerMinX < block.x + Constants::BLOCK_SIZE && playerMaxX > block.x) {
+			if (playerMinZ < block.y + Constants::BLOCK_SIZE && playerMaxZ > block.y) {
+				// Check if in Air
+				if (playerMinY  <= block.z + (Constants::BLOCK_SIZE) && playerMaxY >= block.z) {
+					inAir = false;
+				}
+				else {
+					inAir = true;
+				}
+			}
+		}
+	}
+	
 }
 
 
@@ -351,8 +375,9 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		movementVector += glm::normalize(glm::cross(Orientation, Up));
 	}
 	
+	grounded(blockCords);
 	// Jump logic
-	
+	fprintf(stdout, "%f %d\n", airSpeed, inAir);
 	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
 	{
 		spacePressed = true;

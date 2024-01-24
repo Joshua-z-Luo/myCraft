@@ -52,7 +52,7 @@ private:
 
 	// player status logic
 	bool spacePressed = false;
-	bool inAir = true;
+	bool inAir = false;
 	// p Pressed?
 	bool pPressed = false;
 
@@ -88,8 +88,12 @@ public:
 	void detectCollison(float delta, std::vector<glm::vec3> blockCords);
 	void detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords, glm::vec3 normalForces, float remainingtime);
 
+	// Check if grounded
+	void grounded(std::vector<glm::vec3> blockCords);
+
 	// Handles camera inputs
 	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
+
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);
