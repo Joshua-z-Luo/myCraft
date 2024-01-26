@@ -15,9 +15,8 @@ Map::Map(int chunk)
 	for (int i = 0; i < width; i++) {
 		heightMap[i] = new GLfloat[width];
 	}
-	texture[0] = new Texture(("../../textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture[1] = new Texture(("../../textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
-
+	texture[0] = new Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = new Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
 }
 
 std::vector<GLfloat> Map::getVerts()

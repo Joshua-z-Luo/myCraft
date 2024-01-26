@@ -232,9 +232,6 @@ int main()
 	std::deque<UpdatePacket> updateQue;
 	std::vector<glm::vec3> playerVerts;
 
-	// Enables the Depth Buffer
-	glEnable(GL_DEPTH_TEST);
-
 	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 
@@ -277,10 +274,6 @@ int main()
 			map->updateMap(0, 0);
 			blockCords = map->getBlockCordinates();
 		}
-		// Updates counter and times
-		crntTime = glfwGetTime();
-		timeDiff = crntTime - prevTime;
-		counter++;
 
 		if (timeDiff >= 1.0 / 30.0)
 		{

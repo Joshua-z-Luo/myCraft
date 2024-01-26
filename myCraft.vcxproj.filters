@@ -1416,9 +1416,6 @@
     <Image Include="textures\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="entities\src\grass.png">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
   <ItemGroup>
     <Library Include="libraries\lib\glfw3.lib">

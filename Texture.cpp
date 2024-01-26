@@ -11,7 +11,10 @@ Texture::Texture(const char* image, const char* texType, GLuint slot, GLenum for
 	stbi_set_flip_vertically_on_load(true);
 	// Reads the image from a file and stores it in bytes
 	unsigned char* bytes = stbi_load(image, &widthImg, &heightImg, &numColCh, 0);
-
+	if (bytes == nullptr) {
+		std::cerr << "Error loading image: " << stbi_failure_reason() << std::endl;
+		return;
+	}
 	// Generates an OpenGL texture object
 	glGenTextures(1, &ID);
 	// Assigns the texture to a Texture Unit
@@ -40,8 +43,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot, GLenum for
 	stbi_image_free(bytes);
 
 	// Unbinds the OpenGL Texture object so that it can't accidentally be modified
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	GLenum error = glGetError();
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 

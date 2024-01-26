@@ -57,6 +57,6 @@ void Mesh::Draw(Shader& shader, Player& camera)
 
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	//glUseProgram(0);
+	glUseProgram(0);
 	
 }
