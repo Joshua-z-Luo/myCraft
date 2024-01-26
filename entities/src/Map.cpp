@@ -1,5 +1,6 @@
 #include "header/Map.h"
 
+
 Map::Map(int chunk)
 {
 	numChunks = 0;
@@ -14,8 +15,9 @@ Map::Map(int chunk)
 	for (int i = 0; i < width; i++) {
 		heightMap[i] = new GLfloat[width];
 	}
-	texture[0] = new Texture(("../../textures/grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
-	texture[1] = new Texture(("../../textures/grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
+	texture[0] = new Texture(("../../textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = new Texture(("../../textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
+
 }
 
 std::vector<GLfloat> Map::getVerts()
@@ -144,6 +146,7 @@ void Map::drawMap(Shader& shader, Player& camera)
 		//BlocksVec[i]->getID();
 		BlocksVec[i]->drawMesh(shader, camera);
 	}*/
+	
 	for (int i = 0; i < loadOrder.size(); i++) {
 		//BlocksVec[i]->getID();
 		loadOrder[i]->drawMesh(shader, camera);

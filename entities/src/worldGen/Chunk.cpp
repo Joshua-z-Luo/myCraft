@@ -79,9 +79,12 @@ void Chunk::createChunkMesh(Texture* texture[2])
 			}
 		}
 	}
-	std::vector <Texture> tex; 
-	tex.push_back(*(texture)[0]);
-	tex.push_back(*(texture)[1]);
+	//std::vector <Texture> tex; 
+	//tex.push_back(*(texture)[0]);
+	//tex.push_back(*(texture)[1]);
+	//fprintf(stdout, " here %s \n", tex[0].type);
+	//fprintf(stdout, " here %s \n", tex[1].type);
+	std::vector <Texture> tex(*texture, *texture + sizeof(&texture) / sizeof(Texture));
 	mesh = std::make_unique<Mesh>(result, indicies, tex);
 
 
@@ -102,17 +105,17 @@ std::array<bool, 6> Chunk::checkBlockNeighbours(int x, int y, int z)
 	if (z - 1 >= 0 && BlocksArray[x][y][z - 1] == -1) {
 		result[1] = true;
 	}
-	if (x + 1 < Constants::CHUNK_SIZE && BlocksArray[x + 1][y][z] == -1) {
+	if (y + 1 < Constants::CHUNK_SIZE && BlocksArray[x][y + 1][z] == -1) {
 		result[2] = true;
 	}
-	if (y + 1 < Constants::CHUNK_SIZE && BlocksArray[x][y + 1][z] == -1) {
+	if (x + 1 < Constants::CHUNK_SIZE && BlocksArray[x + 1][y][z] == -1) {
 		result[3] = true;
 	}
 	if (x - 1 >= 0 && BlocksArray[x - 1][y][z] == -1) {
-		result[4] = true;
+		result[5] = true;
 	}
 	if (y - 1 >= 0 && BlocksArray[x][y - 1][z] == -1) {
-		result[5] = true;
+		result[4] = true;
 	}
 	return result;
 }
