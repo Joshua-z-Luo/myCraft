@@ -3,7 +3,8 @@
 #include "compBlock.h"
 #include <vector>
 #include "../../../constants.h"
-
+#include "array"
+#include "../Mesh.h"
 class Chunk
 {
 private:
@@ -12,9 +13,12 @@ private:
 	// specifically for gathering blocks during updateMap()
 
 	int numBlocks;
-	
+	std::unique_ptr<Mesh> mesh;
+	std::array<bool, 6> checkBlockNeighbours(int x, int y, int z);
 	
 public:
+	void createChunkMesh(Texture* texture[2]);
+	void drawMesh(Shader& shader, Player& camera);
 	Chunk(int xID, int yID);
 	void addBlock(int id, int x, int y, int z);
 	void removeBlock(int x, int y, int z);

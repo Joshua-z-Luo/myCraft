@@ -97,14 +97,14 @@ GLint indices[] =
 Vertex lightVertices[] =
 {
 	// Updated coordinates to make the light block 0.5 times in size
-	Vertex{glm::vec3(-0.5f, -0.5f,  0.5f)},
-	Vertex{glm::vec3(-0.5f, -0.5f, -0.5f)},
-	Vertex{glm::vec3(0.5f, -0.5f, -0.5f)},
-	Vertex{glm::vec3(0.5f, -0.5f,  0.5f)},
-	Vertex{glm::vec3(-0.5f,  0.5f,  0.5f)},
-	Vertex{glm::vec3(-0.5f,  0.5f, -0.5f)},
-	Vertex{glm::vec3(0.5f,  0.5f, -0.5f)},
-	Vertex{glm::vec3(0.5f,  0.5f,  0.5f)}
+	Vertex{glm::vec3(-0.5f, -0.5f + 10,  0.5f)},
+	Vertex{glm::vec3(-0.5f, -0.5f + 10, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f + 10, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f + 10,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f + 10,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f + 10, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f + 10, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f + 10,  0.5f)}
 };
 
 GLuint lightIndices[] =
@@ -180,16 +180,14 @@ int main()
 	Map* map = new Map(1);
 	map->addChunk(0);
 	map->loadMap();
-	//std::vector<GLfloat> vect = map->getVerts();
-	//std::vector<GLuint> indi =->getInds();
 
 
 	// Store mesh data in vectors for the mesh
-	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex1(textures, textures + sizeof(textures) / sizeof(Texture));
+	std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 	// Create block mesh
-	//Mesh block(verts, ind, tex);
+	Mesh block(verts, ind, tex);
 
 
 
@@ -200,7 +198,7 @@ int main()
 	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	// Create light mesh
-	Mesh light(lightVerts, lightInd, tex1);
+	Mesh light(lightVerts, lightInd, tex);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
 	glm::vec3 lightPos = glm::vec3(2.0f, 20.0f, 2.0f);
@@ -332,7 +330,7 @@ int main()
 
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
-		//block.Draw(shaderProgram, camera);
+		block.Draw(shaderProgram, camera);
 		light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
 		// Swap the back buffer with the front buffer

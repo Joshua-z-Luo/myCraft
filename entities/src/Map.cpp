@@ -101,10 +101,11 @@ void Map::loadMap()
 	// should be called on start after addChunks
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
+		loadOrder[i]->createChunkMesh(texture);
 		for (int id = 0; id < temp.size(); id++) {
 			//fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
 			std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
-			block->createMesh(texture);
+			//block->createMesh(texture);
 			addBlock(move(block));
 		}
 	} 
@@ -119,17 +120,16 @@ SHOULD BE OPTIMIZED TO KEEP CHUNK DATA THAT CAN BE RECYCLED, SINCE MOVEMENT IS P
 void Map::updateMap(int oldX, int oldY)
 {
 	BlocksVec.clear();
-	//indices.clear();
-	//vertices.clear();
 	loadOrder.clear();
 	numBlocks = 0;
 	for (int x = playerChunkX - 1; x <= playerChunkX + 1; x++) {
 		for (int y = playerChunkY - 1; y <= playerChunkY + 1; y++) {
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
+			(*ChunksArray[x])[y]->createChunkMesh(texture);
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
 				std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
-				block->createMesh(texture);
+				//block->createMesh(texture);
 				addBlock(move(block));
 			}
 		}
@@ -139,9 +139,14 @@ void Map::updateMap(int oldX, int oldY)
 
 void Map::drawMap(Shader& shader, Player& camera)
 {
+	/*
 	for (int i = 0; i < BlocksVec.size(); i++) {
 		//BlocksVec[i]->getID();
 		BlocksVec[i]->drawMesh(shader, camera);
+	}*/
+	for (int i = 0; i < loadOrder.size(); i++) {
+		//BlocksVec[i]->getID();
+		loadOrder[i]->drawMesh(shader, camera);
 	}
 }
 
