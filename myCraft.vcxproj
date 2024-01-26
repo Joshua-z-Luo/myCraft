@@ -75,7 +75,11 @@
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>libraries\lib;libraries\include;entities;$(IncludePath)</IncludePath>
+    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;$(IncludePath)</IncludePath>
+    <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;$(IncludePath)</IncludePath>
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -113,6 +117,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <Optimization>MaxSpeed</Optimization>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,15 +137,19 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <Optimization>MaxSpeed</Optimization>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="entities\src\Mesh.cpp" />
     <ClCompile Include="entities\src\worldGen\compBlock.cpp" />
     <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
     <ClCompile Include="entities\src\Block.cpp" />
@@ -158,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="constants.h" />
+    <ClInclude Include="entities\header\Mesh.h" />
     <ClInclude Include="entities\header\worldGen\compBlock.h" />
     <ClInclude Include="entities\header\worldGen\Chunk.h" />
     <ClInclude Include="entities\header\Block.h" />
@@ -597,6 +611,8 @@
     <None Include="libraries\include\glm\gtx\wrap.inl" />
     <None Include="shaders\default.vert" />
     <None Include="shaders\default.frag" />
+    <None Include="shaders\light.frag" />
+    <None Include="shaders\light.vert" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="libraries\lib\glfw3.lib" />
@@ -605,7 +621,8 @@
     <Text Include="libraries\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="brick.png" />
+    <Image Include="textures\brick.png" />
+    <Image Include="textures\grass.png" />
     <Image Include="pop_cat.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

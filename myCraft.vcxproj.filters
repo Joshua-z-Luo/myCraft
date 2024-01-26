@@ -69,6 +69,12 @@
     <ClCompile Include="gameLogic\UpdatePacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="entities\src\Mesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="images\test.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="player\Player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -971,6 +977,9 @@
     <ClInclude Include="gameLogic\UpdatePacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="entities\header\Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="player\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -1390,12 +1399,21 @@
     <None Include="libraries\include\glm\gtx\wrap.inl">
       <Filter>Header Files\libarary</Filter>
     </None>
+    <None Include="shaders\light.frag">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\light.vert">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="pop_cat.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="brick.png">
+    <Image Include="textures\brick.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\grass.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

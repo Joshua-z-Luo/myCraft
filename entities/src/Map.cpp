@@ -1,5 +1,6 @@
 #include "header/Map.h"
 
+
 Map::Map(int chunk)
 {
 	numChunks = 0;
@@ -14,6 +15,8 @@ Map::Map(int chunk)
 	for (int i = 0; i < width; i++) {
 		heightMap[i] = new GLfloat[width];
 	}
+	texture[0] = new Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	texture[1] = new Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE);
 }
 
 std::vector<GLfloat> Map::getVerts()
@@ -32,16 +35,9 @@ int Map::getNumBlocks()
 	return numBlocks;
 }
 
-void Map::addBlock(Block * newBlock)
+void Map::addBlock(std::unique_ptr<Block> newBlock)
 {
-	BlocksVec.push_back(newBlock);
-	Block * temp = BlocksVec[BlocksVec.size() -1 ];
-	for (int i = 0; i < 64; i++) {
-		vertices.push_back(newBlock->vertices[i]);
-	}
-	for (int i = 0; i < 36; i++) {
-		indices.push_back(newBlock->indices[i] + (8 * numBlocks));
-	}
+	BlocksVec.push_back(std::move(newBlock));
 	numBlocks += 1;
 }
 
@@ -80,7 +76,7 @@ void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 	// Currently using Map class member variable of player position to find chunk to remove block
 	// In future, needs to depend on given xID, yID instead of member varaible, for extendability of method.
 
-	fprintf(stdout, " remove: x: %d y: %d \n", x, y);
+	//fprintf(stdout, " remove: x: %d y: %d \n", x, y);
 	(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
 }
 
@@ -106,9 +102,12 @@ void Map::loadMap()
 	// should be called on start after addChunks
 	for (int i = 0; i < 9; i++) {
 		std::vector<compBlock * > temp = loadOrder[i]->getBlocks();
+		loadOrder[i]->createChunkMesh(texture);
 		for (int id = 0; id < temp.size(); id++) {
-			Block block(temp[id]->x, temp[id]->y, temp[id]->z);
-			addBlock(&block);
+			//fprintf(stdout, "%d %d %d \n", temp[id]->x, temp[id]->y, temp[id]->z);
+			std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+			//block->createMesh(texture);
+			addBlock(move(block));
 		}
 	} 
 }
@@ -122,21 +121,35 @@ SHOULD BE OPTIMIZED TO KEEP CHUNK DATA THAT CAN BE RECYCLED, SINCE MOVEMENT IS P
 void Map::updateMap(int oldX, int oldY)
 {
 	BlocksVec.clear();
-	indices.clear();
-	vertices.clear();
 	loadOrder.clear();
 	numBlocks = 0;
 	for (int x = playerChunkX - 1; x <= playerChunkX + 1; x++) {
 		for (int y = playerChunkY - 1; y <= playerChunkY + 1; y++) {
 			std::vector<compBlock* > temp = (*ChunksArray[x])[y]->getBlocks();
+			(*ChunksArray[x])[y]->createChunkMesh(texture);
 			loadOrder.push_back((*ChunksArray[x])[y]);
 			for (int id = 0; id < temp.size(); id++) {
-				Block * block = new Block(temp[id]->x, temp[id]->y, temp[id]->z);
-				addBlock(block);
+				std::unique_ptr<Block> block = std::make_unique<Block>(temp[id]->x, temp[id]->y, temp[id]->z, temp[id]->id);
+				//block->createMesh(texture);
+				addBlock(move(block));
 			}
 		}
 	}
 
+}
+
+void Map::drawMap(Shader& shader, Player& camera)
+{
+	/*
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		//BlocksVec[i]->getID();
+		BlocksVec[i]->drawMesh(shader, camera);
+	}*/
+	
+	for (int i = 0; i < loadOrder.size(); i++) {
+		//BlocksVec[i]->getID();
+		loadOrder[i]->drawMesh(shader, camera);
+	}
 }
 
 
@@ -451,12 +464,15 @@ Returns all the triangles within the player chunk. Used for ray casting.
 Resulting vector is formatted such that, every 37 indicies is a block. 
 First index of each 36 is the position of the block in the world, while the last 36 are its vertex positions.
 */
-std::vector<glm::vec3> Map::getPlayerChunk()
+std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock)
 {
+	
 	std::vector<glm::vec3> result;
 	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+
+
 	for (int i = 0; i < temp.size(); i++) {
-		Block block(temp[i]->x, temp[i]->y, temp[i]->z);
+		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
 		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
 		glm::vec3 * array = block.getTriangles();
 		for (int num = 0; num < 36; num++) {
@@ -464,6 +480,23 @@ std::vector<glm::vec3> Map::getPlayerChunk()
 		}
 		delete[] array;
 	}
+	
+	//std::vector<glm::vec3> result;
+	//std::vector<compBlock*> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+	//convert 3d index to 1d index
+	//int index = round((playerBlock.z * Constants::CHUNK_SIZE * Constants::CHUNK_SIZE) + (playerBlock.x * Constants::CHUNK_SIZE) + playerBlock.y);
+
+	//fprintf(stdout, "%d, %d %d \n", BlocksVec[index]->x, BlocksVec[index]->x , BlocksVec[index]->x)
+	/*
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		//Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
+		result.push_back(glm::vec3(BlocksVec[i]->x, BlocksVec[i]->y, BlocksVec[i]->z));
+		glm::vec3* array = BlocksVec[i]->getTriangles();
+		for (int num = 0; num < 36; num++) {
+			result.push_back(array[num]);
+		}
+		delete[] array;
+	}*/
 	return result;
 }
 

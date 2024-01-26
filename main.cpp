@@ -21,11 +21,104 @@
 
 #include "constants.h"
 
+#include"entities/header/Mesh.h"
 
-const unsigned int width = 800;
+/*
+GLfloat x = 0;
+GLfloat y = 0;
+GLfloat z = 0;
+Vertex vertices[] =
+{
+	// Top face
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Bottom face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Front face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Right face
+	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Back face
+	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
+
+	// Left face
+	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
+	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
+	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)}
+};
+
+// Indices for vertices order
+GLint indices[] =
+{
+	// Top face
+	16, 17, 18, 18, 19, 16,
+
+	// Front face
+	0, 1, 2, 2, 3, 0,
+
+	// Left face
+	12, 13, 14, 14, 15, 12,
+
+	// Back face
+	4, 5, 6, 6, 7, 4,
+
+	// Right face
+	8, 9, 10, 10, 11, 8,
+
+	// Bottom face
+	20, 21, 22, 22, 23, 20
+};*/
+
+Vertex lightVertices[] =
+{
+	// Updated coordinates to make the light block 0.5 times in size
+	Vertex{glm::vec3(-0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f, -0.50, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f, -0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f,  0.5f)},
+	Vertex{glm::vec3(-0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f, -0.5f)},
+	Vertex{glm::vec3(0.5f,  0.5f,  0.5f)}
+};
+
+GLuint lightIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3,
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
+};
+
+const unsigned int width = 1200;
 const unsigned int height = 800;
-
-
 
 int main()
 {
@@ -40,8 +133,8 @@ int main()
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	// Create a GLFWwindow object of 800 by 800 pixels, naming it "YoutubeOpenGL"
-	GLFWwindow* window = glfwCreateWindow(800, 800, "YoutubeOpenGL", NULL, NULL);
+	// Create a GLFWwindow object of 800 by 800 pixels, naming it "MyCraft"
+	GLFWwindow* window = glfwCreateWindow(width, height, "MyCraft", NULL, NULL);
 	// Error check if the window fails to create
 	if (window == NULL)
 	{
@@ -52,63 +145,79 @@ int main()
 	// Introduce the window into the current context
 	glfwMakeContextCurrent(window);
 
-	//Load GLAD so it configures OpenGL
+	// Load GLAD so it configures OpenGL
 	gladLoadGL();
 	// Specify the viewport of OpenGL in the Window
 	// In this case the viewport goes from x = 0, y = 0, to x = 800, y = 800
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, width, height);
 
+
+
+	// Temporary Texture data
+	// Want to move this into map in future.
+	/**/
+	Texture textures[]
+	{
+		Texture(("textures/grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/grass.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
+
+	Texture texturesBrick[]
+	{
+		Texture(("textures/brick.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
+		Texture(("textures/brick.png"), "specular", 1, GL_RED, GL_UNSIGNED_BYTE)
+	};
 
 
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
+	// Store mesh data in vectors for the mesh
+	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
+	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
+	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
-	// Initalize map on heap
-	Map* map = new Map(1);
-	map->addChunk(0);
-	map->loadMap();
-	std::vector<GLfloat> vec = map->getVerts();
-	std::vector<GLuint> ind = map->getInds();
+	// Shader for light cube
+	Shader lightShader("shaders/light.vert", "shaders/light.frag");
+	// Store mesh data in vectors for the mesh
+	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
+	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
+	// Create light mesh
+	Mesh light(lightVerts, lightInd, tex);
 
-	// Generates Vertex Array Object and binds it
-	VAO VAO1;
-	VAO1.Bind();
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(2.0f, 15.0f, 2.0f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, lightPos);
 
-	// Generates Vertex Buffer Object and links it to vertices
-	VBO VBO1(vec.data(), vec.size() * sizeof(GLfloat));
-	// Generates Element Buffer Object and links it to indices
-	EBO EBO1(ind.data(), ind.size() * sizeof(GLuint));
+	glm::vec3 objectPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 objectModel = glm::mat4(1.0f);
+	objectModel = glm::translate(objectModel, objectPos);
+	
 
-	// Links VBO attributes such as coordinates and colors to VAO
-	// Do I only need to do this once if I follow th same format?
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	
+	lightShader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	shaderProgram.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(objectModel));
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+	
 
-	// Unbind all to prevent accidentally modifying them
-	VAO1.Unbind();
-	VBO1.Unbind();
-	EBO1.Unbind();
-
-	// Gets ID of uniform called "scale"
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
-
-
-	// Texture
-	Texture popCat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	//popCat.texUnit(shaderProgram, "tex0", 0);
-
-	Texture dirtTex("brick.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	dirtTex.texUnit(shaderProgram, "tex0", 0);
+	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
+	// Initalize map
+	Map* map = new Map(1);
+	map->addChunk(0);
+	map->loadMap();
 
 	// Creates camera object
 	// x z y
-	Player camera(width, height, glm::vec3(0.0f, 10.0f, 0.0f));
+	Player camera(width, height, glm::vec3(10.0f, 50.0f, 10.0f));
 
 	// Variables to create periodic event for FPS displaying
 	double prevTime = 0.0;
@@ -123,9 +232,18 @@ int main()
 	std::deque<UpdatePacket> updateQue;
 	std::vector<glm::vec3> playerVerts;
 
-	// Main while loop
+	// Gets block coordinates for detection logic
+	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
+
+	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+		crntTime = glfwGetTime();
+		timeDiff = crntTime - prevTime;
+		counter++;
+
+		// Update que
+		// %TODO: change in future to only due X number of actions per frame for performance purposes.
 		bool updateFlag = false;
 		while (updateQue.size() > 0) {
 			UpdatePacket target = updateQue[0];
@@ -136,36 +254,26 @@ int main()
 			updateFlag = true;
 		}
 
-
+		// World Logic
 		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
 		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
 		if (newX != posX || newY != posY) {
 
-			fprintf(stdout, "%d %d \n", newX, newY);
+			//fprintf(stdout, "%d %d \n", newX, newY);
 			map->playerPositionCord(newX, newY);
 			map->addChunk(-1);
 			map->printChunks();
 			posX = newX;
 			posY = newY;
-
-			std::cout << "Size of the vector: " << vec.size() << std::endl;
-			std::cout << "Size of the vector: " << ind.size() << std::endl;
 			updateFlag = true;
 		}
-
+		// Update que
+		// % TODO: Chunks should not be all loading in one frame, this causes stutters.
+		// Chunk loading should be done block by block via the update que.
 		if (updateFlag == true) {
 			map->updateMap(0, 0);
-			std::vector<GLfloat> vec = map->getVerts();
-			std::vector<GLuint> ind = map->getInds();
-			VBO1.updateData(vec.data(), vec.size() * sizeof(GLfloat));
-			EBO1.UpdateData(ind.data(), ind.size() * sizeof(GLuint));
+			blockCords = map->getBlockCordinates();
 		}
-		
-
-		// Updates counter and times
-		crntTime = glfwGetTime();
-		timeDiff = crntTime - prevTime;
-		counter++;
 
 		if (timeDiff >= 1.0 / 30.0)
 		{
@@ -184,68 +292,33 @@ int main()
 		}
 
 		// Specify the color of the background
-		glClearColor(0.68f, 0.85f, 0.9f, 1.0f); 
+		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
 		// Clean the back buffer and depth buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// Tell OpenGL which Shader Program we want to use
-		shaderProgram.Activate();
+
 
 		// update current position of player hitbox
 		camera.updateBoundingBox();
-
-		
 		// Handles camera inputs
 		// Collision self contained with player class.
-		std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-		camera.Inputs(window, timeDiff, blockCords);
-
-
-		playerVerts = map->getPlayerChunk();
-		if (glfwGetKey(window, GLFW_KEY_P) != GLFW_RELEASE) {
-			// destroy block
-			// NOTE: This is a work around currently, instead in the future, this  logic should be placed within camera class
-			// but currently there is no way for us to recieve a list of triangles from main when p is pressed from inputs.
-			// We could potentially send a vector of blocks to check to Camera.inputs(window) in the future each tick.
-
-			//Current solution checks all verticies/triangle faces of current chunk.
-			// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
-			
-			Ray ray = camera.GetMouseRay(window, camera.getView(), camera.getProjection(45.0f, 0.1f, 100.0f));
-			
-			for (int i = 0; i < playerVerts.size()/ 37; i++) {
-				std::vector<glm::vec3> temp;
-				glm::vec3 startBlock = playerVerts[i * 37];
-				for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
-					temp.push_back(playerVerts[j]);
-				}
-				if (camera.castRayForBlock(window, ray, startBlock, temp)) {
-
-					//IF FOUND CALL MAP SEND TO UPDATEQUE
-					UpdatePacket newPacket(startBlock, posX, posY);
-					updateQue.push_back(newPacket);
-					break;
-				}
-			}
-			
+		if (updateFlag != true) {
+			playerVerts = map->getPlayerChunk(camera.Position);
+			camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
 		}
+		//playerVerts = map->getPlayerChunk(camera.Position);
+		//camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		//%TODO: Player is gets stuck in blocks when a frame where new chunks must be loaded occurs.
+		// Why is this happening? We get the new block coordinates on chunk updates, so collision should carry over?
+		// Current work around is to NOT update the players position during a chunk loading frame.
 		
-
-		
-		
-
-
 		// Updates and exports the camera matrix to the Vertex Shader
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+		camera.updateMatrix(90.0f, 0.1f, 100.0f);
 
-		// Binds texture so that is appears in rendering
-		dirtTex.Bind();
 
-		// Bind the VAO so OpenGL knows to use it
-		VAO1.Bind();
-
-		
-		// Draw primitives, number of indices, datatype of indices, index of indices
-		glDrawElements(GL_TRIANGLES, map->getNumBlocks() * 36, GL_UNSIGNED_INT, 0);
+		// Draws different meshes
+		// ok not drawing the block apparently jsut ruins the shader, no block no shader
+		light.Draw(lightShader, camera);
+		map->drawMap(shaderProgram, camera);
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
@@ -255,11 +328,8 @@ int main()
 
 
 	// Delete all the objects we've created
-	VAO1.Delete();
-	VBO1.Delete();
-	EBO1.Delete();
-	dirtTex.Delete();
 	shaderProgram.Delete();
+	lightShader.Delete();
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program
