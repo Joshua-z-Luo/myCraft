@@ -614,6 +614,7 @@
     <Text Include="libraries\include\stb\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="entities\src\grass.png" />
     <Image Include="textures\brick.png" />
     <Image Include="textures\grass.png" />
     <Image Include="pop_cat.png" />

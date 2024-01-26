@@ -2,9 +2,10 @@
 
 Mesh::Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures)
 {
-	Mesh::vertices = vertices;
-	Mesh::indices = indices;
-	Mesh::textures = textures;
+	this->vertices = vertices;
+	this->indices = indices;
+	this->textures = textures;
+	//fprintf(stdout, "%d inner \n", textures.size());
 	
 	VAO.Bind();
 	// Generates Vertex Buffer Object and links it to vertices
@@ -37,12 +38,19 @@ void Mesh::Draw(Shader& shader, Player& camera)
 	{
 		std::string num;
 		std::string type = textures[i].type;
+		GLenum error = glGetError();
+		if (error != GL_NO_ERROR) {
+			printf("textuer problem \n");
+		}
+
 		if (type == "diffuse")
 		{
+			printf("type 1 \n");
 			num = std::to_string(numDiffuse++);
 		}
 		else if (type == "specular")
 		{
+			printf("type 2 \n");
 			num = std::to_string(numSpecular++);
 		}
 
@@ -55,6 +63,6 @@ void Mesh::Draw(Shader& shader, Player& camera)
 
 	// Draw the actual mesh
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-
+	//glUseProgram(0);
 	
 }

@@ -23,16 +23,10 @@
 
 #include"entities/header/Mesh.h"
 
-
-
-const unsigned int width = 800;
-const unsigned int height = 800;
-
+/*
 GLfloat x = 0;
 GLfloat y = 0;
 GLfloat z = 0;
-
-
 Vertex vertices[] =
 {
 	// Top face
@@ -92,13 +86,13 @@ GLint indices[] =
 
 	// Bottom face
 	20, 21, 22, 22, 23, 20
-};
+};*/
 
 Vertex lightVertices[] =
 {
 	// Updated coordinates to make the light block 0.5 times in size
 	Vertex{glm::vec3(-0.5f, -0.5f,  0.5f)},
-	Vertex{glm::vec3(-0.5f, -0.5f, -0.5f)},
+	Vertex{glm::vec3(-0.5f, -0.50, -0.5f)},
 	Vertex{glm::vec3(0.5f, -0.5f, -0.5f)},
 	Vertex{glm::vec3(0.5f, -0.5f,  0.5f)},
 	Vertex{glm::vec3(-0.5f,  0.5f,  0.5f)},
@@ -123,6 +117,8 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
+const unsigned int width = 1200;
+const unsigned int height = 800;
 
 int main()
 {
@@ -157,8 +153,9 @@ int main()
 
 
 
-	// Texture data
-
+	// Temporary Texture data
+	// Want to move this into map in future.
+	/**/
 	Texture textures[]
 	{
 		Texture(("textures/grass.png"), "diffuse", 0, GL_RGBA, GL_UNSIGNED_BYTE),
@@ -172,27 +169,13 @@ int main()
 	};
 
 
-
 	// Generates Shader object using shaders default.vert and default.frag
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
-
-	// Initalize map on heap
-	Map* map = new Map(1);
-	map->addChunk(0);
-	map->loadMap();
-	//std::vector<GLfloat> vect = map->getVerts();
-	//std::vector<GLuint> indi =->getInds();
-
 
 	// Store mesh data in vectors for the mesh
 	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
 	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
-	std::vector <Texture> tex1(textures, textures + sizeof(textures) / sizeof(Texture));
-	// Create block mesh
-	//Mesh block(verts, ind, tex);
-
-
-
+	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
 	// Shader for light cube
 	Shader lightShader("shaders/light.vert", "shaders/light.frag");
@@ -200,10 +183,10 @@ int main()
 	std::vector <Vertex> lightVerts(lightVertices, lightVertices + sizeof(lightVertices) / sizeof(Vertex));
 	std::vector <GLuint> lightInd(lightIndices, lightIndices + sizeof(lightIndices) / sizeof(GLuint));
 	// Create light mesh
-	Mesh light(lightVerts, lightInd, tex1);
+	Mesh light(lightVerts, lightInd, tex);
 
 	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(2.0f, 20.0f, 2.0f);
+	glm::vec3 lightPos = glm::vec3(2.0f, 15.0f, 2.0f);
 	glm::mat4 lightModel = glm::mat4(1.0f);
 	lightModel = glm::translate(lightModel, lightPos);
 
@@ -221,8 +204,16 @@ int main()
 	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	
+
+	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
+
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
+
+	// Initalize map
+	Map* map = new Map(1);
+	map->addChunk(0);
+	map->loadMap();
 
 	// Creates camera object
 	// x z y
@@ -244,9 +235,10 @@ int main()
 	// Enables the Depth Buffer
 	glEnable(GL_DEPTH_TEST);
 
-
+	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-	// Main while loop
+
+	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
 		crntTime = glfwGetTime();
@@ -332,7 +324,6 @@ int main()
 
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
-		//block.Draw(shaderProgram, camera);
 		light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
 		// Swap the back buffer with the front buffer

@@ -40,7 +40,12 @@ Texture::Texture(const char* image, const char* texType, GLuint slot, GLenum for
 	stbi_image_free(bytes);
 
 	// Unbinds the OpenGL Texture object so that it can't accidentally be modified
-	glBindTexture(GL_TEXTURE_2D, 0);
+	//glBindTexture(GL_TEXTURE_2D, 0);
+	GLenum error = glGetError();
+	if (error != GL_NO_ERROR) {
+		printf("textuer problem \n");
+	}
+
 }
 
 void Texture::texUnit(Shader& shader, const char* uniform, GLuint unit)

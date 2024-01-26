@@ -11,6 +11,7 @@
 #include <cstdlib>
 #include "memory"
 #include "../../player/Player.h"
+#include "../../Texture.h"
 
 /*
 Map class responsible for all game logic regarding world generation.
