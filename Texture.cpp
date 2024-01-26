@@ -42,9 +42,6 @@ Texture::Texture(const char* image, const char* texType, GLuint slot, GLenum for
 	// Unbinds the OpenGL Texture object so that it can't accidentally be modified
 	//glBindTexture(GL_TEXTURE_2D, 0);
 	GLenum error = glGetError();
-	if (error != GL_NO_ERROR) {
-		printf("textuer problem \n");
-	}
 
 }
 

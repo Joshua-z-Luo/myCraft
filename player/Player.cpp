@@ -236,34 +236,25 @@ void Player::detectCollison(float delta, std::vector<glm::vec3> blockCords)
 
 void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords, glm::vec3 normalForces, float remainingtime)
 {
-	//fprintf(stdout, "%f, %f, %f normals \n", normalForces.x, normalForces.z, normalForces.y );
 	if (normalForces.y != 0.0f) {
 		float dotprod = ((Direction.y * normalForces.z) + (Direction.z * normalForces.y));
 		float dotprodx = ((Direction.y * normalForces.x) + (Direction.x * normalForces.y));
 		Direction.y = (dotprod * normalForces.z) + (dotprodx * normalForces.x);
 		Direction.z = dotprod * normalForces.y;
 		Direction.x = dotprodx * normalForces.y;
-		//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 		// remainingtime * delta is the time left in the game tick.
 		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
 		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 		glm::vec3 displacement = (speed * delta) * Direction;
 		displacement.y = (airSpeed * delta) * Direction.y;
-		//fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
 		// If we have a secondary collision during sliding
 		if (collisiontime < remainingtime && collisiontime >= 0.0) {
 			displacement = displacement * collisiontime;
 		}
 		remainingtime = remainingtime - collisiontime;
 		MovePlayer(displacement);
-		/*
-		if (normalForces.y != 0.0f && inAir == true) {
-			inAir = false;
-		}
-		else {
-			inAir = true;
-		}*/
+
 	}
 	else if (normalForces.x != 0.0f) {
 		float dotprod = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
@@ -273,14 +264,12 @@ void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords
 		Direction.y = dotprody * normalForces.x;
 
 
-		//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 		// remainingtime * delta is the time left in the game tick.
 		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
 		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 		glm::vec3 displacement = (speed * delta) * Direction;
 		displacement.y = (airSpeed * delta) * Direction.y;
-		//fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
 		// If we have a secondary collision during sliding
 		if (collisiontime < remainingtime && collisiontime >= 0.0) {
 			displacement = displacement * collisiontime; // this sometimes causes an error
@@ -291,18 +280,15 @@ void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords
 	else if (normalForces.z != 0.0f) {
 		float dotprod = ((Direction.y * normalForces.z) + (Direction.z * normalForces.y));
 		float dotprodx = ((Direction.x * normalForces.z) + (Direction.z * normalForces.x));
-		//Direction.x = dotprod * normalForces.z;
 		Direction.z = (dotprod * normalForces.y) + (dotprodx * normalForces.x);
 		Direction.y = dotprod * normalForces.z;
 		Direction.x = dotprodx * normalForces.z;
-		//fprintf(stdout, "value : %f %f %f  direction \n", Direction.x, Direction.z, Direction.y);
 
 		// remainingtime * delta is the time left in the game tick.
 		std::vector<glm::vec3> broadPhase = broadSweep(blockCords, delta);
 		float collisiontime = sweeptAABB(broadPhase, normalForces, delta);
 		glm::vec3 displacement = (speed * delta) * Direction;
 		displacement.y = (airSpeed * delta) * Direction.y;
-		//fprintf(stdout, "value : %f %f %f  displacement \n", displacement.x, displacement.z, displacement.y);
 		// If we have a secondary collision during sliding
 		if (collisiontime < remainingtime && collisiontime >= 0.0) {
 			displacement = displacement * collisiontime;
@@ -355,7 +341,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	speed = 0.0f;
 	float newAirSpeed = 0.0f;
 	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
-	float frameSpeed = 7.0f;
+	float frameSpeed = 5.0f;
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -377,7 +363,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	
 	grounded(blockCords);
 	// Jump logic
-	fprintf(stdout, "%f %d\n", airSpeed, inAir);
+	//fprintf(stdout, "%f %d\n", airSpeed, inAir);
 	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
 	{
 		spacePressed = true;

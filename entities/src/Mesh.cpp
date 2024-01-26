@@ -38,19 +38,13 @@ void Mesh::Draw(Shader& shader, Player& camera)
 	{
 		std::string num;
 		std::string type = textures[i].type;
-		GLenum error = glGetError();
-		if (error != GL_NO_ERROR) {
-			printf("textuer problem \n");
-		}
 
 		if (type == "diffuse")
 		{
-			printf("type 1 \n");
 			num = std::to_string(numDiffuse++);
 		}
 		else if (type == "specular")
 		{
-			printf("type 2 \n");
 			num = std::to_string(numSpecular++);
 		}
 

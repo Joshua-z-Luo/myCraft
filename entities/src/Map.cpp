@@ -77,7 +77,7 @@ void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 	// Currently using Map class member variable of player position to find chunk to remove block
 	// In future, needs to depend on given xID, yID instead of member varaible, for extendability of method.
 
-	fprintf(stdout, " remove: x: %d y: %d \n", x, y);
+	//fprintf(stdout, " remove: x: %d y: %d \n", x, y);
 	(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
 }
 
