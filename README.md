@@ -69,7 +69,7 @@ Hold Leftclick - Rotate player camera
 ## Patch Notes
 
 <details>
-<summary>Section 1</summary>
+<summary> 0.1 [LATEST PATCH] </summary>
 
 ### Section 1 Content
 
@@ -78,7 +78,7 @@ This is the content of section 1.
 </details>
 
 <details>
-<summary>Section 2</summary>
+<summary>Filler </summary>
 
 ### Section 2 Content
 
