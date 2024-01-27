@@ -99,22 +99,43 @@ std::array<bool, 6> Chunk::checkBlockNeighbours(int x, int y, int z)
 {
 
 	std::array<bool, 6> result = {false, false, false, false, false, false};
-	if (z + 1 < Constants::CHUNK_SIZE && BlocksArray[x][y][z + 1] == -1) {
+	if (z + 1 >= Constants::CHUNK_SIZE) {
 		result[0] = true;
 	}
-	if (z - 1 >= 0 && BlocksArray[x][y][z - 1] == -1) {
+	else if (BlocksArray[x][y][z + 1] == -1) {
+		result[0] = true;
+	}
+
+	if (z - 1 <  Constants::CHUNK_SIZE) {
 		result[1] = true;
 	}
-	if (y + 1 < Constants::CHUNK_SIZE && BlocksArray[x][y + 1][z] == -1) {
+	else if (BlocksArray[x][y][z - 1] == -1) {
+		result[1] = true;
+	}
+	if (y + 1 >= Constants::CHUNK_SIZE) {
 		result[2] = true;
 	}
-	if (x + 1 < Constants::CHUNK_SIZE && BlocksArray[x + 1][y][z] == -1) {
+	else if ( BlocksArray[x][y + 1][z] == -1) {
+		result[2] = true;
+	}
+
+	if (x + 1 >= Constants::CHUNK_SIZE) {
 		result[3] = true;
 	}
-	if (x - 1 >= 0 && BlocksArray[x - 1][y][z] == -1) {
+	else if (BlocksArray[x + 1][y][z] == -1) {
+		result[3] = true;
+	}
+	if (x - 1 < Constants::CHUNK_SIZE) {
 		result[5] = true;
 	}
-	if (y - 1 >= 0 && BlocksArray[x][y - 1][z] == -1) {
+	else if (BlocksArray[x - 1][y][z] == -1) {
+		result[5] = true;
+	}
+
+	if (y - 1 <  0) {
+		result[4] = true;
+	}
+	else if (BlocksArray[x][y - 1][z] == -1) {
 		result[4] = true;
 	}
 	return result;

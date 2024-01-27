@@ -341,7 +341,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	speed = 0.0f;
 	float newAirSpeed = 0.0f;
 	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
-	float frameSpeed = 5.0f;
+	float frameSpeed = 4.0f;
 
 	// Handles key inputs
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
