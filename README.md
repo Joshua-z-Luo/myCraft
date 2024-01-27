@@ -68,8 +68,6 @@ Hold Leftclick - Rotate player camera
 <!-- PATCH NOTES -->
 ## Patch Notes
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 <details>
 <summary>Section 1</summary>
 
@@ -87,6 +85,8 @@ This is the content of section 1.
 This is the content of section 2.
 
 </details>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
