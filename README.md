@@ -56,8 +56,11 @@ To try it out, please download, extract, and run myCraft.exe located in the zip 
 https://drive.google.com/drive/folders/1IDa2FCzghfAotbLsF4xUDhqKfRIdcPF5?usp=sharing
 
 The basic control layout is:
+
 W, A, S, D - Forward, Left, Backwards, Right
+
 SPACEBAR - Jump
+
 Hold Leftclick - Rotate player camera
 
 <!-- CONTACT -->
