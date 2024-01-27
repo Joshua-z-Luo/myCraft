@@ -63,8 +63,12 @@ SPACEBAR - Jump
 
 Hold Leftclick - Rotate player camera
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- PATCH NOTES -->
-## PATCH NOTES
+## Patch Notes
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <details>
 <summary>Section 1</summary>
