@@ -17,9 +17,6 @@
   <summary>Table of Contents</summary>
   <ol>
     <li>
-      <a href="#history-of-development">History of Development</a>
-    </li>
-    <li>
       <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#built-with">Built With</a></li>
@@ -27,6 +24,9 @@
     </li>
     <li>
       <a href="#getting-started">Getting Started</a>
+    </li>
+    <li>
+      <a href="#history-of-development">History of Development</a>
     </li>
     <li><a href="#contact">Contact</a></li>
   </ol>
@@ -54,6 +54,11 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 
 To try it out, please download, extract, and run myCraft.exe located in the zip file in the google drive folder below:
 https://drive.google.com/drive/folders/1IDa2FCzghfAotbLsF4xUDhqKfRIdcPF5?usp=sharing
+
+The basic control layout is:
+W, A, S, D - Forward, Left, Backwards, Right
+SPACEBAR - Jump
+Hold Leftclick - Rotate player camera
 
 <!-- CONTACT -->
 ## Contact
