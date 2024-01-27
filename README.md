@@ -63,6 +63,27 @@ SPACEBAR - Jump
 
 Hold Leftclick - Rotate player camera
 
+<!-- PATCH NOTES -->
+## PATCH NOTES
+
+<details>
+<summary>Section 1</summary>
+
+### Section 1 Content
+
+This is the content of section 1.
+
+</details>
+
+<details>
+<summary>Section 2</summary>
+
+### Section 2 Content
+
+This is the content of section 2.
+
+</details>
+
 <!-- CONTACT -->
 ## Contact
 Feel free to contact us at:
