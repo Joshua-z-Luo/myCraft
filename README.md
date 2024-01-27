@@ -26,7 +26,7 @@
       <a href="#getting-started">Getting Started</a>
     </li>
     <li>
-      <a href="patch-notes">Patch Notes</a>
+      <a href="#patch-notes">Patch Notes</a>
     </li>
     <li><a href="#contact">Contact</a></li>
   </ol>
