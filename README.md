@@ -32,19 +32,6 @@
   </ol>
 </details>
 
-## History of Development
-![pic6](./images/image6.png)
-![pic5](./images/image5_1.png)
-![pic4](./images/image4.png)
-![pic3](./images/image3.png)
-![pic2](./images/image2.png)
-![pic1](./images/image1.png)
-
-
-
-
-
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
@@ -65,6 +52,8 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 <!-- GETTING STARTED -->
 ## Getting Started
 
+To try it out, please download, extract, and run myCraft.exe located in the zip file in the google drive folder below:
+https://drive.google.com/drive/folders/1IDa2FCzghfAotbLsF4xUDhqKfRIdcPF5?usp=sharing
 
 <!-- CONTACT -->
 ## Contact
