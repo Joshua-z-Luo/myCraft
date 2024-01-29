@@ -76,6 +76,7 @@ Hold Leftclick - Rotate player camera
 Hi! Here is some stuff we added.
 
 Implemented:
+
   -> Basic procedural generation via Simplex Noise
     - Map is generated in chunks, 32 x 32 x 32 blocks in size.
     - The blocks in each chunk are all drawn as one mesh to reduce number of draw calls sent to gpu per frame.
