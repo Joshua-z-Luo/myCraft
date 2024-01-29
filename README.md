@@ -73,11 +73,33 @@ Hold Leftclick - Rotate player camera
 
 ### Release Patch!
 
-This is the content of section 1.
+Hi! Here is some stuff we added.
+
+Implemented:
+  -> Basic procedural generation via Simplex Noise
+    - Map is generated in chunks, 32 x 32 x 32 blocks in size.
+    - The blocks in each chunk are all drawn as one mesh to reduce number of draw calls sent to gpu per frame.
+    I started by rendering each block as an indvidual mesh, and this caused SIGNIFIGANT performance issues. By
+    switching to rendering chunks, performance has greatly increased as we are only sending 9 draw calls as only
+    9 chunks are ever loaded at the same time.
+
+  -> General Collision detection using Swept AABB
+    - Initally started with basic AABB for collision detection but could not create smooth 3d collision reactions 
+    with so many different possible collision objects in the gamespace.
+    - Swept AABB instead calculates the future position of an entity and sees if it collides with any block. If it does
+    It stops the object just before touching the block. This greatly reduces clipping, and allows our reactions to be
+    more seemless.
+
+  -> [EXPERIMENTAL] Block Destruction
+    - Player can press P to cast a ray, if the ray finds a block that block is deleted.
+    - Very janky right now, as while the ray casting works well, the way we get the possible blocks for the ray to collide
+    with is by getting all loaded blocks and checking if ray collides with each one. There is currently no check to see
+    which block the ray should remove in the list of blocks, so it removes the first one it finds in the list. This means
+    it will not necessarily remove the block that the player intends to remove, but rather the first block along the ray
+    that it encounters within the list of all blocks. So it could remove a block on the far side of the hill, instead of the
+    blcok the player is staring at.
 
 </details>
-
-<details>
   
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
