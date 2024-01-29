@@ -71,21 +71,14 @@ Hold Leftclick - Rotate player camera
 <details>
 <summary> 0.1 [LATEST PATCH] </summary>
 
-### Section 1 Content
+### Release Patch!
 
 This is the content of section 1.
 
 </details>
 
 <details>
-<summary>Filler </summary>
-
-### Section 2 Content
-
-This is the content of section 2.
-
-</details>
-
+  
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
