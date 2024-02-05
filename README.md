@@ -38,7 +38,8 @@
 This is an ongoing personal learning project to help us familiarize ourselves with GPU API's such as OpenGL and continue to further our skill as game developers.
 
 The game is a Minecraft style, procedurally generated voxel sandbox.
-![pic2](./images/image2.png)
+
+![pic2](./images/image.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
