@@ -39,7 +39,7 @@ This is an ongoing personal learning project to help us familiarize ourselves wi
 
 The game is a Minecraft style, procedurally generated voxel sandbox.
 
-![pic2](./images/image.png)
+![pic1](./images/image.png)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
