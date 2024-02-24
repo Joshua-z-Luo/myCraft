@@ -245,7 +245,7 @@ int main()
 		// Update que
 		// %TODO: change in future to only due X number of actions per frame for performance purposes.
 		bool updateFlag = false;
-		while (updateQue.size() > 0) {
+		if (updateQue.size() > 0) {
 			UpdatePacket target = updateQue[0];
 			glm::vec3 deleteBlock = target.getTargetBlock();
 
