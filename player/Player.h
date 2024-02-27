@@ -116,6 +116,7 @@ public:
 
 	// Exports Frustum Planes of player
 	std::vector<glm::vec4> extractFrustumPlanes();
+	std::vector<glm::vec4> extractFrustumPlanes(const glm::mat4& viewProjectionMatrix);
 };
 
 #endif

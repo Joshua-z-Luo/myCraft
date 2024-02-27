@@ -636,3 +636,55 @@ std::vector<glm::vec4> Player::extractFrustumPlanes()
 	}*/
 	return result;
 }
+
+
+/*
+ Gets the Frustum planes of the player camera but with custom Projection View matrix.
+*/
+std::vector<glm::vec4> Player::extractFrustumPlanes(const glm::mat4& viewProjectionMatrix)
+{
+
+	std::vector<glm::vec4> result;
+	glm::mat4 invTranspose = glm::transpose(viewProjectionMatrix);
+
+	// Extracting left plane
+	glm::vec4 leftPlane = invTranspose[3] + invTranspose[0];
+	// Normalize the plane
+	leftPlane /= glm::length(glm::vec3(leftPlane));
+	result.push_back(leftPlane);
+
+	// Extracting right plane
+	glm::vec4 rightPlane = invTranspose[3] - invTranspose[0];
+	// Normalize the plane
+	rightPlane /= glm::length(glm::vec3(rightPlane));
+	result.push_back(rightPlane);
+
+	// Extracting bottom plane
+	glm::vec4 bottomPlane = invTranspose[3] + invTranspose[1];
+	// Normalize the plane
+	bottomPlane /= glm::length(glm::vec3(bottomPlane));
+	result.push_back(bottomPlane);
+
+	// Extracting top plane
+	glm::vec4 topPlane = invTranspose[3] - invTranspose[1];
+	// Normalize the plane
+	topPlane /= glm::length(glm::vec3(topPlane));
+	result.push_back(topPlane);
+
+	// Extracting near plane
+	glm::vec4 nearPlane = invTranspose[3] + invTranspose[2];
+	// Normalize the plane
+	nearPlane /= glm::length(glm::vec3(nearPlane));
+	result.push_back(nearPlane);
+
+	// Extracting far plane
+	glm::vec4 farPlane = invTranspose[3] - invTranspose[2];
+	// Normalize the plane
+	farPlane /= glm::length(glm::vec3(farPlane));
+	result.push_back(farPlane);
+	/*
+	for (const auto& plane : result) {
+		std::cout << "(" << plane.x << ", " << plane.y << ", " << plane.z << ", " << plane.w << ")" << std::endl;
+	}*/
+	return result;
+}

@@ -302,7 +302,14 @@ int main()
 		// Handles camera inputs
 		// Collision self contained with player class.
 		if (updateFlag != true) {
-			playerVerts = map->getPlayerChunk(camera.Position, camera.extractFrustumPlanes());
+			glm::mat4 view = glm::mat4(1.0f);
+			glm::mat4 projection = glm::mat4(1.0f);
+			view = camera.getView();
+			projection = camera.getProjection(45.0f, 0.1f, 10.0f);
+			// verticies of visable blocks
+			playerVerts = map->getPlayerChunk(camera.Position, camera.extractFrustumPlanes(projection * view));
+
+			// controls
 			camera.Inputs(window, timeDiff, blockCords, playerVerts, &updateQue, posX, posY);
 		}
 		//playerVerts = map->getPlayerChunk(camera.Position);

@@ -503,23 +503,6 @@ First index of each 36 is the position of the block in the world, while the last
 */
 std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes)
 {
-
-	/*
-	std::vector<compBlock*> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
-	std::vector<glm::vec3> result;
-
-	std::sort(temp.begin(), temp.end(), [&](compBlock * p1, compBlock * p2) {
-		return sortByDistance(playerBlock, p1, p2);
-		});
-	for (int i = 0; i < temp.size(); i++) {
-		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
-		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
-		glm::vec3* array = block.getTriangles();
-		for (int num = 0; num < 36; num++) {
-			result.push_back(array[num]);
-		}
-		delete[] array;
-	}*/
 	// USING BLOCKS VEC vvvvv
 	std::vector<glm::vec3> result;
 	std::vector<compBlock> temp;
