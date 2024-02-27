@@ -14,6 +14,11 @@ void Player::MovePlayer(glm::vec3 displacement)
 	Position += displacement;
 }
 
+glm::vec3 Player::getOrientation()
+{
+	return Orientation;
+}
+
 void Player::setPlayerMovement(float frameSpeed, glm::vec3 direction, float newAirSpeed)
 {
 	Direction = direction;
@@ -335,8 +340,9 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 
 
 
-void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3>* playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY)
+void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY)
 {
+	//printf("%d number of triangles in playerverts \n", playerVerts->size());
 	// Binds speed to real time not frames per second.
 	speed = 0.0f;
 	float newAirSpeed = 0.0f;
@@ -405,23 +411,24 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
 
 		pPressed = true;
-		Ray ray = GetMouseRay(window, getView(), getProjection(45.0f, 0.1f, 100.0f));
-
-		for (int i = 0; i < playerVerts->size() / 37; i++) {
+		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
+		for (int i = 0; i < playerVerts.size() / 37; i++) {
 			std::vector<glm::vec3> temp;
-			glm::vec3 startBlock = (*playerVerts)[i * 37];
+			glm::vec3 startBlock = playerVerts[i * 37];
 			for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
-				temp.push_back((*playerVerts)[j]);
+				temp.push_back(playerVerts[j]);
 			}
 			if (castRayForBlock(window, ray, startBlock, temp)) {
 
 				//IF FOUND CALL MAP SEND TO UPDATEQUE
+				// porblem is here
+				//printf("%f %f %f here\n", startBlock.x, startBlock.y, startBlock.z);
 				UpdatePacket newPacket(startBlock, posX, posY);
 				updateQue->push_back(newPacket);
 				break;
 			}
 		}
-
+		
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE) {
@@ -489,7 +496,8 @@ void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mou
 
 bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
 {
-
+	// triangles is literlly every triangle in the chunk.
+	// try and reduce 
 	for (int i = 0; i < triangles.size(); i += 3)
 	{
 		glm::vec3 v0 = triangles[i];
@@ -503,7 +511,7 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 			return true;
 		}
 	}
-
+	
 	// No intersection with any triangle
 	return false;
 }
@@ -576,4 +584,55 @@ void Player::Matrix(Shader& shader, const char* uniform)
 {
 	// Exports camera matrix
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
+}
+
+/*
+ Gets the Frustum planes of the player camera.
+*/
+std::vector<glm::vec4> Player::extractFrustumPlanes()
+{
+
+	std::vector<glm::vec4> result;
+	glm::mat4 invTranspose = glm::transpose(cameraMatrix);
+
+	// Extracting left plane
+	glm::vec4 leftPlane = invTranspose[3] + invTranspose[0];
+	// Normalize the plane
+	leftPlane /= glm::length(glm::vec3(leftPlane));
+	result.push_back(leftPlane);
+
+	// Extracting right plane
+	glm::vec4 rightPlane = invTranspose[3] - invTranspose[0];
+	// Normalize the plane
+	rightPlane /= glm::length(glm::vec3(rightPlane));
+	result.push_back(rightPlane);
+
+	// Extracting bottom plane
+	glm::vec4 bottomPlane = invTranspose[3] + invTranspose[1];
+	// Normalize the plane
+	bottomPlane /= glm::length(glm::vec3(bottomPlane));
+	result.push_back(bottomPlane);
+
+	// Extracting top plane
+	glm::vec4 topPlane = invTranspose[3] - invTranspose[1];
+	// Normalize the plane
+	topPlane /= glm::length(glm::vec3(topPlane));
+	result.push_back(topPlane);
+
+	// Extracting near plane
+	glm::vec4 nearPlane = invTranspose[3] + invTranspose[2];
+	// Normalize the plane
+	nearPlane /= glm::length(glm::vec3(nearPlane));
+	result.push_back(nearPlane);
+
+	// Extracting far plane
+	glm::vec4 farPlane = invTranspose[3] - invTranspose[2];
+	// Normalize the plane
+	farPlane /= glm::length(glm::vec3(farPlane));
+	result.push_back(farPlane);
+	/*
+	for (const auto& plane : result) {
+		std::cout << "(" << plane.x << ", " << plane.y << ", " << plane.z << ", " << plane.w << ")" << std::endl;
+	}*/
+	return result;
 }

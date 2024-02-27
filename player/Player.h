@@ -74,6 +74,8 @@ public:
 	void MovePlayer(glm::vec3 displacement);
 
 
+	glm::vec3 getOrientation();
+
 	// Set player movement for collision detection
 	void setPlayerMovement(float frameSpeed, glm::vec3 direction, float newAirSpeed);
 	glm::vec3 getDirection();
@@ -92,7 +94,7 @@ public:
 	void grounded(std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
 
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
@@ -111,6 +113,9 @@ public:
 	// Exports the camera matrix to a shader
 	void Matrix(Shader& shader, const char* uniform);
 
+
+	// Exports Frustum Planes of player
+	std::vector<glm::vec4> extractFrustumPlanes();
 };
 
 #endif

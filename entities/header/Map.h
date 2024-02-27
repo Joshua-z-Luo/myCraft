@@ -12,6 +12,7 @@
 #include "memory"
 #include "../../player/Player.h"
 #include "../../Texture.h"
+#include <algorithm>
 
 /*
 Map class responsible for all game logic regarding world generation.
@@ -78,7 +79,7 @@ public:
 	std::vector<GLuint> getInds();
 	int getNumChunks();
 
-	std::vector<glm::vec3> getPlayerChunk(glm::vec3 playerBlock);
+	std::vector<glm::vec3> getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes);
 	std::vector<glm::vec3> getBlockCordinates();
 
 };

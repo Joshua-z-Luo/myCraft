@@ -302,8 +302,8 @@ int main()
 		// Handles camera inputs
 		// Collision self contained with player class.
 		if (updateFlag != true) {
-			playerVerts = map->getPlayerChunk(camera.Position);
-			camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+			playerVerts = map->getPlayerChunk(camera.Position, camera.extractFrustumPlanes());
+			camera.Inputs(window, timeDiff, blockCords, playerVerts, &updateQue, posX, posY);
 		}
 		//playerVerts = map->getPlayerChunk(camera.Position);
 		//camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
@@ -323,6 +323,7 @@ int main()
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
+		//printf("x %f, y %f z %f \n", camera.Position.x, camera.Position.y, camera.Position.z);
 	}
 
 
