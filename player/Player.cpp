@@ -405,7 +405,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 
 	// Handles editing
 
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && pPressed == false) {
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false) {
 		// destroy block
 		//Current solution checks all verticies/triangle faces of current chunk.
 		// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
@@ -419,10 +419,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				temp.push_back(playerVerts[j]);
 			}
 			if (castRayForBlock(window, ray, startBlock, temp)) {
-
 				//IF FOUND CALL MAP SEND TO UPDATEQUE
-				// porblem is here
-				//printf("%f %f %f here\n", startBlock.x, startBlock.y, startBlock.z);
 				UpdatePacket newPacket(startBlock, posX, posY);
 				updateQue->push_back(newPacket);
 				break;
@@ -430,12 +427,52 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		}
 		
 	}
-
-	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE) {
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
 		pPressed = false;
 	}
 
+	/*
+	Code below slaves mouse to center of screen.
+	*/
+	// -----------------------------------------------------------------------------------------------
+	// Hides mouse cursor
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	// Prevents camera from jumping on the first click
+	if (firstClick)
+	{
+		glfwSetCursorPos(window, (width / 2), (height / 2));
+		firstClick = false;
+	}
+	// Stores the coordinates of the cursor
+	double mouseX;
+	double mouseY;
+	// Fetches the coordinates of the cursor
+	glfwGetCursorPos(window, &mouseX, &mouseY);
+
+	// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+	// and then "transforms" them into degrees 
+	float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+	float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
+
+	// Calculates upcoming vertical change in the Orientation
+	glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+
+	// Decides whether or not the next vertical Orientation is legal or not
+	if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+	{
+		Orientation = newOrientation;
+	}
+	// Rotates the Orientation left and right
+	Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+
+	// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+	glfwSetCursorPos(window, (width / 2), (height / 2));
+	
+	// -----------------------------------------------------------------------------------------------
+
+
 	// Handles mouse inputs
+	/*
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
 		// Hides mouse cursor
@@ -481,6 +518,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		// Makes sure the next time the camera looks around it doesn't jump
 		firstClick = true;
 	}
+	*/
 	
 
 	detectCollison(delta, blockCords);
