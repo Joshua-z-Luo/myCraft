@@ -17,7 +17,9 @@
 
 #include"entities/header/Block.h"
 #include "entities/header/Map.h"
+
 #include "gameLogic/UpdatePacket.h"
+#include "gameLogic/DestroyPacket.h"
 
 #include "constants.h"
 
@@ -229,7 +231,7 @@ int main()
 	int posX = 0;
 	int posY = 0;
 
-	std::deque<UpdatePacket> updateQue;
+	std::deque<std::unique_ptr<UpdatePacket>> updateQue;
 	std::vector<glm::vec3> playerVerts;
 
 	// Gets block coordinates for detection logic
@@ -246,10 +248,22 @@ int main()
 		// %TODO: change in future to only due X number of actions per frame for performance purposes.
 		bool updateFlag = false;
 		if (updateQue.size() > 0) {
-			UpdatePacket target = updateQue[0];
-			glm::vec3 deleteBlock = target.getTargetBlock();
+			printf("%d \n", updateQue[0]->getActionID());
+			switch (updateQue[0]->getActionID()) {
+			case 1:
+				glm::vec3 deleteBlock = updateQue[0]->conductAction();
+				map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z);
+				break;
+			case 2:
 
-			map->removeBlockFromChunk(target.getChunkX(), target.getChunkY(), deleteBlock.x, deleteBlock.y, deleteBlock.z);
+				break;
+			case 3:
+
+				break;
+			default:
+				printf(" no update \n");
+			}
+
 			updateQue.pop_front();
 			updateFlag = true;
 		}

@@ -12,7 +12,7 @@ Checks if ray intersects block.
 */
 bool Ray::rayIntersectsBlock(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t)
 {
-    const float EPSILON = 0.001f;
+    const float EPSILON = 0.0001f;
 
     glm::vec3 edge1, edge2, h, s, q;
     float a, f, u, v;

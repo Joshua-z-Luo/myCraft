@@ -8,7 +8,6 @@
 #include<glm/gtc/type_ptr.hpp>
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
-#include "../gameLogic/UpdatePacket.h"
 #include"../shaders/shaderClass/shaderClass.h"
 #include "Ray.h"
 #include "vector"
@@ -17,7 +16,10 @@
 
 #include "../constants.h"
 
+#include "../gameLogic/DestroyPacket.h"
+#include "../gameLogic/AddPacket.h"
 
+#include <algorithm>
 
 /*
 Player class. Replaces Camera class.
@@ -94,7 +96,7 @@ public:
 	void grounded(std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
 
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer

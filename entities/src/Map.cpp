@@ -470,9 +470,12 @@ int Map::getNumChunks()
 /*
 Helper functions for raycasting method.
 */
+
+// % TODO ISSUE WITH SORTING. 
+// SOME DISTANCES NOT PROPERLY CALCULATED 
 bool sortByDistance(glm::vec3 playerPos, compBlock blockPos, compBlock blockPos2) {
-	double dist1 = std::sqrt((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x) + (blockPos.y - playerPos.y) * (blockPos.y - playerPos.y) + (blockPos.z - playerPos.z) * (blockPos.z - playerPos.z));
-	double dist2 = std::sqrt((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x) + (blockPos2.y - playerPos.y) * (blockPos2.y - playerPos.y) + (blockPos2.z - playerPos.z) * (blockPos2.z - playerPos.z));
+	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.y) * (blockPos.y - playerPos.y)) + ((blockPos.z - playerPos.z) * (blockPos.z - playerPos.z)));
+	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.y) * (blockPos2.y - playerPos.y)) + ((blockPos2.z - playerPos.z) * (blockPos2.z - playerPos.z)));
 	return dist1 < dist2;
 }
 
@@ -529,7 +532,7 @@ std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<gl
 		delete[] array;
 	}
 	// Check if culling is working by printing number of triangles rendered.
-	printf("%d number of triangles, %d blocks vec \n", result.size(), BlocksVec.size());
+	//printf("%d number of triangles, %d blocks vec \n", result.size(), BlocksVec.size());
 	
 	return result;
 }

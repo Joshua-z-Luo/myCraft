@@ -149,6 +149,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="gameLogic\AddPacket.cpp" />
+    <ClCompile Include="gameLogic\DestroyPacket.cpp" />
     <ClCompile Include="entities\src\Mesh.cpp" />
     <ClCompile Include="entities\src\worldGen\compBlock.cpp" />
     <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
@@ -170,7 +172,9 @@
     <ClCompile Include="gameLogic\UpdatePacket.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameLogic\AddPacket.h" />
     <ClInclude Include="constants.h" />
+    <ClInclude Include="gameLogic\DestroyPacket.h" />
     <ClInclude Include="entities\header\Mesh.h" />
     <ClInclude Include="entities\header\worldGen\compBlock.h" />
     <ClInclude Include="entities\header\worldGen\Chunk.h" />

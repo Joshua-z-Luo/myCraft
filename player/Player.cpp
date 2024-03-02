@@ -339,8 +339,14 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 }
 
 
+// Sorting helper (for placing blocks)
+bool sortTriangleByDistance(glm::vec3 playerPos, glm::vec3 blockPos, glm::vec3 blockPos2) {
+	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.y) * (blockPos.y - playerPos.y)) + ((blockPos.z - playerPos.z) * (blockPos.z - playerPos.z)));
+	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.y) * (blockPos2.y - playerPos.y)) + ((blockPos2.z - playerPos.z) * (blockPos2.z - playerPos.z)));
+	return dist1 < dist2;
+}
 
-void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY)
+void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
 {
 	//printf("%d number of triangles in playerverts \n", playerVerts->size());
 	// Binds speed to real time not frames per second.
@@ -407,27 +413,53 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false) {
 		// destroy block
-		//Current solution checks all verticies/triangle faces of current chunk.
-		// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
-
 		pPressed = true;
 		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
 		for (int i = 0; i < playerVerts.size() / 37; i++) {
-			std::vector<glm::vec3> temp;
+			std::vector<glm::vec3> temp(36);
 			glm::vec3 startBlock = playerVerts[i * 37];
-			for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
-				temp.push_back(playerVerts[j]);
-			}
+			std::copy(playerVerts.begin() + (i * 37) + 1,
+				playerVerts.begin() + (i * 37) + 37,
+				temp.begin());
 			if (castRayForBlock(window, ray, startBlock, temp)) {
 				//IF FOUND CALL MAP SEND TO UPDATEQUE
-				UpdatePacket newPacket(startBlock, posX, posY);
-				updateQue->push_back(newPacket);
+				updateQue->push_back(std::make_unique<DestroyPacket>(startBlock));
 				break;
 			}
 		}
 		
 	}
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
+	
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false) {
+		// place block
+		pPressed = true;
+		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
+
+		// sort the player verts
+		for (int i = 0; i < playerVerts.size() / 37; i++) {
+			std::vector<glm::vec3> temp(36);
+			glm::vec3 startBlock = playerVerts[i * 37];
+			std::copy(playerVerts.begin() + (i * 37) + 1,
+				playerVerts.begin() + (i * 37) + 37,
+				temp.begin());
+
+			// sort triangles
+			std::sort(temp.begin(), temp.end(), [&](glm::vec3 p1, glm::vec3 p2) {
+				return sortTriangleByDistance(Position, p1, p2);
+				});
+			if (castRayForBlock(window, ray, startBlock, temp)) {
+				// IF FOUND CALL MAP SEND TO UPDATEQUE
+				// we need to find the normal of our intersection
+				// but our intersection could be literlly anywhere on the block since thats howe coded it 
+				// sort triangles by euclidian distance
+				// adujust startblock for placement of new block.
+				updateQue->push_back(std::make_unique<AddPacket>(startBlock));
+				break;
+			}
+		}
+
+	}
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
 		pPressed = false;
 	}
 
@@ -536,6 +568,9 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 {
 	// triangles is literlly every triangle in the chunk.
 	// try and reduce 
+
+	// sort triangles based on distance to player -> find normal of intersected triangle -> add normal to block position -> new block position is placed block position
+
 	for (int i = 0; i < triangles.size(); i += 3)
 	{
 		glm::vec3 v0 = triangles[i];
@@ -726,3 +761,5 @@ std::vector<glm::vec4> Player::extractFrustumPlanes(const glm::mat4& viewProject
 	}*/
 	return result;
 }
+
+
