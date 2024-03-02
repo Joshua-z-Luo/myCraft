@@ -69,7 +69,7 @@
     <ClCompile Include="gameLogic\UpdatePacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\src\Mesh.cpp">
+    <ClCompile Include="entities\src\Model\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="images\test.cpp">
@@ -82,6 +82,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="gameLogic\AddPacket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="entities\src\Model\Triangle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -983,7 +986,7 @@
     <ClInclude Include="gameLogic\UpdatePacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\header\Mesh.h">
+    <ClInclude Include="entities\header\Model\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="player\Player.h">
@@ -993,6 +996,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gameLogic\AddPacket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="entities\header\Model\Triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

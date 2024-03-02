@@ -504,10 +504,10 @@ Returns all the triangles within the player chunk. Used for ray casting.
 Resulting vector is formatted such that, every 37 indicies is a block.
 First index of each 36 is the position of the block in the world, while the last 36 are its vertex positions.
 */
-std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes)
+std::vector<Triangle> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes)
 {
 	// USING BLOCKS VEC vvvvv
-	std::vector<glm::vec3> result;
+	std::vector<Triangle> result;
 	std::vector<compBlock> temp;
 	for (int i = 0; i < BlocksVec.size(); i++) {
 		glm::vec3 block_pos = glm::vec3(BlocksVec[i]->x, BlocksVec[i]->z, BlocksVec[i]->y);
@@ -524,9 +524,8 @@ std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<gl
 	for (int i = 0; i < temp.size(); i++) {
 		Block block(temp[i].x, temp[i].y, temp[i].z, temp[i].id);
 		
-		result.push_back(glm::vec3(temp[i].x, temp[i].y, temp[i].z));
-		glm::vec3* array = block.getTriangles();
-		for (int num = 0; num < 36; num++) {
+		Triangle * array = block.getTriangles();
+		for (int num = 0; num < 12; num++) {
 			result.push_back(array[num]);
 		}
 		delete[] array;

@@ -1,7 +1,6 @@
 #include "header/Block.h"
 
 
-
 Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 {
 	this->id = id;
@@ -85,14 +84,26 @@ GLuint* Block::getInd()
 	return indices;
 }
 
-glm::vec3* Block::getTriangles()
+Triangle * Block::getTriangles()
 {
-	glm::vec3* result = new glm::vec3[36];
+	//glm::vec3* result = new glm::vec3[36];
+	Triangle * result = new Triangle[12];
 	for (int i = 0; i < 12; i++) {
+		/*
 		for (int x = i * 3; x < (i * 3) + 3; x++) {
-			glm::vec3 temp(baseVertices[(indices[x])].position.x, baseVertices[(indices[x])].position.y, baseVertices[(indices[x])].position.z);
-			result[x] = temp;
-		}
+
+			
+
+			glm::vec3 temp(baseVertices[(indices[x])].position.x, baseVertices[(indices[x])].position.y, baseVertices[(indices[x])].positSion.z);
+			//result[x] = temp;
+		}*/
+
+
+		glm::vec3 temp1(baseVertices[(indices[i * 3])].position.x, baseVertices[(indices[i * 3])].position.y, baseVertices[(indices[i * 3])].position.z);
+		glm::vec3 temp2(baseVertices[(indices[(i * 3) + 1])].position.x, baseVertices[(indices[(i * 3) + 1])].position.y, baseVertices[(indices[(i * 3) + 1])].position.z);
+		glm::vec3 temp3(baseVertices[(indices[(i * 3) + 2])].position.x, baseVertices[(indices[(i * 3) + 2])].position.y, baseVertices[(indices[(i * 3) + 2])].position.z);
+		Triangle triangle(glm::vec3(x, y, z), temp1, temp2, temp3);
+		result[i] = triangle;
 	}
 	return result;
 }

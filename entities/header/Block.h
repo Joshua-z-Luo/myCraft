@@ -9,13 +9,14 @@
 #include<glm/gtc/type_ptr.hpp>
 #include <tuple>
 #include <vector>
-#include"header/Mesh.h"
+#include"header/Model/Mesh.h"
 #include "../../shaders/EBO.h"
 #include "../../shaders/VBO.h"
 #include "../../shaders/VAO.h"
 #include <utility> 
 #include <memory>
 #include "../../Texture.h"
+#include "header/Model/Triangle.h"
 #include "../../player/Player.h"
 
 
@@ -76,7 +77,7 @@ public:
 
 	//GLfloat* getVert();
 	GLuint* getInd();
-	glm::vec3* getTriangles();
+    Triangle * getTriangles();
 
     void createMesh(Texture * texture[2]);
     void drawMesh(Shader& shader, Player& camera);

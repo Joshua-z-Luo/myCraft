@@ -151,7 +151,7 @@
   <ItemGroup>
     <ClCompile Include="gameLogic\AddPacket.cpp" />
     <ClCompile Include="gameLogic\DestroyPacket.cpp" />
-    <ClCompile Include="entities\src\Mesh.cpp" />
+    <ClCompile Include="entities\src\Model\Mesh.cpp" />
     <ClCompile Include="entities\src\worldGen\compBlock.cpp" />
     <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
     <ClCompile Include="entities\src\Block.cpp" />
@@ -170,12 +170,13 @@
     <ClCompile Include="shaders\VAO.cpp" />
     <ClCompile Include="shaders\VBO.cpp" />
     <ClCompile Include="gameLogic\UpdatePacket.cpp" />
+    <ClCompile Include="entities\src\Model\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gameLogic\AddPacket.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="gameLogic\DestroyPacket.h" />
-    <ClInclude Include="entities\header\Mesh.h" />
+    <ClInclude Include="entities\header\Model\Mesh.h" />
     <ClInclude Include="entities\header\worldGen\compBlock.h" />
     <ClInclude Include="entities\header\worldGen\Chunk.h" />
     <ClInclude Include="entities\header\Block.h" />
@@ -475,6 +476,7 @@
     <ClInclude Include="shaders\VAO.h" />
     <ClInclude Include="shaders\VBO.h" />
     <ClInclude Include="gameLogic\UpdatePacket.h" />
+    <ClInclude Include="entities\header\Model\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libraries\include\glm\detail\func_common.inl" />

@@ -346,7 +346,7 @@ bool sortTriangleByDistance(glm::vec3 playerPos, glm::vec3 blockPos, glm::vec3 b
 	return dist1 < dist2;
 }
 
-void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
+void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
 {
 	//printf("%d number of triangles in playerverts \n", playerVerts->size());
 	// Binds speed to real time not frames per second.
@@ -415,21 +415,21 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		// destroy block
 		pPressed = true;
 		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
-		for (int i = 0; i < playerVerts.size() / 37; i++) {
-			std::vector<glm::vec3> temp(36);
-			glm::vec3 startBlock = playerVerts[i * 37];
-			std::copy(playerVerts.begin() + (i * 37) + 1,
-				playerVerts.begin() + (i * 37) + 37,
+		for (int i = 0; i < playerVerts.size() / 12; i++) {
+			std::vector<Triangle> temp(12);
+			//glm::vec3 startBlock = playerVerts[i * 37];
+			std::copy(playerVerts.begin() + (i * 12) + 1,
+				playerVerts.begin() + (i * 12) + 12,
 				temp.begin());
-			if (castRayForBlock(window, ray, startBlock, temp)) {
+			if (castRayForBlock(window, ray, temp[0].origin, temp)) {
 				//IF FOUND CALL MAP SEND TO UPDATEQUE
-				updateQue->push_back(std::make_unique<DestroyPacket>(startBlock));
+				updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
 				break;
 			}
 		}
 		
 	}
-	
+	/*
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false) {
 		// place block
 		pPressed = true;
@@ -459,6 +459,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		}
 
 	}
+	*/
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
 		pPressed = false;
 	}
@@ -564,18 +565,18 @@ void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mou
 }
 
 
-bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
+bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles)
 {
 	// triangles is literlly every triangle in the chunk.
 	// try and reduce 
 
 	// sort triangles based on distance to player -> find normal of intersected triangle -> add normal to block position -> new block position is placed block position
 
-	for (int i = 0; i < triangles.size(); i += 3)
+	for (int i = 0; i < triangles.size(); i ++)
 	{
-		glm::vec3 v0 = triangles[i];
-		glm::vec3 v1 = triangles[i + 1];
-		glm::vec3 v2 = triangles[i + 2];
+		glm::vec3 v0 = triangles[i].vert1;
+		glm::vec3 v1 = triangles[i].vert2;
+		glm::vec3 v2 = triangles[i].vert3;
 
 		float t;
 		if (ray.rayIntersectsBlock(v0, v1, v2, t))

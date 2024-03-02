@@ -4,7 +4,7 @@
 #include <vector>
 #include "../../../constants.h"
 #include "array"
-#include "../Mesh.h"
+#include "../Model/Mesh.h"
 class Chunk
 {
 private:

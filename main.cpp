@@ -23,7 +23,7 @@
 
 #include "constants.h"
 
-#include"entities/header/Mesh.h"
+#include"entities/header/Model/Mesh.h"
 
 /*
 GLfloat x = 0;
@@ -232,7 +232,7 @@ int main()
 	int posY = 0;
 
 	std::deque<std::unique_ptr<UpdatePacket>> updateQue;
-	std::vector<glm::vec3> playerVerts;
+	std::vector<Triangle> playerVerts;
 
 	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
@@ -335,7 +335,7 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 100.0f);
 
-
+		
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
 		light.Draw(lightShader, camera);

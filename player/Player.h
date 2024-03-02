@@ -20,6 +20,7 @@
 #include "../gameLogic/AddPacket.h"
 
 #include <algorithm>
+#include "../entities/header/Model/Triangle.h"
 
 /*
 Player class. Replaces Camera class.
@@ -96,11 +97,11 @@ public:
 	void grounded(std::vector<glm::vec3> blockCords);
 
 	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
 
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
-	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);
+	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles);
 	Ray GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 	void GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY);
 	glm::mat4 getView();
