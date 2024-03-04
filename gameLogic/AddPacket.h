@@ -6,7 +6,7 @@ class AddPacket :
 private:
 	glm::vec3 targetBlock;
 public:
-	AddPacket(glm::vec3 targetBlock);
+	AddPacket(glm::vec3 targetBlock, int blockID);
 	glm::vec3 conductAction() override;
 };
 

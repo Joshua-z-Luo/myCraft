@@ -47,7 +47,32 @@ Adds a block the the specified chunk.
 */
 void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 {
-	// xID + originX, yID + originY IS NOT THE CORRECT CALCULATION (NEEDS TO BE FIXED)
+	float xF = x;
+	float yF = y;
+	xID = floor(xF / Constants::CHUNK_SIZE);
+	yID = floor(yF / Constants::CHUNK_SIZE);
+	// Get chunk position
+
+	if (x < 0) {
+		x = Constants::CHUNK_SIZE + (x % (Constants::CHUNK_SIZE));
+	}
+	else {
+		x = x % Constants::CHUNK_SIZE;
+	}
+	if (y < 0) {
+		y = Constants::CHUNK_SIZE + (y % (Constants::CHUNK_SIZE));
+
+	}
+	else {
+		y = y % Constants::CHUNK_SIZE;
+	}
+	if (x == 32) {
+		x = 0;
+	}
+	if (y == 32) {
+		y = 0;
+	}
+	printf("%d %d %d final \n", x, y, z);
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
 }
 
@@ -474,14 +499,14 @@ Helper functions for raycasting method.
 // % TODO ISSUE WITH SORTING. 
 // SOME DISTANCES NOT PROPERLY CALCULATED 
 bool sortByDistance(glm::vec3 playerPos, compBlock blockPos, compBlock blockPos2) {
-	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.y) * (blockPos.y - playerPos.y)) + ((blockPos.z - playerPos.z) * (blockPos.z - playerPos.z)));
-	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.y) * (blockPos2.y - playerPos.y)) + ((blockPos2.z - playerPos.z) * (blockPos2.z - playerPos.z)));
+	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y)));
+	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y)));
 	return dist1 < dist2;
 }
 
 bool sortByDistance(glm::vec3 playerPos, compBlock * blockPos, compBlock * blockPos2) {
-	double dist1 = std::sqrt((blockPos->x - playerPos.x) * (blockPos->x - playerPos.x) + (blockPos->y - playerPos.y) * (blockPos->y - playerPos.y) + (blockPos->z - playerPos.z) * (blockPos->z - playerPos.z));
-	double dist2 = std::sqrt((blockPos2->x - playerPos.x) * (blockPos2->x - playerPos.x) + (blockPos2->y - playerPos.y) * (blockPos2->y - playerPos.y) + (blockPos2->z - playerPos.z) * (blockPos2->z - playerPos.z));
+	double dist1 = std::sqrt((blockPos->x - playerPos.x) * (blockPos->x - playerPos.x) + (blockPos->y - playerPos.z) * (blockPos->y - playerPos.z) + (blockPos->z - playerPos.y) * (blockPos->z - playerPos.y));
+	double dist2 = std::sqrt((blockPos2->x - playerPos.x) * (blockPos2->x - playerPos.x) + (blockPos2->y - playerPos.z) * (blockPos2->y - playerPos.z) + (blockPos2->z - playerPos.y) * (blockPos2->z - playerPos.y));
 	return dist1 < dist2;
 }
 

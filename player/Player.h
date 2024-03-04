@@ -102,6 +102,7 @@ public:
 
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles);
+	int castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles);
 	Ray GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 	void GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY);
 	glm::mat4 getView();

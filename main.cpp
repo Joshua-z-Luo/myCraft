@@ -251,11 +251,16 @@ int main()
 			printf("%d \n", updateQue[0]->getActionID());
 			switch (updateQue[0]->getActionID()) {
 			case 1:
+				// Delete Block
 				glm::vec3 deleteBlock = updateQue[0]->conductAction();
 				map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z);
 				break;
 			case 2:
+				// Add Block
+				glm::vec3 addBlock = updateQue[0]->conductAction();
+				// % TODO IMPLEMENT A WAY TO FETCH THE BLOCK ID. MIGHT NEED NEW METHOD IN UpdatePacket
 
+				map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, 1);
 				break;
 			case 3:
 
@@ -319,7 +324,7 @@ int main()
 			glm::mat4 view = glm::mat4(1.0f);
 			glm::mat4 projection = glm::mat4(1.0f);
 			view = camera.getView();
-			projection = camera.getProjection(45.0f, 0.1f, 10.0f);
+			projection = camera.getProjection(22.5f, 0.1f, 10.0f);
 			// verticies of visable blocks
 			playerVerts = map->getPlayerChunk(camera.Position, camera.extractFrustumPlanes(projection * view));
 

@@ -3,7 +3,7 @@
 Ray::Ray(const glm::vec3 origin, const glm::vec3 direction)
 {
 	this->origin = origin;
-	this->direction = glm::normalize(direction);
+	this->direction = glm::normalize(direction) * 0.1f;
 
 }
 
@@ -12,7 +12,9 @@ Checks if ray intersects block.
 */
 bool Ray::rayIntersectsBlock(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t)
 {
-    const float EPSILON = 0.0001f;
+    // SOMETHING IS WRONG WITH RAY
+    // CAN BE SHOWN BY CLICKING ON EDGES OF BLOCKS, NOT DETECTING BLOCKS THAT ARE TOO CLOSE.
+    const float EPSILON = 0.01f;
 
     glm::vec3 edge1, edge2, h, s, q;
     float a, f, u, v;
@@ -39,6 +41,8 @@ bool Ray::rayIntersectsBlock(const glm::vec3& v0, const glm::vec3& v1, const glm
         return false;
 
     float r = f * glm::dot(edge2, q);
+    glm::vec3 intersectionPoint = origin + direction * r;
+
 
     return r > EPSILON;
 }

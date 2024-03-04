@@ -340,9 +340,11 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 
 
 // Sorting helper (for placing blocks)
-bool sortTriangleByDistance(glm::vec3 playerPos, glm::vec3 blockPos, glm::vec3 blockPos2) {
-	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.y) * (blockPos.y - playerPos.y)) + ((blockPos.z - playerPos.z) * (blockPos.z - playerPos.z)));
-	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.y) * (blockPos2.y - playerPos.y)) + ((blockPos2.z - playerPos.z) * (blockPos2.z - playerPos.z)));
+bool sortTriangleByDistance(glm::vec3 playerPos, Triangle trig1, Triangle trig2) {
+	glm::vec3 blockPos = trig1.getTriangleCenter();
+	glm::vec3 blockPos2 = trig2.getTriangleCenter();
+	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y)));
+	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y)));
 	return dist1 < dist2;
 }
 
@@ -423,43 +425,55 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				temp.begin());
 			if (castRayForBlock(window, ray, temp[0].origin, temp)) {
 				//IF FOUND CALL MAP SEND TO UPDATEQUE
+				printf("%f, %f, %f remove \n", temp[0].origin.x, temp[0].origin.y, temp[0].origin.z);
 				updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
 				break;
 			}
 		}
 		
 	}
-	/*
+	
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false) {
 		// place block
+		printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
 		pPressed = true;
 		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
 
 		// sort the player verts
-		for (int i = 0; i < playerVerts.size() / 37; i++) {
-			std::vector<glm::vec3> temp(36);
-			glm::vec3 startBlock = playerVerts[i * 37];
-			std::copy(playerVerts.begin() + (i * 37) + 1,
-				playerVerts.begin() + (i * 37) + 37,
+		for (int i = 0; i < playerVerts.size() / 12; i++) {
+			std::vector<Triangle> temp(12);
+			std::copy(playerVerts.begin() + (i * 12) + 1,
+				playerVerts.begin() + (i * 12) + 12,
 				temp.begin());
 
 			// sort triangles
-			std::sort(temp.begin(), temp.end(), [&](glm::vec3 p1, glm::vec3 p2) {
+			std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
 				return sortTriangleByDistance(Position, p1, p2);
 				});
-			if (castRayForBlock(window, ray, startBlock, temp)) {
+			int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
+			if (ind >= 0) {
 				// IF FOUND CALL MAP SEND TO UPDATEQUE
 				// we need to find the normal of our intersection
-				// but our intersection could be literlly anywhere on the block since thats howe coded it 
-				// sort triangles by euclidian distance
 				// adujust startblock for placement of new block.
-				updateQue->push_back(std::make_unique<AddPacket>(startBlock));
+				glm::vec3 normal = temp[ind].getNormal();
+				printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
+				glm::vec3 newBlock = temp[ind].origin + temp[ind].getNormal();
+
+				// % TODO
+				// X and somewhat Z direction block placements are fine, however Y direction block placements are super fucked.
+				// X is super consistently works, Z direction sometimes fails when block count in ray is high. 
+				// Y DOES NOT WORK. AT ALL. PLACES BLOCKS IN OPPOSITE NORMAL DIRECTION GENERALLY....
+
+
+				printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
+				int blockID = 1;
+				updateQue->push_back(std::make_unique<AddPacket>(newBlock, blockID));
 				break;
 			}
 		}
 
 	}
-	*/
+	
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE) {
 		pPressed = false;
 	}
@@ -469,7 +483,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	*/
 	// -----------------------------------------------------------------------------------------------
 	// Hides mouse cursor
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	// Prevents camera from jumping on the first click
 	if (firstClick)
 	{
@@ -588,6 +602,26 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 	
 	// No intersection with any triangle
 	return false;
+}
+
+int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles)
+{
+	for (int i = 0; i < triangles.size(); i++)
+	{
+		glm::vec3 v0 = triangles[i].vert1;
+		glm::vec3 v1 = triangles[i].vert2;
+		glm::vec3 v2 = triangles[i].vert3;
+
+		float t;
+		if (ray.rayIntersectsBlock(v0, v1, v2, t))
+		{
+			// Intersection found with this triangle
+			return i;
+		}
+	}
+
+	// No intersection with any triangle
+	return -1;
 }
 
 Ray Player::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
