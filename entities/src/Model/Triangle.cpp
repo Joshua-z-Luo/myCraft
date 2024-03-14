@@ -1,11 +1,12 @@
 #include "../../header/Model/Triangle.h"
 
-Triangle::Triangle(glm::vec3 origin, glm::vec3 vert1, glm::vec3 vert2, glm::vec3 vert3)
+Triangle::Triangle(glm::vec3 origin, glm::vec3 vert1, glm::vec3 vert2, glm::vec3 vert3, int face)
 {
 	this->origin = origin;
 	this->vert1 = vert1;
 	this->vert2 = vert2;
 	this->vert3 = vert3;
+	this->faceID = face;
 }
 
 Triangle::Triangle()
@@ -42,7 +43,7 @@ glm::vec3 Triangle::getNormal()
 	// UPDATE TODO: WE MIGHT NEED TO ADD A VALUE TO DETERMINE WHICH WAY THE NORMAL IS FACING FOR EACH TRIANGLE. TO HELP DETERMINE WHICH WAY THE TRIANGLE NORMAL IS FACING. (I.e) (0, 0, +1) -> UP, (0, 0, -1) DOWN.
 	// as currently our normal is always facing the positive direction.
 
-	glm::vec3 tnormal(normal.x, normal.z, normal.y);
+	glm::vec3 tnormal(normal.x * -1, normal.z * -1, normal.y * -1);
 	//printf("%f, %f, %f tranvserse \n", tnormal.x, tnormal.y, tnormal.z);
 	return glm::normalize(tnormal);
 }

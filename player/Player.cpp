@@ -447,6 +447,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				temp.begin());
 
 			// sort triangles
+			/**/
 			std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
 				return sortTriangleByDistance(Position, p1, p2);
 				});
@@ -616,6 +617,7 @@ int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& b
 			// Intersection found with this triangle
 			glm::vec3 temp = triangles[i].getNormal();
 			printf("face %d %f, %f, %f \n", i, temp.x, temp.y, temp.z);
+			return i;
 		}
 	}
 

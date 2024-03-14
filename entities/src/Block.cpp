@@ -20,7 +20,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 	indices[2] = 18;
 	indices[3] = 18;
 	indices[4] = 19;
-	indices[5] = 16;
+	indices[5] = 16;	
 
 	// Front face
 	indices[6] = 0;
@@ -30,7 +30,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 	indices[10] = 3;
 	indices[11] = 0;
 
-	// Left face
+	// Bottom face
 	indices[12] = 12;
 	indices[13] = 13;
 	indices[14] = 14;
@@ -54,7 +54,7 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 	indices[28] = 11;
 	indices[29] = 8;
 
-	// Bottom face
+	// Left face
 	indices[30] = 20;
 	indices[31] = 21;
 	indices[32] = 22;
@@ -102,7 +102,7 @@ Triangle * Block::getTriangles()
 		glm::vec3 temp1(baseVertices[(indices[i * 3])].position.x, baseVertices[(indices[i * 3])].position.y, baseVertices[(indices[i * 3])].position.z);
 		glm::vec3 temp2(baseVertices[(indices[(i * 3) + 1])].position.x, baseVertices[(indices[(i * 3) + 1])].position.y, baseVertices[(indices[(i * 3) + 1])].position.z);
 		glm::vec3 temp3(baseVertices[(indices[(i * 3) + 2])].position.x, baseVertices[(indices[(i * 3) + 2])].position.y, baseVertices[(indices[(i * 3) + 2])].position.z);
-		Triangle triangle(glm::vec3(x, y, z), temp1, temp2, temp3);
+		Triangle triangle(glm::vec3(x, y, z), temp1, temp2, temp3, i);
 		result[i] = triangle;
 	}
 	return result;
