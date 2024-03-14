@@ -13,6 +13,7 @@ public:
 	Triangle();
 	glm::vec3 getTriangleCenter();
 	glm::vec3 getNormal();
+
 	// glm::vec3 checkIfBackFacep(glm::vec3, );
 
 };

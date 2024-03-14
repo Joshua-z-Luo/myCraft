@@ -459,10 +459,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
 				glm::vec3 newBlock = temp[ind].origin + temp[ind].getNormal();
 
-				// % TODO
-				// X and somewhat Z direction block placements are fine, however Y direction block placements are super fucked.
-				// X is super consistently works, Z direction sometimes fails when block count in ray is high. 
-				// Y DOES NOT WORK. AT ALL. PLACES BLOCKS IN OPPOSITE NORMAL DIRECTION GENERALLY....
+
 
 
 				printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
@@ -604,7 +601,7 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 	return false;
 }
 
-int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles)
+int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles)
 {
 	for (int i = 0; i < triangles.size(); i++)
 	{
@@ -612,11 +609,13 @@ int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& b
 		glm::vec3 v1 = triangles[i].vert2;
 		glm::vec3 v2 = triangles[i].vert3;
 
+		//we can check if ray is intersecting multiple faces by not returning and printing the normals of each face collided per block.
 		float t;
 		if (ray.rayIntersectsBlock(v0, v1, v2, t))
 		{
 			// Intersection found with this triangle
-			return i;
+			glm::vec3 temp = triangles[i].getNormal();
+			printf("face %d %f, %f, %f \n", i, temp.x, temp.y, temp.z);
 		}
 	}
 

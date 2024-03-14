@@ -12,6 +12,10 @@ Triangle::Triangle()
 {
 }
 
+
+// RAYS ARE EXTREMELY ACCURATE. NEED TO SET  NORMALS FOR EACH FACE BLOCK.
+
+
 glm::vec3 Triangle::getTriangleCenter()
 {
 	glm::vec3 centroid;
@@ -23,17 +27,22 @@ glm::vec3 Triangle::getTriangleCenter()
 
 glm::vec3 Triangle::getNormal()
 {
+	
 	glm::vec3 AB = vert1 - vert2;
 	glm::vec3 AC = vert1 - vert3;
 	glm::vec3 normal = glm::cross(AB, AC);
-	printf("%f, %f, %f normal original \n", normal.x, normal.y, normal.z);
+	//printf("%f, %f, %f normal original \n", normal.x, normal.y, normal.z);
 
 
 	// can place in positive x,y direction fine. Z direction is inveresed.
 	// % TODO found normal issue. Normal is always calculated to be the same direction. This is beacuse the triangles dont know what "normal is" (i.e) the are all in the same direction.
 
 	// % Todo fix ray accuracy issues
+
+	// UPDATE TODO: WE MIGHT NEED TO ADD A VALUE TO DETERMINE WHICH WAY THE NORMAL IS FACING FOR EACH TRIANGLE. TO HELP DETERMINE WHICH WAY THE TRIANGLE NORMAL IS FACING. (I.e) (0, 0, +1) -> UP, (0, 0, -1) DOWN.
+	// as currently our normal is always facing the positive direction.
+
 	glm::vec3 tnormal(normal.x, normal.z, normal.y);
-	printf("%f, %f, %f tranvserse \n", tnormal.x, tnormal.y, tnormal.z);
+	//printf("%f, %f, %f tranvserse \n", tnormal.x, tnormal.y, tnormal.z);
 	return glm::normalize(tnormal);
 }
