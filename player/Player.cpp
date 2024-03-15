@@ -343,8 +343,8 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 bool sortTriangleByDistance(glm::vec3 playerPos, Triangle trig1, Triangle trig2) {
 	glm::vec3 blockPos = trig1.getTriangleCenter();
 	glm::vec3 blockPos2 = trig2.getTriangleCenter();
-	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y)));
-	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y)));
+	double dist1 = ((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y));
+	double dist2 = ((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y));
 	return dist1 < dist2;
 }
 
@@ -407,7 +407,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		airSpeed = 0.0f;
 	}
 	
-	// NEED SOME WAY TO CHECK IF THE BLOCK IS IN THE AIR.
 
 	setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
 
@@ -447,10 +446,10 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				temp.begin());
 
 			// sort triangles
-			/**/
+			
 			std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
 				return sortTriangleByDistance(Position, p1, p2);
-				});
+				}); 
 			int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
 			if (ind >= 0) {
 				// IF FOUND CALL MAP SEND TO UPDATEQUE
@@ -579,10 +578,6 @@ void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mou
 
 bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles)
 {
-	// triangles is literlly every triangle in the chunk.
-	// try and reduce 
-
-	// sort triangles based on distance to player -> find normal of intersected triangle -> add normal to block position -> new block position is placed block position
 
 	for (int i = 0; i < triangles.size(); i ++)
 	{
@@ -591,7 +586,7 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 		glm::vec3 v2 = triangles[i].vert3;
 
 		float t;
-		if (ray.rayIntersectsBlock(v0, v1, v2, t))
+		if (ray.rayIntersectsBlock(triangles[i], t))
 		{
 			// Intersection found with this triangle
 			return true;
@@ -602,22 +597,31 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 	return false;
 }
 
+
+// PROBLEM FOUND. PROBLEM IS WITH DISTANCE CALCULATION. TRIANGLES ARE NOT BEING PROPERLY SORTED BY DISTANCE SO PLAYER IS INTERSECTING WITH TRAIANGLESO NFAR END OF RAY 
+
 int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles)
 {
+	printf("new block\n");
 	for (int i = 0; i < triangles.size(); i++)
 	{
+
+		//printf("triangle num %d \n", triangles[i].faceID);
 		glm::vec3 v0 = triangles[i].vert1;
 		glm::vec3 v1 = triangles[i].vert2;
 		glm::vec3 v2 = triangles[i].vert3;
-
+		printf("face %d \n", triangles[i].faceID);
 		//we can check if ray is intersecting multiple faces by not returning and printing the normals of each face collided per block.
 		float t;
-		if (ray.rayIntersectsBlock(v0, v1, v2, t))
+		if (ray.rayIntersectsBlock(triangles[i], t))
 		{
 			// Intersection found with this triangle
 			glm::vec3 temp = triangles[i].getNormal();
-			printf("face %d %f, %f, %f \n", i, temp.x, temp.y, temp.z);
-			return i;
+			//printf("face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
+
+			if (ray.rayNormalCheck(triangles[i])) {
+				return i;
+			}
 		}
 	}
 
