@@ -324,7 +324,7 @@ int main()
 			glm::mat4 view = glm::mat4(1.0f);
 			glm::mat4 projection = glm::mat4(1.0f);
 			view = camera.getView();
-			projection = camera.getProjection(22.5f, 0.1f, 10.0f);
+			projection = camera.getProjection(90.0f, 0.1f, 10.0f);
 			// verticies of visable blocks
 			playerVerts = map->getPlayerChunk(camera.Position, camera.extractFrustumPlanes(projection * view));
 

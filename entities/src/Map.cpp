@@ -496,8 +496,6 @@ int Map::getNumChunks()
 Helper functions for raycasting method.
 */
 
-// % TODO ISSUE WITH SORTING. 
-// SOME DISTANCES NOT PROPERLY CALCULATED 
 bool sortByDistance(glm::vec3 playerPos, compBlock blockPos, compBlock blockPos2) {
 	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y)));
 	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y)));

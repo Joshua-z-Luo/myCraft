@@ -415,10 +415,9 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false) {
 		// destroy block
 		pPressed = true;
-		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
+		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
 		for (int i = 0; i < playerVerts.size() / 12; i++) {
 			std::vector<Triangle> temp(12);
-			//glm::vec3 startBlock = playerVerts[i * 37];
 			std::copy(playerVerts.begin() + (i * 12) + 1,
 				playerVerts.begin() + (i * 12) + 12,
 				temp.begin());
@@ -436,7 +435,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 		// place block
 		printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
 		pPressed = true;
-		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 100.0f));
+		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
 
 		// sort the player verts
 		for (int i = 0; i < playerVerts.size() / 12; i++) {
@@ -445,19 +444,28 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				playerVerts.begin() + (i * 12) + 12,
 				temp.begin());
 
-			// sort triangles
+			// sort triangles for better accuracy
 			
 			std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
 				return sortTriangleByDistance(Position, p1, p2);
-				}); 
+				});
+
 			int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
 			if (ind >= 0) {
 				// IF FOUND CALL MAP SEND TO UPDATEQUE
+				
 				// we need to find the normal of our intersection
-				// adujust startblock for placement of new block.
 				glm::vec3 normal = temp[ind].getNormal();
+				normal.x *= -1;
+				normal.y *= -1;
+				normal.z *= -1;
+				
+				// convert from opengl cords to block space
+				glm::vec3 tnormal = glm::vec3(normal.x, normal.z, normal.y);
 				printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
-				glm::vec3 newBlock = temp[ind].origin + temp[ind].getNormal();
+
+				// adujust startblock for placement of new block.
+				glm::vec3 newBlock = temp[ind].origin + tnormal;
 
 
 
@@ -598,8 +606,6 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 }
 
 
-// PROBLEM FOUND. PROBLEM IS WITH DISTANCE CALCULATION. TRIANGLES ARE NOT BEING PROPERLY SORTED BY DISTANCE SO PLAYER IS INTERSECTING WITH TRAIANGLESO NFAR END OF RAY 
-
 int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles)
 {
 	printf("new block\n");
@@ -610,16 +616,18 @@ int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& b
 		glm::vec3 v0 = triangles[i].vert1;
 		glm::vec3 v1 = triangles[i].vert2;
 		glm::vec3 v2 = triangles[i].vert3;
-		printf("face %d \n", triangles[i].faceID);
 		//we can check if ray is intersecting multiple faces by not returning and printing the normals of each face collided per block.
 		float t;
 		if (ray.rayIntersectsBlock(triangles[i], t))
 		{
+			printf("face %d \n", triangles[i].faceID);
 			// Intersection found with this triangle
 			glm::vec3 temp = triangles[i].getNormal();
 			//printf("face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
 
 			if (ray.rayNormalCheck(triangles[i])) {
+				glm::vec3 temp = triangles[i].getNormal();
+				printf("collided face face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
 				return i;
 			}
 		}
@@ -629,6 +637,8 @@ int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& b
 	return -1;
 }
 
+
+// %TODO RAY ACCURACY ISSUES MAY BE RELATED TO RAY CREATION
 Ray Player::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
 	double mouseX, mouseY;
 	GetMouseCoordinates(window, mouseX, mouseY);

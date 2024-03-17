@@ -26,14 +26,11 @@ glm::vec3 Triangle::getTriangleCenter()
 glm::vec3 Triangle::getNormal()
 {
 	
-	glm::vec3 AB = vert1 - vert2;
-	glm::vec3 AC = vert1 - vert3;
+	glm::vec3 AB = vert2 - vert1;
+	glm::vec3 AC = vert3 - vert2;
 	glm::vec3 normal = glm::cross(AB, AC);
 	//printf("%f, %f, %f normal original \n", normal.x, normal.y, normal.z);
-
-
-
-	glm::vec3 tnormal(normal.x * -1, normal.z * -1, normal.y * -1);
+	//glm::vec3 tnormal(normal.x, normal.z, normal.y);
 	//printf("%f, %f, %f tranvserse \n", tnormal.x, tnormal.y, tnormal.z);
-	return glm::normalize(tnormal);
+	return glm::normalize(normal);
 }
