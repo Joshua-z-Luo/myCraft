@@ -23,7 +23,7 @@ SOLVED:
 PERSISTANT ISSUES:
     - Ray has accuracy/detection issues, passing through parts of blocks on click. not triggering any sort of reaction. THIS ONLY OCCURS IN THE NEGATIVE Y DIRECTION (FRONT FACE OF BLOCKS)
     - Issue is not with sorting. When to close to block, and aiming at certain parts of a face, ray will hit missing triangle and pass throguh to other blocks.
-    - Hitbox of front face is only very top of block.
+    - Hitbox of front face is only very top of block. (negative y)
 
 */
 
