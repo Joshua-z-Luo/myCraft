@@ -12,6 +12,7 @@ public:
 	UpdatePacket();
 	virtual glm::vec3 conductAction() = 0;
 	int getActionID();
+	int blockID = 1;
 protected:
 	int actionID;
 

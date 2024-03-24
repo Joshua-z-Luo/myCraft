@@ -1,6 +1,6 @@
 #include"Camera.h"
 
-
+/*
 
 Camera::Camera(int width, int height, glm::vec3 position)
 {
@@ -141,7 +141,7 @@ bool Camera::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 		//glm::vec3 v2 = triangles[i + 2] + blockPosition;
 
 		float t;
-		if (ray.rayIntersectsBlock(v0, v1, v2, t))
+		if (ray.rayIntersectsBlock(triangles[i], t))
 		{
 			// Intersection found with this triangle
 			return true;
@@ -197,3 +197,4 @@ void Camera::updateBoundingBox()
 	playerMinY = Position.y - Constants::BLOCK_SIZE;
 	playerMinZ = Position.z - Constants::BLOCK_SIZE;
 }
+*/

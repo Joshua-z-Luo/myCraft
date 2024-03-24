@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "../entities/header/Model/Triangle.h"
 
 class Ray
 {
@@ -8,6 +9,7 @@ public:
 	glm::vec3 direction;
 
 	Ray(const glm::vec3 origin, const glm::vec3 direction);
-	bool rayIntersectsBlock(const glm::vec3& v0, const glm::vec3& v1, const glm::vec3& v2, float& t);
+	bool rayIntersectsBlock(const Triangle& triangle, float& t);
+	bool rayNormalCheck(Triangle triangle);
 };
 
