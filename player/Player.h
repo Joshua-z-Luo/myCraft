@@ -56,8 +56,11 @@ private:
 	// player status logic
 	bool spacePressed = false;
 	bool inAir = false;
-	// p Pressed?
+	bool menu = false;
+
+	// key Pressed?
 	bool pPressed = false;
+	bool escPressed = false;
 
 
 public:
@@ -121,6 +124,9 @@ public:
 	// Exports Frustum Planes of player
 	std::vector<glm::vec4> extractFrustumPlanes();
 	std::vector<glm::vec4> extractFrustumPlanes(const glm::mat4& viewProjectionMatrix);
+
+	// Get menu status
+	bool isMenuOpen();
 };
 
 #endif

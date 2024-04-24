@@ -170,7 +170,7 @@ int main(int, char**)
             ImGui::End();
         }
 
-        // Rendering
+        // Game Menu logic
         ImGui::Render();
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);

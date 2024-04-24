@@ -361,16 +361,18 @@ int main()
 		map->drawMap(shaderProgram, camera);
 
 		// Menu elements
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
+		if (camera.isMenuOpen()) {
+			ImGui_ImplOpenGL3_NewFrame();
+			ImGui_ImplGlfw_NewFrame();
+			ImGui::NewFrame();
 
-		ImGui::Begin("Demo window");
-		ImGui::Button("Hello!");
-		ImGui::End();
+			ImGui::Begin("Demo window");
+			ImGui::Button("Hello!");
+			ImGui::End();
 
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+			ImGui::Render();
+			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		}
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
