@@ -6,7 +6,6 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-
 #include"Texture.h"
 #include"shaders/shaderClass/shaderClass.h"
 #include"shaders/VAO.h"
@@ -24,6 +23,10 @@
 #include "constants.h"
 
 #include"entities/header/Model/Mesh.h"
+
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 /*
 GLfloat x = 0;
@@ -207,6 +210,17 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	
 
+	// ----------------------------- Menu (ImGui) -----------------------------------------------------------------------------------------------------
+	const char* glsl_version = "#version 130";
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(glsl_version);
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
 	// Enables the Depth Buffer
@@ -345,11 +359,25 @@ int main()
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
 		light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
+
+		// Menu elements
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		ImGui::Begin("Demo window");
+		ImGui::Button("Hello!");
+		ImGui::End();
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
 		//printf("x %f, y %f z %f \n", camera.Position.x, camera.Position.y, camera.Position.z);
+
 	}
 
 
