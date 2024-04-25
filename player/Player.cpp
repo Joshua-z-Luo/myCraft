@@ -597,137 +597,142 @@ Handle player inputs
 */
 void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
 {
-	//printf("%d number of triangles in playerverts \n", playerVerts->size());
-	// Binds speed to real time not frames per second.
-	speed = 0.0f;
-	float newAirSpeed = 0.0f;
-	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
-	float frameSpeed = 4.0f;
+	if (!menu)
+	{
+		//printf("%d number of triangles in playerverts \n", playerVerts->size());
+		// Binds speed to real time not frames per second.
+		speed = 0.0f;
+		float newAirSpeed = 0.0f;
+		glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
+		float frameSpeed = 4.0f;
 
-	// Handles key inputs
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-	{
-		movementVector += glm::vec3(Orientation.x, 0.0f, Orientation.z);
-	}
-	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-	{
-		movementVector += -glm::normalize(glm::cross(Orientation, Up));
-	}
-	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-	{
-		movementVector += -glm::vec3(Orientation.x, 0.0f, Orientation.z);
-	}
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-	{
-		movementVector += glm::normalize(glm::cross(Orientation, Up));
-	}
+		// Handles key inputs
+		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		{
+			movementVector += glm::vec3(Orientation.x, 0.0f, Orientation.z);
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			movementVector += -glm::normalize(glm::cross(Orientation, Up));
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			movementVector += -glm::vec3(Orientation.x, 0.0f, Orientation.z);
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			movementVector += glm::normalize(glm::cross(Orientation, Up));
+		}
 
-	grounded(blockCords);
-	// Jump logic
-	//fprintf(stdout, "%f %d\n", airSpeed, inAir);
-	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
-	{
-		spacePressed = true;
-		Direction.y = 1.0f;
-		airSpeed = 10.0f;
+		grounded(blockCords);
+		// Jump logic
+		//fprintf(stdout, "%f %d\n", airSpeed, inAir);
+		if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
+		{
+			spacePressed = true;
+			Direction.y = 1.0f;
+			airSpeed = 10.0f;
 
-	}
-	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
-		spacePressed = false;
-	}
-	if (Direction.y != 0.0f || inAir == true) {
-		float velocityChange = delta * gravity;
-		newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
-		//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
+		}
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+			spacePressed = false;
+		}
+		if (Direction.y != 0.0f || inAir == true) {
+			float velocityChange = delta * gravity;
+			newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
+			//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
 
-		if (newAirSpeed < 0.0f) {
-			movementVector.y = Down.y;
-			if (newAirSpeed < -10.0f) {
-				newAirSpeed = -10.0f;
+			if (newAirSpeed < 0.0f) {
+				movementVector.y = Down.y;
+				if (newAirSpeed < -10.0f) {
+					newAirSpeed = -10.0f;
+				}
+			}
+			else if (newAirSpeed > 0.0f) {
+				movementVector.y = Up.y;
 			}
 		}
-		else if (newAirSpeed > 0.0f) {
-			movementVector.y = Up.y;
+		else {
+			airSpeed = 0.0f;
 		}
-	}
-	else {
-		airSpeed = 0.0f;
-	}
 
 
-	setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
+		setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
 
 
 
-	/*
-	* Handles removing blocks
-	*/
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false && menu == false) {
-		pPressed = true;
-		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
-		for (int i = 0; i < playerVerts.size() / 12; i++) {
-			std::vector<Triangle> temp(12);
-			std::copy(playerVerts.begin() + (i * 12) + 1,
-				playerVerts.begin() + (i * 12) + 12,
-				temp.begin());
-			if (castRayForBlock(window, ray, temp[0].origin, temp)) {
-				//IF FOUND CALL MAP SEND TO UPDATEQUE
-				printf("%f, %f, %f remove \n", temp[0].origin.x, temp[0].origin.y, temp[0].origin.z);
-				updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
-				break;
+		/*
+		* Handles removing blocks
+		*/
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false && menu == false) {
+			pPressed = true;
+			Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+			for (int i = 0; i < playerVerts.size() / 12; i++) {
+				std::vector<Triangle> temp(12);
+				std::copy(playerVerts.begin() + (i * 12) + 1,
+					playerVerts.begin() + (i * 12) + 12,
+					temp.begin());
+				if (castRayForBlock(window, ray, temp[0].origin, temp)) {
+					//IF FOUND CALL MAP SEND TO UPDATEQUE
+					printf("%f, %f, %f remove \n", temp[0].origin.x, temp[0].origin.y, temp[0].origin.z);
+					updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
+					break;
+				}
 			}
+
 		}
+		/*
+		* Handles adding blocks
+		*/
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false && menu == false) {
+			// place block
+			printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
+			pPressed = true;
+			Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
 
-	}
-	/*
-	* Handles adding blocks
-	*/
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false && menu == false) {
-		// place block
-		printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
-		pPressed = true;
-		Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+			// sort the player verts
+			for (int i = 0; i < playerVerts.size() / 12; i++) {
+				std::vector<Triangle> temp(12);
+				std::copy(playerVerts.begin() + (i * 12) + 1,
+					playerVerts.begin() + (i * 12) + 12,
+					temp.begin());
 
-		// sort the player verts
-		for (int i = 0; i < playerVerts.size() / 12; i++) {
-			std::vector<Triangle> temp(12);
-			std::copy(playerVerts.begin() + (i * 12) + 1,
-				playerVerts.begin() + (i * 12) + 12,
-				temp.begin());
+				// sort triangles for better accuracy
 
-			// sort triangles for better accuracy
+				std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
+					return sortTriangleByDistance(Position, p1, p2);
+					});
 
-			std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
-				return sortTriangleByDistance(Position, p1, p2);
-				});
+				int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
+				if (ind >= 0) {
+					// IF FOUND CALL MAP SEND TO UPDATEQUE
 
-			int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
-			if (ind >= 0) {
-				// IF FOUND CALL MAP SEND TO UPDATEQUE
+					// we need to find the normal of our intersection
+					glm::vec3 normal = temp[ind].getNormal();
+					normal.x *= -1;
+					normal.y *= -1;
+					normal.z *= -1;
 
-				// we need to find the normal of our intersection
-				glm::vec3 normal = temp[ind].getNormal();
-				normal.x *= -1;
-				normal.y *= -1;
-				normal.z *= -1;
+					// convert from opengl cords to block space
+					glm::vec3 tnormal = glm::vec3(normal.x, normal.z, normal.y);
+					printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
 
-				// convert from opengl cords to block space
-				glm::vec3 tnormal = glm::vec3(normal.x, normal.z, normal.y);
-				printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
-
-				// adujust startblock for placement of new block.
-				glm::vec3 newBlock = temp[ind].origin + tnormal;
+					// adujust startblock for placement of new block.
+					glm::vec3 newBlock = temp[ind].origin + tnormal;
 
 
 
 
-				printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
-				int blockID = 1;
-				updateQue->push_back(std::make_unique<AddPacket>(newBlock, blockID));
-				break;
+					printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
+					int blockID = 1;
+					updateQue->push_back(std::make_unique<AddPacket>(newBlock, blockID));
+					break;
+				}
 			}
-		}
 
+		}
+		// apply movement
+		detectCollison(delta, blockCords);
 	}
 
 	// open options menu
@@ -800,8 +805,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 
 	// -----------------------------------------------------------------------------------------------
 
-
-	detectCollison(delta, blockCords);
 
 
 }
