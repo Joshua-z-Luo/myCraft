@@ -253,6 +253,14 @@ int main()
 	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 
+	// set imgui general styles
+	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+	colors[ImGuiCol_Button] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Set button color to grey
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f); // Set hover color to light grey
+
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -368,32 +376,28 @@ int main()
 		ImGui::NewFrame();
 
 		if (camera.isMenuOpen()) {
-
-
-
-			ImGui::SetNextWindowSize(ImVec2(100, 100)); // Set window size to 400x300
+			ImVec2 windowSize = ImVec2(100, 100);
+			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
 			ImGui::SetNextWindowPos(ImVec2(550, 350)); // Set window position to (100, 100)
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-
 			// Get window size
-			ImVec2 windowSize = ImGui::GetWindowSize();
+
+
 			// Calculate position for centering button
 			ImVec2 buttonSize(75, 20); // button size
 			ImVec2 buttonPosition = ImVec2((windowSize.x - buttonSize.x) * 0.5f, (windowSize.y - buttonSize.y) * 0.5f); // Find center
-
 			// Set cursor position to center the button
 			ImGui::SetCursorPos(buttonPosition);
 
 			if (ImGui::Button("Exit Game", buttonSize)) {
-				// Delete all the objects we've created
-				shaderProgram.Delete();
-				lightShader.Delete();
-				// Delete window before ending the program
-				glfwDestroyWindow(window);
-				// Terminate GLFW before ending the program
-				glfwTerminate();
-				return 0;
+				// break out of game loop
+				break;
 			}
+			// Restore button color
+
+
+
+
 			ImGui::End();
 		}
 
