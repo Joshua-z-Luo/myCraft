@@ -137,6 +137,8 @@ int main()
 	// Tell GLFW we are using the CORE profile
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//make window unresizable
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "MyCraft"
 	GLFWwindow* window = glfwCreateWindow(width, height, "MyCraft", NULL, NULL);
@@ -361,18 +363,42 @@ int main()
 		map->drawMap(shaderProgram, camera);
 
 		// Menu elements
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
 		if (camera.isMenuOpen()) {
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
 
-			ImGui::Begin("Demo window");
-			ImGui::Button("Hello!");
+
+
+			ImGui::SetNextWindowSize(ImVec2(100, 100)); // Set window size to 400x300
+			ImGui::SetNextWindowPos(ImVec2(550, 350)); // Set window position to (100, 100)
+			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+			// Get window size
+			ImVec2 windowSize = ImGui::GetWindowSize();
+			// Calculate position for centering button
+			ImVec2 buttonSize(75, 20); // button size
+			ImVec2 buttonPosition = ImVec2((windowSize.x - buttonSize.x) * 0.5f, (windowSize.y - buttonSize.y) * 0.5f); // Find center
+
+			// Set cursor position to center the button
+			ImGui::SetCursorPos(buttonPosition);
+
+			if (ImGui::Button("Exit Game", buttonSize)) {
+				// Delete all the objects we've created
+				shaderProgram.Delete();
+				lightShader.Delete();
+				// Delete window before ending the program
+				glfwDestroyWindow(window);
+				// Terminate GLFW before ending the program
+				glfwTerminate();
+				return 0;
+			}
 			ImGui::End();
-
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		}
+
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
