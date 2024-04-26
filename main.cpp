@@ -227,6 +227,12 @@ int main()
 	colors[ImGuiCol_Button] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Set button color to grey
 	colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f); // Set hover color to light grey
 
+	// add scaled fonts
+	ImFontAtlas* fontAtlas = io.Fonts;
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 14.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 45.0f);
+
+
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
 	// Enables the Depth Buffer
@@ -378,7 +384,9 @@ int main()
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
 			ImGui::Begin("Inventory", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
-			ImGui::Text("Inventory");
+				ImGui::PushFont(fontAtlas->Fonts[1]);
+				ImGui::Text("Inventory");
+				ImGui::PopFont();
 
 			ImGui::End();
 			ImGui::PopStyleColor();
@@ -392,23 +400,22 @@ int main()
 			ImGui::Begin("Overlay", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
 			ImGui::End();
 
-			ImVec2 windowSize = ImVec2(100, 100);
+			ImVec2 windowSize = ImVec2(200, 100);
 			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
-			ImGui::SetNextWindowPos(ImVec2(550, 400)); // Set window position to (100, 100)
+			ImGui::SetNextWindowPos(ImVec2(500, 400)); // Set window position to (100, 100)
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
-			// Get window size
 
+				// Calculate position for centering button
+				ImVec2 buttonSize(150, 50); // button size
+				ImVec2 buttonPosition = ImVec2((windowSize.x - buttonSize.x) * 0.5f, (windowSize.y - buttonSize.y) * 0.5f); // Find center
+				// Set cursor position to center the button
+				ImGui::SetCursorPos(buttonPosition);
 
-			// Calculate position for centering button
-			ImVec2 buttonSize(75, 20); // button size
-			ImVec2 buttonPosition = ImVec2((windowSize.x - buttonSize.x) * 0.5f, (windowSize.y - buttonSize.y) * 0.5f); // Find center
-			// Set cursor position to center the button
-			ImGui::SetCursorPos(buttonPosition);
-
-			if (ImGui::Button("Exit Game", buttonSize)) {
-				// break out of game loop
-				break;
-			}
+				if (ImGui::Button("Exit Game", buttonSize)) {
+					// break out of game loop
+					break;
+				}
+		
 			ImGui::End();
 		}
 		ImGui::Render();
