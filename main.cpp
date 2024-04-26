@@ -222,6 +222,10 @@ int main()
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+	colors[ImGuiCol_Button] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Set button color to grey
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f); // Set hover color to light grey
 
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
@@ -252,13 +256,6 @@ int main()
 
 	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
-
-	// set imgui general styles
-	ImGui::StyleColorsDark();
-	ImGuiStyle& style = ImGui::GetStyle();
-	ImVec4* colors = style.Colors;
-	colors[ImGuiCol_Button] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Set button color to grey
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f); // Set hover color to light grey
 
 
 	// Game loop
@@ -334,10 +331,6 @@ int main()
 			//camera.Inputs(window);
 		}
 
-		// Specify the color of the background
-		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
-		// Clean the back buffer and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		// update current position of player hitbox
@@ -364,7 +357,11 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 100.0f);
 
-		
+		// Specify the color of the background
+		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
+		// Clean the back buffer and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
 		light.Draw(lightShader, camera);
@@ -375,10 +372,29 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		if (camera.isInventoryOpen()) {
+			ImGui::SetNextWindowSize(ImVec2(800, 400));
+			ImGui::SetNextWindowPos(ImVec2(200, 200)); 
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+			ImGui::Begin("Inventory", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+			ImGui::Text("Inventory");
+
+			ImGui::End();
+			ImGui::PopStyleColor();
+		}
+
 		if (camera.isMenuOpen()) {
+			// Draw a black translucent overlay
+			ImGui::SetNextWindowPos(ImVec2(0, 0));
+			ImGui::SetNextWindowSize(io.DisplaySize);
+			ImGui::SetNextWindowBgAlpha(0.7f);
+			ImGui::Begin("Overlay", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+			ImGui::End();
+
 			ImVec2 windowSize = ImVec2(100, 100);
 			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
-			ImGui::SetNextWindowPos(ImVec2(550, 350)); // Set window position to (100, 100)
+			ImGui::SetNextWindowPos(ImVec2(550, 400)); // Set window position to (100, 100)
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 			// Get window size
 
@@ -393,14 +409,8 @@ int main()
 				// break out of game loop
 				break;
 			}
-			// Restore button color
-
-
-
-
 			ImGui::End();
 		}
-
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -417,6 +427,12 @@ int main()
 	// Delete all the objects we've created
 	shaderProgram.Delete();
 	lightShader.Delete();
+
+	//cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program

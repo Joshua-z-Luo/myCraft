@@ -57,10 +57,12 @@ private:
 	bool spacePressed = false;
 	bool inAir = false;
 	bool menu = false;
+	bool inventory = false;
 
 	// key Pressed?
 	bool pPressed = false;
 	bool escPressed = false;
+	bool tabPressed = false;
 
 
 public:
@@ -127,6 +129,7 @@ public:
 
 	// Get menu status
 	bool isMenuOpen();
+	bool isInventoryOpen();
 };
 
 #endif
