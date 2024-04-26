@@ -229,8 +229,8 @@ int main()
 
 	// add scaled fonts
 	ImFontAtlas* fontAtlas = io.Fonts;
-	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 14.0f);
-	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 45.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 16.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 40.0f);
 
 
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
@@ -280,15 +280,23 @@ int main()
 			case 1:
 				// Delete Block
 				glm::vec3 deleteBlock = updateQue[0]->conductAction();
-				map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z);
+
+				//add block to inventory
+				// 1. get destryoed blockid, (might need to get a return value from removeBlockFromChunk)
+				// 2. call addBlockToInventory from player class
+				camera.addItemToInventory(map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z), 1);
 				break;
+
 			case 2:
 				// Add Block
 				glm::vec3 addBlock = updateQue[0]->conductAction();
 				// % TODO IMPLEMENT A WAY TO FETCH THE BLOCK ID. MIGHT NEED NEW METHOD IN UpdatePacket
-
+				// 1. FIX SELECTABLES (CAN ONLY SELECT slot IF BLOCK AMOUNT < THEN MAX OF STACK). 
+				// 2. PLACE BLOCK IF SELECTED IN INVENTORY 
+				// 3. REMOVE BLOCK FROM INVENTORY ONCE PLACED
 				map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, 1);
 				break;
+
 			case 3:
 
 				break;
@@ -387,6 +395,32 @@ int main()
 				ImGui::PushFont(fontAtlas->Fonts[1]);
 				ImGui::Text("Inventory");
 				ImGui::PopFont();
+
+				ImGui::Columns(2, nullptr, false);
+
+				std::array <std::array<int, 2>, 20> inventoryArray = camera.getInventory(); 
+
+				for (int i = 0; i < inventoryArray.size(); i++) {
+
+
+					// Render selectable or empty text
+					if (inventoryArray[i][1] == -1) {
+						ImGui::Text("Empty Slot");
+					}
+					else {
+						// %TODO Selectable not reacting to clicks sometimes.
+						if (ImGui::Selectable((
+							"Block: " + std::to_string(inventoryArray[i][1]) + " "
+							+ "Amount: " + std::to_string(inventoryArray[i][0]))
+							.c_str(), (camera.getSelectedSlot() == i))) 
+							{
+
+								printf("Item %d clicked!\n", i);
+								camera.setSelectedSlot(i); // set selected state if clicked
+							}
+					}
+					ImGui::NextColumn();
+				}
 
 			ImGui::End();
 			ImGui::PopStyleColor();

@@ -10,16 +10,17 @@
 #include<glm/gtx/vector_angle.hpp>
 #include"../shaders/shaderClass/shaderClass.h"
 #include "Ray.h"
+
 #include "vector"
 #include "deque"
+#include <array>
 #include <limits>
+#include <string>
+#include <algorithm>
 
 #include "../constants.h"
-
 #include "../gameLogic/DestroyPacket.h"
 #include "../gameLogic/AddPacket.h"
-
-#include <algorithm>
 #include "../entities/header/Model/Triangle.h"
 
 /*
@@ -40,6 +41,10 @@ private:
 	GLfloat playerMinY;
 	GLfloat playerMinZ;
 
+	// inventory
+	// for tuple, first value is amount, 2nd value is amount
+	std::array <std::array<int, 2>, 20> inventoryArray;
+	int selectedSlot = 0;
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
@@ -66,7 +71,8 @@ private:
 
 
 public:
-
+	// Handles camera inputs
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
 
 	// Stores the main vectors of the camera
 	glm::vec3 Position;
@@ -101,10 +107,13 @@ public:
 	// Check if grounded
 	void grounded(std::vector<glm::vec3> blockCords);
 
-	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
+	// inventory logic
+	void addItemToInventory(int blockID, int amount);
+	std::array <std::array<int, 2>, 20> getInventory();
+	int getSelectedSlot();
+	void setSelectedSlot(int index);
 
-
+	// Ray logic
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
 	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles);
 	int castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles);

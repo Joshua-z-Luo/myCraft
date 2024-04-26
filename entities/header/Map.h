@@ -64,7 +64,7 @@ public:
 
 	void addBlock(std::unique_ptr<Block> newBlock);
 	void addBlockToChunk(int xID, int yID, int x, int y, int z, int id);
-	void removeBlockFromChunk(int xID, int yID, int x, int y, int z);
+	int removeBlockFromChunk(int xID, int yID, int x, int y, int z);
 	void populateChunk(Chunk * chunk, int xID, int yID);
 
 	void loadMap();

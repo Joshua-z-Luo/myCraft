@@ -6,6 +6,12 @@ Player::Player(int width, int height, glm::vec3 position)
 	Player::height = height;
 	Position = position;
 	updateBoundingBox();
+
+	// initalize empty inventory
+	for (int i = 0; i < inventoryArray.size(); i++) {
+		inventoryArray[i][0] = 0;
+		inventoryArray[i][1] = -1;
+	}
 }
 
 
@@ -336,6 +342,45 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 		}
 	}
 	
+}
+
+void Player::addItemToInventory(int blockID, int amount)
+{	
+	bool flag = false;
+	int firstEmpty = NULL;
+	for (int i = 0; i < inventoryArray.size(); i++) {
+		if (inventoryArray[i][1] == -1 and flag == false) {
+			firstEmpty = i;
+			flag = true;
+			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
+		}
+		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 2) {
+			inventoryArray[i][0] += amount;
+			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
+			return;
+		}
+		fprintf(stdout, "%d firstempty %d iteration \n", firstEmpty, i);
+	}
+	if (flag == true) {
+		inventoryArray[firstEmpty][1] = blockID;
+		inventoryArray[firstEmpty][0] = amount;
+		fprintf(stdout, " %d inventory number %d location ", inventoryArray[firstEmpty][0], firstEmpty);
+	}
+}
+
+std::array<std::array<int, 2>, 20> Player::getInventory()
+{
+	return inventoryArray;
+}
+
+int Player::getSelectedSlot()
+{
+	return selectedSlot;
+}
+
+void Player::setSelectedSlot(int index)
+{
+	selectedSlot = index;
 }
 
 
