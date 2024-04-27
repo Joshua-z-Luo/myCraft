@@ -101,6 +101,7 @@ Triangle * Block::getTriangles()
 	return result;
 }
 
+
 void Block::createMesh(Texture * texture[2])
 {
 	std::vector <Vertex> verts(baseVertices, baseVertices + sizeof(baseVertices) / sizeof(Vertex));

@@ -6,7 +6,6 @@
 #include<glm/gtc/matrix_transform.hpp>
 #include<glm/gtc/type_ptr.hpp>
 
-
 #include"Texture.h"
 #include"shaders/shaderClass/shaderClass.h"
 #include"shaders/VAO.h"
@@ -24,6 +23,10 @@
 #include "constants.h"
 
 #include"entities/header/Model/Mesh.h"
+
+#include "imgui.h"
+#include "backends/imgui_impl_glfw.h"
+#include "backends/imgui_impl_opengl3.h"
 
 /*
 GLfloat x = 0;
@@ -134,6 +137,8 @@ int main()
 	// Tell GLFW we are using the CORE profile
 	// So that means we only have the modern functions
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	//make window unresizable
+	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 
 	// Create a GLFWwindow object of 800 by 800 pixels, naming it "MyCraft"
 	GLFWwindow* window = glfwCreateWindow(width, height, "MyCraft", NULL, NULL);
@@ -207,6 +212,27 @@ int main()
 	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	
 
+	// ----------------------------- Menu (ImGui) -----------------------------------------------------------------------------------------------------
+	const char* glsl_version = "#version 130";
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	// Setup Platform/Renderer bindings
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init(glsl_version);
+	// Setup Dear ImGui style
+	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+	colors[ImGuiCol_Button] = ImVec4(0.5f, 0.5f, 0.5f, 1.0f); // Set button color to grey
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.7f, 0.7f, 0.7f, 1.0f); // Set hover color to light grey
+
+	// add scaled fonts
+	ImFontAtlas* fontAtlas = io.Fonts;
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 16.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 40.0f);
+
+
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
 	// Enables the Depth Buffer
@@ -237,6 +263,7 @@ int main()
 	// Gets block coordinates for detection logic
 	std::vector<glm::vec3> blockCords = map->getBlockCordinates();
 
+
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -251,17 +278,27 @@ int main()
 			printf("%d \n", updateQue[0]->getActionID());
 			switch (updateQue[0]->getActionID()) {
 			case 1:
-				// Delete Block
+				// Player Delete Block
 				glm::vec3 deleteBlock = updateQue[0]->conductAction();
-				map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z);
-				break;
-			case 2:
-				// Add Block
-				glm::vec3 addBlock = updateQue[0]->conductAction();
-				// % TODO IMPLEMENT A WAY TO FETCH THE BLOCK ID. MIGHT NEED NEW METHOD IN UpdatePacket
 
-				map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, 1);
+				//add block to inventory
+				// 1. get destryoed blockid, (might need to get a return value from removeBlockFromChunk)
+				// 2. call addBlockToInventory from player class
+				camera.addItemToInventory(map->removeBlockFromChunk(0, 0, deleteBlock.x, deleteBlock.y, deleteBlock.z), 1);
 				break;
+
+			case 2:
+				// Player add block from inventory
+				glm::vec3 addBlock = updateQue[0]->conductAction();
+				if (camera.getSelectedSlot() != -1) {
+					map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, camera.getInventory()[camera.getSelectedSlot()][1]);
+					camera.removeItemFromInventory(1, camera.getSelectedSlot());
+					if (camera.getInventory()[camera.getSelectedSlot()][1] == -1) {
+						camera.setSelectedSlot(-1);
+					}
+				}
+				break;
+
 			case 3:
 
 				break;
@@ -310,10 +347,6 @@ int main()
 			//camera.Inputs(window);
 		}
 
-		// Specify the color of the background
-		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
-		// Clean the back buffer and depth buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 		// update current position of player hitbox
@@ -340,16 +373,97 @@ int main()
 		// Updates and exports the camera matrix to the Vertex Shader
 		camera.updateMatrix(90.0f, 0.1f, 100.0f);
 
-		
+		// Specify the color of the background
+		glClearColor(0.7f, 0.7f, 1.0f, 1.0f);
+		// Clean the back buffer and depth buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		// Draws different meshes
 		// ok not drawing the block apparently jsut ruins the shader, no block no shader
 		light.Draw(lightShader, camera);
 		map->drawMap(shaderProgram, camera);
+
+		// Menu elements
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		if (camera.isInventoryOpen()) {
+			ImGui::SetNextWindowSize(ImVec2(800, 400));
+			ImGui::SetNextWindowPos(ImVec2(200, 200)); 
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+			ImGui::Begin("Inventory", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+				ImGui::PushFont(fontAtlas->Fonts[1]);
+				ImGui::Text("Inventory");
+				ImGui::PopFont();
+
+				ImGui::Columns(2, nullptr, false);
+
+				std::array <std::array<int, 2>, 20> inventoryArray = camera.getInventory(); 
+
+				for (int i = 0; i < inventoryArray.size(); i++) {
+
+
+					// Render selectable or empty text
+					if (inventoryArray[i][1] == -1) {
+						ImGui::Text("Empty Slot");
+					}
+					else {
+						// %TODO Selectable not reacting to clicks sometimes.
+						if (ImGui::Selectable((
+							std::to_string(i + 1) + " "
+							"Block: " + std::to_string(inventoryArray[i][1]) + " "
+							+ "Amount: " + std::to_string(inventoryArray[i][0]))
+							.c_str(), (camera.getSelectedSlot() == i))) 
+							{
+
+								camera.setSelectedSlot(i); // set selected state if clicked
+								printf("Item %d clicked!\n", camera.getSelectedSlot());
+							}
+					}
+					ImGui::NextColumn();
+				}
+
+			ImGui::End();
+			ImGui::PopStyleColor();
+		}
+
+		if (camera.isMenuOpen()) {
+			// Draw a black translucent overlay
+			ImGui::SetNextWindowPos(ImVec2(0, 0));
+			ImGui::SetNextWindowSize(io.DisplaySize);
+			ImGui::SetNextWindowBgAlpha(0.7f);
+			ImGui::Begin("Overlay", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+			ImGui::End();
+
+			ImVec2 windowSize = ImVec2(200, 100);
+			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
+			ImGui::SetNextWindowPos(ImVec2(500, 400)); // Set window position to (100, 100)
+			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+
+				// Calculate position for centering button
+				ImVec2 buttonSize(150, 50); // button size
+				ImVec2 buttonPosition = ImVec2((windowSize.x - buttonSize.x) * 0.5f, (windowSize.y - buttonSize.y) * 0.5f); // Find center
+				// Set cursor position to center the button
+				ImGui::SetCursorPos(buttonPosition);
+
+				if (ImGui::Button("Exit Game", buttonSize)) {
+					// break out of game loop
+					break;
+				}
+		
+			ImGui::End();
+		}
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		// Swap the back buffer with the front buffer
 		glfwSwapBuffers(window);
 		// Take care of all GLFW events
 		glfwPollEvents();
 		//printf("x %f, y %f z %f \n", camera.Position.x, camera.Position.y, camera.Position.z);
+
 	}
 
 
@@ -357,6 +471,12 @@ int main()
 	// Delete all the objects we've created
 	shaderProgram.Delete();
 	lightShader.Delete();
+
+	//cleanup
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
+
 	// Delete window before ending the program
 	glfwDestroyWindow(window);
 	// Terminate GLFW before ending the program

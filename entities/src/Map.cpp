@@ -76,7 +76,11 @@ void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
 }
 
-void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
+
+/* 
+* Remove selected block from selected chunk. Returns id of block removed
+*/
+int Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 {	
 	float xF = x;
 	float yF = y;
@@ -109,7 +113,7 @@ void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 
 	//fprintf(stdout, " remove: x: %d y: %d, %f %f floats \n", xID, yID, x / Constants::CHUNK_SIZE, y / Constants::CHUNK_SIZE);
 	//(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
-	(*ChunksArray[xID + originX])[yID + originY]->removeBlock(x, y, z);
+	return (*ChunksArray[xID + originX])[yID + originY]->removeBlock(x, y, z);
 }
 
 /*
