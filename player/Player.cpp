@@ -353,7 +353,7 @@ void Player::addItemToInventory(int blockID, int amount)
 			firstEmpty = i;
 			flag = true;
 			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
-		}
+		}	
 		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 8) {
 			inventoryArray[i][0] += amount;
 			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
