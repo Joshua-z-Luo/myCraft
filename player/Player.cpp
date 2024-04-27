@@ -6,23 +6,12 @@ Player::Player(int width, int height, glm::vec3 position)
 	Player::height = height;
 	Position = position;
 	updateBoundingBox();
-
-	// initalize empty inventory
-	for (int i = 0; i < inventoryArray.size(); i++) {
-		inventoryArray[i][0] = 0;
-		inventoryArray[i][1] = -1;
-	}
 }
 
 
 void Player::MovePlayer(glm::vec3 displacement)
 {
 	Position += displacement;
-}
-
-glm::vec3 Player::getOrientation()
-{
-	return Orientation;
 }
 
 void Player::setPlayerMovement(float frameSpeed, glm::vec3 direction, float newAirSpeed)
@@ -344,63 +333,152 @@ void Player::grounded(std::vector<glm::vec3> blockCords)
 	
 }
 
-void Player::addItemToInventory(int blockID, int amount)
-{	
-	bool flag = false;
-	int firstEmpty = NULL;
-	for (int i = 0; i < inventoryArray.size(); i++) {
-		if (inventoryArray[i][1] == -1 and flag == false) {
-			firstEmpty = i;
-			flag = true;
-			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
-		}	
-		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 8) {
-			inventoryArray[i][0] += amount;
-			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
-			return;
+
+
+void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3>* playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY)
+{
+	// Binds speed to real time not frames per second.
+	speed = 0.0f;
+	float newAirSpeed = 0.0f;
+	glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
+	float frameSpeed = 4.0f;
+
+	// Handles key inputs
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	{
+		movementVector += glm::vec3(Orientation.x, 0.0f, Orientation.z);
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+	{
+		movementVector += -glm::normalize(glm::cross(Orientation, Up));
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+	{
+		movementVector += -glm::vec3(Orientation.x, 0.0f, Orientation.z);
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+	{	
+		movementVector += glm::normalize(glm::cross(Orientation, Up));
+	}
+	
+	grounded(blockCords);
+	// Jump logic
+	//fprintf(stdout, "%f %d\n", airSpeed, inAir);
+	if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
+	{
+		spacePressed = true;
+		Direction.y = 1.0f;
+		airSpeed = 10.0f;
+
+	}
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+		spacePressed = false;
+	}
+	if (Direction.y != 0.0f || inAir == true) {
+		float velocityChange = delta * gravity;
+		newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
+		//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
+
+		if (newAirSpeed < 0.0f) {
+			movementVector.y = Down.y;
+			if (newAirSpeed < -10.0f) {
+				newAirSpeed = -10.0f;
+			}
 		}
-		fprintf(stdout, "%d firstempty %d iteration \n", firstEmpty, i);
+		else if (newAirSpeed > 0.0f){
+			movementVector.y = Up.y;
+		}
 	}
-	if (flag == true) {
-		inventoryArray[firstEmpty][1] = blockID;
-		inventoryArray[firstEmpty][0] = amount;
-		fprintf(stdout, " %d inventory number %d location ", inventoryArray[firstEmpty][0], firstEmpty);
+	else {
+		airSpeed = 0.0f;
 	}
-}
+	
+	// NEED SOME WAY TO CHECK IF THE BLOCK IS IN THE AIR.
 
-void Player::removeItemFromInventory(int amount, int slot)
-{
-	if (inventoryArray[slot][0] >= amount) {
-		inventoryArray[slot][0] -= amount;
+	setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
+
+	// Handles editing
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_PRESS && pPressed == false) {
+		// destroy block
+		//Current solution checks all verticies/triangle faces of current chunk.
+		// Needs to be optimized to only check triangle faces that are facing the player instead of every single triangle within the chunk.
+
+		pPressed = true;
+		Ray ray = GetMouseRay(window, getView(), getProjection(45.0f, 0.1f, 100.0f));
+
+		for (int i = 0; i < playerVerts->size() / 37; i++) {
+			std::vector<glm::vec3> temp;
+			glm::vec3 startBlock = (*playerVerts)[i * 37];
+			for (int j = (i * 37) + 1; j < (i * 37) + 37; j++) {
+				temp.push_back((*playerVerts)[j]);
+			}
+			if (castRayForBlock(window, ray, startBlock, temp)) {
+
+				//IF FOUND CALL MAP SEND TO UPDATEQUE
+				UpdatePacket newPacket(startBlock, posX, posY);
+				updateQue->push_back(newPacket);
+				break;
+			}
+		}
+
 	}
-	if (inventoryArray[slot][0] == 0) {
-		inventoryArray[slot][1] = -1;
+
+	if (glfwGetKey(window, GLFW_KEY_P) == GLFW_RELEASE) {
+		pPressed = false;
 	}
-}
 
-std::array<std::array<int, 2>, 20> Player::getInventory()
-{
-	return inventoryArray;
-}
+	// Handles mouse inputs
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+	{
+		// Hides mouse cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 
-int Player::getSelectedSlot()
-{
-	return selectedSlot;
-}
+		// Prevents camera from jumping on the first click
+		if (firstClick)
+		{
+			glfwSetCursorPos(window, (width / 2), (height / 2));
+			firstClick = false;
+		}
 
-void Player::setSelectedSlot(int index)
-{
-	selectedSlot = index;
-}
+		// Stores the coordinates of the cursor
+		double mouseX;
+		double mouseY;
+		// Fetches the coordinates of the cursor
+		glfwGetCursorPos(window, &mouseX, &mouseY);
 
+		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+		// and then "transforms" them into degrees 
+		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
 
-// Sorting helper (for placing blocks)
-bool sortTriangleByDistance(glm::vec3 playerPos, Triangle trig1, Triangle trig2) {
-	glm::vec3 blockPos = trig1.getTriangleCenter();
-	glm::vec3 blockPos2 = trig2.getTriangleCenter();
-	double dist1 = ((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y));
-	double dist2 = ((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y));
-	return dist1 < dist2;
+		// Calculates upcoming vertical change in the Orientation
+		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+
+		// Decides whether or not the next vertical Orientation is legal or not
+		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+		{
+			Orientation = newOrientation;
+		}
+		 
+		// Rotates the Orientation left and right
+		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+
+		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+		glfwSetCursorPos(window, (width / 2), (height / 2));
+	}
+	else if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE)
+	{
+		// Unhides cursor since camera is not looking around anymore
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		// Makes sure the next time the camera looks around it doesn't jump
+		firstClick = true;
+	}
+	
+
+	detectCollison(delta, blockCords);
+	
+	
 }
 
 void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY)
@@ -409,61 +487,27 @@ void Player::GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mou
 }
 
 
-bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles)
+bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles)
 {
 
-	for (int i = 0; i < triangles.size(); i ++)
+	for (int i = 0; i < triangles.size(); i += 3)
 	{
-		glm::vec3 v0 = triangles[i].vert1;
-		glm::vec3 v1 = triangles[i].vert2;
-		glm::vec3 v2 = triangles[i].vert3;
+		glm::vec3 v0 = triangles[i];
+		glm::vec3 v1 = triangles[i + 1];
+		glm::vec3 v2 = triangles[i + 2];
 
 		float t;
-		if (ray.rayIntersectsBlock(triangles[i], t))
+		if (ray.rayIntersectsBlock(v0, v1, v2, t))
 		{
 			// Intersection found with this triangle
 			return true;
 		}
 	}
-	
+
 	// No intersection with any triangle
 	return false;
 }
 
-
-int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles)
-{
-	printf("new block\n");
-	for (int i = 0; i < triangles.size(); i++)
-	{
-
-		//printf("triangle num %d \n", triangles[i].faceID);
-		glm::vec3 v0 = triangles[i].vert1;
-		glm::vec3 v1 = triangles[i].vert2;
-		glm::vec3 v2 = triangles[i].vert3;
-		//we can check if ray is intersecting multiple faces by not returning and printing the normals of each face collided per block.
-		float t;
-		if (ray.rayIntersectsBlock(triangles[i], t))
-		{
-			printf("face %d \n", triangles[i].faceID);
-			// Intersection found with this triangle
-			glm::vec3 temp = triangles[i].getNormal();
-			//printf("face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
-
-			if (ray.rayNormalCheck(triangles[i])) {
-				glm::vec3 temp = triangles[i].getNormal();
-				printf("collided face face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
-				return i;
-			}
-		}
-	}
-
-	// No intersection with any triangle
-	return -1;
-}
-
-
-// %TODO RAY ACCURACY ISSUES MAY BE RELATED TO RAY CREATION
 Ray Player::GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) {
 	double mouseX, mouseY;
 	GetMouseCoordinates(window, mouseX, mouseY);
@@ -532,363 +576,4 @@ void Player::Matrix(Shader& shader, const char* uniform)
 {
 	// Exports camera matrix
 	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
-}
-
-/*
- Gets the Frustum planes of the player camera.
-*/
-std::vector<glm::vec4> Player::extractFrustumPlanes()
-{
-
-	std::vector<glm::vec4> result;
-	glm::mat4 invTranspose = glm::transpose(cameraMatrix);
-
-	// Extracting left plane
-	glm::vec4 leftPlane = invTranspose[3] + invTranspose[0];
-	// Normalize the plane
-	leftPlane /= glm::length(glm::vec3(leftPlane));
-	result.push_back(leftPlane);
-
-	// Extracting right plane
-	glm::vec4 rightPlane = invTranspose[3] - invTranspose[0];
-	// Normalize the plane
-	rightPlane /= glm::length(glm::vec3(rightPlane));
-	result.push_back(rightPlane);
-
-	// Extracting bottom plane
-	glm::vec4 bottomPlane = invTranspose[3] + invTranspose[1];
-	// Normalize the plane
-	bottomPlane /= glm::length(glm::vec3(bottomPlane));
-	result.push_back(bottomPlane);
-
-	// Extracting top plane
-	glm::vec4 topPlane = invTranspose[3] - invTranspose[1];
-	// Normalize the plane
-	topPlane /= glm::length(glm::vec3(topPlane));
-	result.push_back(topPlane);
-
-	// Extracting near plane
-	glm::vec4 nearPlane = invTranspose[3] + invTranspose[2];
-	// Normalize the plane
-	nearPlane /= glm::length(glm::vec3(nearPlane));
-	result.push_back(nearPlane);
-
-	// Extracting far plane
-	glm::vec4 farPlane = invTranspose[3] - invTranspose[2];
-	// Normalize the plane
-	farPlane /= glm::length(glm::vec3(farPlane));
-	result.push_back(farPlane);
-	/*
-	for (const auto& plane : result) {
-		std::cout << "(" << plane.x << ", " << plane.y << ", " << plane.z << ", " << plane.w << ")" << std::endl;
-	}*/
-	return result;
-}
-
-
-/*
- Gets the Frustum planes of the player camera but with custom Projection View matrix.
-*/
-std::vector<glm::vec4> Player::extractFrustumPlanes(const glm::mat4& viewProjectionMatrix)
-{
-
-	std::vector<glm::vec4> result;
-	glm::mat4 invTranspose = glm::transpose(viewProjectionMatrix);
-
-	// Extracting left plane
-	glm::vec4 leftPlane = invTranspose[3] + invTranspose[0];
-	// Normalize the plane
-	leftPlane /= glm::length(glm::vec3(leftPlane));
-	result.push_back(leftPlane);
-
-	// Extracting right plane
-	glm::vec4 rightPlane = invTranspose[3] - invTranspose[0];
-	// Normalize the plane
-	rightPlane /= glm::length(glm::vec3(rightPlane));
-	result.push_back(rightPlane);
-
-	// Extracting bottom plane
-	glm::vec4 bottomPlane = invTranspose[3] + invTranspose[1];
-	// Normalize the plane
-	bottomPlane /= glm::length(glm::vec3(bottomPlane));
-	result.push_back(bottomPlane);
-
-	// Extracting top plane
-	glm::vec4 topPlane = invTranspose[3] - invTranspose[1];
-	// Normalize the plane
-	topPlane /= glm::length(glm::vec3(topPlane));
-	result.push_back(topPlane);
-
-	// Extracting near plane
-	glm::vec4 nearPlane = invTranspose[3] + invTranspose[2];
-	// Normalize the plane
-	nearPlane /= glm::length(glm::vec3(nearPlane));
-	result.push_back(nearPlane);
-
-	// Extracting far plane
-	glm::vec4 farPlane = invTranspose[3] - invTranspose[2];
-	// Normalize the plane
-	farPlane /= glm::length(glm::vec3(farPlane));
-	result.push_back(farPlane);
-	/*
-	for (const auto& plane : result) {
-		std::cout << "(" << plane.x << ", " << plane.y << ", " << plane.z << ", " << plane.w << ")" << std::endl;
-	}*/
-	return result;
-}
-
-bool Player::isMenuOpen()
-{
-	return menu;
-}
-
-bool Player::isInventoryOpen()
-{
-	return inventory;
-}
-
-/*
-Get menu status
-*/
-
-
-/*
-Handle player inputs
-*/
-void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
-{
-	if (!menu)
-	{
-		
-
-			//printf("%d number of triangles in playerverts \n", playerVerts->size());
-			// Binds speed to real time not frames per second.
-			speed = 0.0f;
-			float newAirSpeed = 0.0f;
-			glm::vec3 movementVector(0.0f, 0.0f, 0.0f);
-			float frameSpeed = 4.0f;
-
-			// Handles key inputs
-			if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-			{
-				movementVector += glm::vec3(Orientation.x, 0.0f, Orientation.z);
-			}
-			if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-			{
-				movementVector += -glm::normalize(glm::cross(Orientation, Up));
-			}
-			if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-			{
-				movementVector += -glm::vec3(Orientation.x, 0.0f, Orientation.z);
-			}
-			if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-			{
-				movementVector += glm::normalize(glm::cross(Orientation, Up));
-			}
-
-			grounded(blockCords);
-			// Jump logic
-			//fprintf(stdout, "%f %d\n", airSpeed, inAir);
-			if (spacePressed == false && glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && airSpeed == 0.0f)
-			{
-				spacePressed = true;
-				Direction.y = 1.0f;
-				airSpeed = 10.0f;
-
-			}
-			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
-				spacePressed = false;
-			}
-			if (Direction.y != 0.0f || inAir == true) {
-				float velocityChange = delta * gravity;
-				newAirSpeed = ((airSpeed * Direction.y) + velocityChange);
-				//fprintf(stdout, "Veclotiy change: %f , new air speed %f old air speed %f\n ", velocityChange, newAirSpeed, airSpeed);
-
-				if (newAirSpeed < 0.0f) {
-					movementVector.y = Down.y;
-					if (newAirSpeed < -10.0f) {
-						newAirSpeed = -10.0f;
-					}
-				}
-				else if (newAirSpeed > 0.0f) {
-					movementVector.y = Up.y;
-				}
-			}
-			else {
-				airSpeed = 0.0f;
-			}
-
-
-			setPlayerMovement(frameSpeed, movementVector, abs(newAirSpeed));
-
-
-			if (!inventory)
-			{
-			/*
-			* Handles removing blocks
-			*/
-			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false && menu == false) {
-				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
-				for (int i = 0; i < playerVerts.size() / 12; i++) {
-					std::vector<Triangle> temp(12);
-					std::copy(playerVerts.begin() + (i * 12) + 1,
-						playerVerts.begin() + (i * 12) + 12,
-						temp.begin());
-					if (castRayForBlock(window, ray, temp[0].origin, temp)) {
-						//IF FOUND CALL MAP SEND TO UPDATEQUE
-						printf("%f, %f, %f remove \n", temp[0].origin.x, temp[0].origin.y, temp[0].origin.z);
-						updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
-						break;
-					}
-				}
-
-			}
-			/*
-			* Handles adding blocks
-			*/
-			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false && menu == false) {
-				// place block
-				printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
-				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
-
-				// sort the player verts
-				for (int i = 0; i < playerVerts.size() / 12; i++) {
-					std::vector<Triangle> temp(12);
-					std::copy(playerVerts.begin() + (i * 12) + 1,
-						playerVerts.begin() + (i * 12) + 12,
-						temp.begin());
-
-					// sort triangles for better accuracy
-
-					std::sort(temp.begin(), temp.end(), [&](Triangle p1, Triangle p2) {
-						return sortTriangleByDistance(Position, p1, p2);
-						});
-
-					int ind = castRayForBlockPlace(window, ray, temp[0].origin, temp);
-					if (ind >= 0) {
-						// IF FOUND CALL MAP SEND TO UPDATEQUE
-
-						// we need to find the normal of our intersection
-						glm::vec3 normal = temp[ind].getNormal();
-						normal.x *= -1;
-						normal.y *= -1;
-						normal.z *= -1;
-
-						// convert from opengl cords to block space
-						glm::vec3 tnormal = glm::vec3(normal.x, normal.z, normal.y);
-						printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
-
-						// adujust startblock for placement of new block.
-						glm::vec3 newBlock = temp[ind].origin + tnormal;
-
-
-
-
-						printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
-						int blockID = 1;
-						updateQue->push_back(std::make_unique<AddPacket>(newBlock, blockID));
-						break;
-					}
-				}
-
-			}
-		}
-
-		// apply movement
-		detectCollison(delta, blockCords);
-
-		// open invetory
-		if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
-			if (tabPressed == false)
-			{
-				tabPressed = true;
-				if (inventory == false)
-				{
-					inventory = true;
-				}
-				else {
-					inventory = false;
-				}
-			}
-
-		}
-	}
-
-	// open options menu
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
-		if (escPressed == false)
-		{
-			escPressed = true;
-			if (menu == false)
-			{
-				menu = true;
-			}
-			else {
-				menu = false;
-			}
-		}
-
-	}
-
-
-	/*
-	Reset key presses
-	*/
-	// -----------------------------------------------------------------------------------------------
-	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_RELEASE && menu == false) {
-		pPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
-		escPressed = false;
-	}
-	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE) {
-		tabPressed = false;
-	}
-
-	/*
-	Code below slaves mouse to center of screen.
-	*/
-	// -----------------------------------------------------------------------------------------------
-	// Hides mouse cursor
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	// Prevents camera from jumping on the first click
-	if (menu == false and inventory == false)
-	{
-		if (firstClick)
-		{
-			glfwSetCursorPos(window, (width / 2), (height / 2));
-			firstClick = false;
-		}
-		// Stores the coordinates of the cursor
-		double mouseX;
-		double mouseY;
-		// Fetches the coordinates of the cursor
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-
-		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-		// and then "transforms" them into degrees 
-		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
-		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
-
-		// Calculates upcoming vertical change in the Orientation
-		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
-
-		// Decides whether or not the next vertical Orientation is legal or not
-		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-		{
-			Orientation = newOrientation;
-		}
-		// Rotates the Orientation left and right
-		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
-
-		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-		glfwSetCursorPos(window, (width / 2), (height / 2));
-	}
-
-	// -----------------------------------------------------------------------------------------------
-
-
-
 }

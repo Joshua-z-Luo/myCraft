@@ -12,7 +12,6 @@
 #include "memory"
 #include "../../player/Player.h"
 #include "../../Texture.h"
-#include <algorithm>
 
 /*
 Map class responsible for all game logic regarding world generation.
@@ -64,7 +63,7 @@ public:
 
 	void addBlock(std::unique_ptr<Block> newBlock);
 	void addBlockToChunk(int xID, int yID, int x, int y, int z, int id);
-	int removeBlockFromChunk(int xID, int yID, int x, int y, int z);
+	void removeBlockFromChunk(int xID, int yID, int x, int y, int z);
 	void populateChunk(Chunk * chunk, int xID, int yID);
 
 	void loadMap();
@@ -79,7 +78,7 @@ public:
 	std::vector<GLuint> getInds();
 	int getNumChunks();
 
-	std::vector<Triangle> getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes);
+	std::vector<glm::vec3> getPlayerChunk(glm::vec3 playerBlock);
 	std::vector<glm::vec3> getBlockCordinates();
 
 };

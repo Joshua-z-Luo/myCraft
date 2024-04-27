@@ -69,43 +69,13 @@
     <ClCompile Include="gameLogic\UpdatePacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="entities\src\Model\Mesh.cpp">
+    <ClCompile Include="entities\src\Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="images\test.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="player\Player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gameLogic\DestroyPacket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gameLogic\AddPacket.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="entities\src\Model\Triangle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\backends\imgui_impl_opengl3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\backends\imgui_impl_glfw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\imgui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\imgui_demo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\imgui_draw.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\imgui_tables.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="libraries\include\mygui\imgui_widgets.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1007,49 +977,10 @@
     <ClInclude Include="gameLogic\UpdatePacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="entities\header\Model\Mesh.h">
+    <ClInclude Include="entities\header\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="player\Player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gameLogic\DestroyPacket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gameLogic\AddPacket.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entities\header\Model\Triangle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\nuklear.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imgui.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_opengl3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_opengl3_loader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_glfw.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imgui_internal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imstb_rectpack.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imstb_textedit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imstb_truetype.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="libraries\include\mygui\imconfig.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1474,9 +1405,11 @@
     <None Include="shaders\light.vert">
       <Filter>Resource Files\shaders</Filter>
     </None>
-    <None Include="libraries\include\mygui\misc\debuggers\imgui.natstepfilter" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="pop_cat.png">
+      <Filter>Resource Files</Filter>
+    </Image>
     <Image Include="textures\brick.png">
       <Filter>Resource Files</Filter>
     </Image>
@@ -1493,8 +1426,5 @@
     <Text Include="libraries\include\stb\stb_image.h">
       <Filter>Header Files\libarary</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Natvis Include="libraries\include\mygui\misc\debuggers\imgui.natvis" />
   </ItemGroup>
 </Project>

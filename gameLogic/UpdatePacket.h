@@ -3,18 +3,16 @@
 #pragma once
 
 
-/*
-Abstract Class
-*/
 class UpdatePacket
 {
 public:
-	UpdatePacket();
-	virtual glm::vec3 conductAction() = 0;
-	int getActionID();
-	int blockID = 1;
-protected:
-	int actionID;
-
+	UpdatePacket(glm::vec3 targetBlock, int chunkX, int chunkY);
+	int getChunkX();
+	int getChunkY();
+	glm::vec3 getTargetBlock();
+private:
+	glm::vec3 targetBlock;
+	int chunkX;
+	int chunkY;
 };
 

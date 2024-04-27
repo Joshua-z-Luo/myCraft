@@ -47,47 +47,12 @@ Adds a block the the specified chunk.
 */
 void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 {
-	float xF = x;
-	float yF = y;
-	xID = floor(xF / Constants::CHUNK_SIZE);
-	yID = floor(yF / Constants::CHUNK_SIZE);
-	// Get chunk position
-
-	if (x < 0) {
-		x = Constants::CHUNK_SIZE + (x % (Constants::CHUNK_SIZE));
-	}
-	else {
-		x = x % Constants::CHUNK_SIZE;
-	}
-	if (y < 0) {
-		y = Constants::CHUNK_SIZE + (y % (Constants::CHUNK_SIZE));
-
-	}
-	else {
-		y = y % Constants::CHUNK_SIZE;
-	}
-	if (x == 32) {
-		x = 0;
-	}
-	if (y == 32) {
-		y = 0;
-	}
-	printf("%d %d %d final \n", x, y, z);
+	// xID + originX, yID + originY IS NOT THE CORRECT CALCULATION (NEEDS TO BE FIXED)
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
 }
 
-
-/* 
-* Remove selected block from selected chunk. Returns id of block removed
-*/
-int Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
+void Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 {	
-	float xF = x;
-	float yF = y;
-	xID = floor(xF / Constants::CHUNK_SIZE);
-	yID = floor(yF / Constants::CHUNK_SIZE);
-	// Get chunk position
-
 	if (x < 0) {
 		x = Constants::CHUNK_SIZE + (x % (Constants::CHUNK_SIZE));
 	}
@@ -111,9 +76,8 @@ int Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 	// Currently using Map class member variable of player position to find chunk to remove block
 	// In future, needs to depend on given xID, yID instead of member varaible, for extendability of method.
 
-	//fprintf(stdout, " remove: x: %d y: %d, %f %f floats \n", xID, yID, x / Constants::CHUNK_SIZE, y / Constants::CHUNK_SIZE);
-	//(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
-	return (*ChunksArray[xID + originX])[yID + originY]->removeBlock(x, y, z);
+	//fprintf(stdout, " remove: x: %d y: %d \n", x, y);
+	(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
 }
 
 /*
@@ -495,73 +459,47 @@ int Map::getNumChunks()
 	return numChunks;
 }
 
-
-/*
-Helper functions for raycasting method.
-*/
-
-bool sortByDistance(glm::vec3 playerPos, compBlock blockPos, compBlock blockPos2) {
-	double dist1 = std::sqrt(((blockPos.x - playerPos.x) * (blockPos.x - playerPos.x)) + ((blockPos.y - playerPos.z) * (blockPos.y - playerPos.z)) + ((blockPos.z - playerPos.y) * (blockPos.z - playerPos.y)));
-	double dist2 = std::sqrt(((blockPos2.x - playerPos.x) * (blockPos2.x - playerPos.x)) + ((blockPos2.y - playerPos.z) * (blockPos2.y - playerPos.z)) + ((blockPos2.z - playerPos.y) * (blockPos2.z - playerPos.y)));
-	return dist1 < dist2;
-}
-
-bool sortByDistance(glm::vec3 playerPos, compBlock * blockPos, compBlock * blockPos2) {
-	double dist1 = std::sqrt((blockPos->x - playerPos.x) * (blockPos->x - playerPos.x) + (blockPos->y - playerPos.z) * (blockPos->y - playerPos.z) + (blockPos->z - playerPos.y) * (blockPos->z - playerPos.y));
-	double dist2 = std::sqrt((blockPos2->x - playerPos.x) * (blockPos2->x - playerPos.x) + (blockPos2->y - playerPos.z) * (blockPos2->y - playerPos.z) + (blockPos2->z - playerPos.y) * (blockPos2->z - playerPos.y));
-	return dist1 < dist2;
-}
-
-
-bool pointInsideFrustum(const glm::vec3& point, const std::vector<glm::vec4>& frustumPlanes) {
-	//std::cout << "(" << point.x << ", " << point.y << ", " << point.z << ")" << std::endl;
-	for (const auto& plane : frustumPlanes) {
-		float distance = glm::dot(glm::vec3(plane), point) + plane.w;
-		//printf("%f \n", distance);
-		if (distance < 0) {
-			// The point is outside the frustum
-			return false;
-		}
-	}
-	// The point is inside the frustum
-	return true;
-}
 /*
 Returns all the triangles within the player chunk. Used for ray casting.
-Resulting vector is formatted such that, every 37 indicies is a block.
+Resulting vector is formatted such that, every 37 indicies is a block. 
 First index of each 36 is the position of the block in the world, while the last 36 are its vertex positions.
 */
-std::vector<Triangle> Map::getPlayerChunk(glm::vec3 playerBlock, std::vector<glm::vec4> planes)
+std::vector<glm::vec3> Map::getPlayerChunk(glm::vec3 playerBlock)
 {
-	// USING BLOCKS VEC vvvvv
-	std::vector<Triangle> result;
-	std::vector<compBlock> temp;
-	for (int i = 0; i < BlocksVec.size(); i++) {
-		glm::vec3 block_pos = glm::vec3(BlocksVec[i]->x, BlocksVec[i]->z, BlocksVec[i]->y);
-
-		// Culling
-		if (pointInsideFrustum(block_pos, planes)) {
-			temp.push_back(compBlock(BlocksVec[i]->x, BlocksVec[i]->y, BlocksVec[i]->z, BlocksVec[i]->getID()));
-		}	
-	}
 	
-	std::sort(temp.begin(), temp.end(), [&](compBlock p1, compBlock p2) {
-		return sortByDistance(playerBlock, p1, p2);
-		});
+	std::vector<glm::vec3> result;
+	std::vector<compBlock *> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+
+
 	for (int i = 0; i < temp.size(); i++) {
-		Block block(temp[i].x, temp[i].y, temp[i].z, temp[i].id);
-		
-		Triangle * array = block.getTriangles();
-		for (int num = 0; num < 12; num++) {
+		Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
+		result.push_back(glm::vec3(temp[i]->x, temp[i]->y, temp[i]->z));
+		glm::vec3 * array = block.getTriangles();
+		for (int num = 0; num < 36; num++) {
 			result.push_back(array[num]);
 		}
 		delete[] array;
 	}
-	// Check if culling is working by printing number of triangles rendered.
-	//printf("%d number of triangles, %d blocks vec \n", result.size(), BlocksVec.size());
 	
+	//std::vector<glm::vec3> result;
+	//std::vector<compBlock*> temp = (*ChunksArray[playerChunkX])[playerChunkY]->getBlocks();
+	//convert 3d index to 1d index
+	//int index = round((playerBlock.z * Constants::CHUNK_SIZE * Constants::CHUNK_SIZE) + (playerBlock.x * Constants::CHUNK_SIZE) + playerBlock.y);
+
+	//fprintf(stdout, "%d, %d %d \n", BlocksVec[index]->x, BlocksVec[index]->x , BlocksVec[index]->x)
+	/*
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		//Block block(temp[i]->x, temp[i]->y, temp[i]->z, temp[i]->id);
+		result.push_back(glm::vec3(BlocksVec[i]->x, BlocksVec[i]->y, BlocksVec[i]->z));
+		glm::vec3* array = BlocksVec[i]->getTriangles();
+		for (int num = 0; num < 36; num++) {
+			result.push_back(array[num]);
+		}
+		delete[] array;
+	}*/
 	return result;
 }
+
 /*
 Technically, we could just loop through use getVerts and loop through the verticies directly, 
 which would reduce runtime by n/2
@@ -572,7 +510,7 @@ std::vector<glm::vec3> Map::getBlockCordinates()
 {
 	std::vector<glm::vec3> result;
 	for (int i = 0; i < BlocksVec.size(); i++) {
-	
+
 		result.push_back(BlocksVec[i]->getBlockCords());
 	}
 	return result;
