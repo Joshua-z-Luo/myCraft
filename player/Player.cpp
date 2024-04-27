@@ -354,7 +354,7 @@ void Player::addItemToInventory(int blockID, int amount)
 			flag = true;
 			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
 		}
-		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 2) {
+		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 8) {
 			inventoryArray[i][0] += amount;
 			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
 			return;
@@ -365,6 +365,16 @@ void Player::addItemToInventory(int blockID, int amount)
 		inventoryArray[firstEmpty][1] = blockID;
 		inventoryArray[firstEmpty][0] = amount;
 		fprintf(stdout, " %d inventory number %d location ", inventoryArray[firstEmpty][0], firstEmpty);
+	}
+}
+
+void Player::removeItemFromInventory(int amount, int slot)
+{
+	if (inventoryArray[slot][0] >= amount) {
+		inventoryArray[slot][0] -= amount;
+	}
+	if (inventoryArray[slot][0] == 0) {
+		inventoryArray[slot][1] = -1;
 	}
 }
 

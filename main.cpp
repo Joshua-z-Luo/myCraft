@@ -278,7 +278,7 @@ int main()
 			printf("%d \n", updateQue[0]->getActionID());
 			switch (updateQue[0]->getActionID()) {
 			case 1:
-				// Delete Block
+				// Player Delete Block
 				glm::vec3 deleteBlock = updateQue[0]->conductAction();
 
 				//add block to inventory
@@ -288,13 +288,15 @@ int main()
 				break;
 
 			case 2:
-				// Add Block
+				// Player add block from inventory
 				glm::vec3 addBlock = updateQue[0]->conductAction();
-				// % TODO IMPLEMENT A WAY TO FETCH THE BLOCK ID. MIGHT NEED NEW METHOD IN UpdatePacket
-				// 1. FIX SELECTABLES (CAN ONLY SELECT slot IF BLOCK AMOUNT < THEN MAX OF STACK). 
-				// 2. PLACE BLOCK IF SELECTED IN INVENTORY 
-				// 3. REMOVE BLOCK FROM INVENTORY ONCE PLACED
-				map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, 1);
+				if (camera.getSelectedSlot() != -1) {
+					map->addBlockToChunk(0, 0, addBlock.x, addBlock.y, addBlock.z, camera.getInventory()[camera.getSelectedSlot()][1]);
+					camera.removeItemFromInventory(1, camera.getSelectedSlot());
+					if (camera.getInventory()[camera.getSelectedSlot()][1] == -1) {
+						camera.setSelectedSlot(-1);
+					}
+				}
 				break;
 
 			case 3:
@@ -410,13 +412,14 @@ int main()
 					else {
 						// %TODO Selectable not reacting to clicks sometimes.
 						if (ImGui::Selectable((
+							std::to_string(i + 1) + " "
 							"Block: " + std::to_string(inventoryArray[i][1]) + " "
 							+ "Amount: " + std::to_string(inventoryArray[i][0]))
 							.c_str(), (camera.getSelectedSlot() == i))) 
 							{
 
-								printf("Item %d clicked!\n", i);
 								camera.setSelectedSlot(i); // set selected state if clicked
+								printf("Item %d clicked!\n", camera.getSelectedSlot());
 							}
 					}
 					ImGui::NextColumn();

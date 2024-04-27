@@ -44,7 +44,7 @@ private:
 	// inventory
 	// for tuple, first value is amount, 2nd value is amount
 	std::array <std::array<int, 2>, 20> inventoryArray;
-	int selectedSlot = 0;
+	int selectedSlot = -1;
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
@@ -109,6 +109,7 @@ public:
 
 	// inventory logic
 	void addItemToInventory(int blockID, int amount);
+	void removeItemFromInventory( int amount, int slot);
 	std::array <std::array<int, 2>, 20> getInventory();
 	int getSelectedSlot();
 	void setSelectedSlot(int index);
