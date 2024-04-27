@@ -8,16 +8,20 @@
 #include<glm/gtc/type_ptr.hpp>
 #include<glm/gtx/rotate_vector.hpp>
 #include<glm/gtx/vector_angle.hpp>
-#include "../gameLogic/UpdatePacket.h"
 #include"../shaders/shaderClass/shaderClass.h"
 #include "Ray.h"
+
 #include "vector"
 #include "deque"
+#include <array>
 #include <limits>
+#include <string>
+#include <algorithm>
 
 #include "../constants.h"
-
-
+#include "../gameLogic/DestroyPacket.h"
+#include "../gameLogic/AddPacket.h"
+#include "../entities/header/Model/Triangle.h"
 
 /*
 Player class. Replaces Camera class.
@@ -37,6 +41,10 @@ private:
 	GLfloat playerMinY;
 	GLfloat playerMinZ;
 
+	// inventory
+	// for tuple, first value is amount, 2nd value is amount
+	std::array <std::array<int, 2>, 20> inventoryArray;
+	int selectedSlot = -1;
 
 	// Prevents the camera from jumping around when first clicking left click
 	bool firstClick = true;
@@ -53,12 +61,18 @@ private:
 	// player status logic
 	bool spacePressed = false;
 	bool inAir = false;
-	// p Pressed?
+	bool menu = false;
+	bool inventory = false;
+
+	// key Pressed?
 	bool pPressed = false;
+	bool escPressed = false;
+	bool tabPressed = false;
 
 
 public:
-
+	// Handles camera inputs
+	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY);
 
 	// Stores the main vectors of the camera
 	glm::vec3 Position;
@@ -73,6 +87,8 @@ public:
 	// Split movement into inputs and move function for better organization
 	void MovePlayer(glm::vec3 displacement);
 
+
+	glm::vec3 getOrientation();
 
 	// Set player movement for collision detection
 	void setPlayerMovement(float frameSpeed, glm::vec3 direction, float newAirSpeed);
@@ -91,12 +107,17 @@ public:
 	// Check if grounded
 	void grounded(std::vector<glm::vec3> blockCords);
 
-	// Handles camera inputs
-	void Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<glm::vec3> * playerVerts, std::deque<UpdatePacket>* updateQue, int posX, int posY);
+	// inventory logic
+	void addItemToInventory(int blockID, int amount);
+	void removeItemFromInventory( int amount, int slot);
+	std::array <std::array<int, 2>, 20> getInventory();
+	int getSelectedSlot();
+	void setSelectedSlot(int index);
 
-
+	// Ray logic
 	// when it finds a block to commti an action to, it appends it to a que of actions to be completed by the chunk managaer
-	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<glm::vec3>& triangles);
+	bool castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, const std::vector<Triangle>& triangles);
+	int castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles);
 	Ray GetMouseRay(GLFWwindow* window, const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
 	void GetMouseCoordinates(GLFWwindow* window, double& mouseX, double& mouseY);
 	glm::mat4 getView();
@@ -111,6 +132,14 @@ public:
 	// Exports the camera matrix to a shader
 	void Matrix(Shader& shader, const char* uniform);
 
+
+	// Exports Frustum Planes of player
+	std::vector<glm::vec4> extractFrustumPlanes();
+	std::vector<glm::vec4> extractFrustumPlanes(const glm::mat4& viewProjectionMatrix);
+
+	// Get menu status
+	bool isMenuOpen();
+	bool isInventoryOpen();
 };
 
 #endif

@@ -75,7 +75,7 @@
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;$(IncludePath)</IncludePath>
+    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;libraries\include\mygui;$(IncludePath)</IncludePath>
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -115,7 +115,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <Optimization>Disabled</Optimization>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -149,13 +149,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="entities\src\Mesh.cpp" />
+    <ClCompile Include="gameLogic\AddPacket.cpp" />
+    <ClCompile Include="gameLogic\DestroyPacket.cpp" />
+    <ClCompile Include="entities\src\Model\Mesh.cpp" />
     <ClCompile Include="entities\src\worldGen\compBlock.cpp" />
     <ClCompile Include="entities\src\worldGen\Chunk.cpp" />
     <ClCompile Include="entities\src\Block.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="images\test.cpp" />
     <ClCompile Include="libraries\include\glm\detail\glm.cpp" />
+    <ClCompile Include="libraries\include\mygui\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="libraries\include\mygui\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="libraries\include\mygui\imgui.cpp" />
+    <ClCompile Include="libraries\include\mygui\imgui_demo.cpp" />
+    <ClCompile Include="libraries\include\mygui\imgui_draw.cpp" />
+    <ClCompile Include="libraries\include\mygui\imgui_tables.cpp" />
+    <ClCompile Include="libraries\include\mygui\imgui_widgets.cpp" />
     <ClCompile Include="player\Player.cpp" />
     <ClCompile Include="player\Camera.cpp" />
     <ClCompile Include="entities\src\Map.cpp" />
@@ -168,10 +177,13 @@
     <ClCompile Include="shaders\VAO.cpp" />
     <ClCompile Include="shaders\VBO.cpp" />
     <ClCompile Include="gameLogic\UpdatePacket.cpp" />
+    <ClCompile Include="entities\src\Model\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gameLogic\AddPacket.h" />
     <ClInclude Include="constants.h" />
-    <ClInclude Include="entities\header\Mesh.h" />
+    <ClInclude Include="gameLogic\DestroyPacket.h" />
+    <ClInclude Include="entities\header\Model\Mesh.h" />
     <ClInclude Include="entities\header\worldGen\compBlock.h" />
     <ClInclude Include="entities\header\worldGen\Chunk.h" />
     <ClInclude Include="entities\header\Block.h" />
@@ -461,6 +473,16 @@
     <ClInclude Include="libraries\include\glm\vec4.hpp" />
     <ClInclude Include="libraries\include\glm\vector_relational.hpp" />
     <ClInclude Include="libraries\include\KHR\khrplatform.h" />
+    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="libraries\include\mygui\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="libraries\include\mygui\imconfig.h" />
+    <ClInclude Include="libraries\include\mygui\imgui.h" />
+    <ClInclude Include="libraries\include\mygui\imgui_internal.h" />
+    <ClInclude Include="libraries\include\mygui\imstb_rectpack.h" />
+    <ClInclude Include="libraries\include\mygui\imstb_textedit.h" />
+    <ClInclude Include="libraries\include\mygui\imstb_truetype.h" />
+    <ClInclude Include="libraries\include\nuklear.h" />
     <ClInclude Include="player\Player.h" />
     <ClInclude Include="player\Camera.h" />
     <ClInclude Include="entities\header\Map.h" />
@@ -471,6 +493,7 @@
     <ClInclude Include="shaders\VAO.h" />
     <ClInclude Include="shaders\VBO.h" />
     <ClInclude Include="gameLogic\UpdatePacket.h" />
+    <ClInclude Include="entities\header\Model\Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="libraries\include\glm\detail\func_common.inl" />
@@ -609,6 +632,7 @@
     <None Include="libraries\include\glm\gtx\vector_angle.inl" />
     <None Include="libraries\include\glm\gtx\vector_query.inl" />
     <None Include="libraries\include\glm\gtx\wrap.inl" />
+    <None Include="libraries\include\mygui\misc\debuggers\imgui.natstepfilter" />
     <None Include="shaders\default.vert" />
     <None Include="shaders\default.frag" />
     <None Include="shaders\light.frag" />
@@ -623,7 +647,9 @@
   <ItemGroup>
     <Image Include="textures\brick.png" />
     <Image Include="textures\grass.png" />
-    <Image Include="pop_cat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="libraries\include\mygui\misc\debuggers\imgui.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

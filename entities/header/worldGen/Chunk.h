@@ -4,7 +4,7 @@
 #include <vector>
 #include "../../../constants.h"
 #include "array"
-#include "../Mesh.h"
+#include "../Model/Mesh.h"
 class Chunk
 {
 private:
@@ -21,7 +21,7 @@ public:
 	void drawMesh(Shader& shader, Player& camera);
 	Chunk(int xID, int yID);
 	void addBlock(int id, int x, int y, int z);
-	void removeBlock(int x, int y, int z);
+	int removeBlock(int x, int y, int z);
 	std::vector<compBlock * > getBlocks();
 
 	int getNumBlocks();
