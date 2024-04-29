@@ -232,6 +232,8 @@ int main()
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 16.0f);
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 40.0f);
 
+	style.WindowBorderSize = 0.0f;
+
 
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
 
@@ -388,6 +390,42 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		// hit esc
+		ImGui::SetNextWindowSize(ImVec2(250, 25));
+		ImGui::SetNextWindowPos(ImVec2(15, 15));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+		ImGui::Begin("HitEsc", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+			ImGui::Text("Press ESC for options");
+			ImGui::PopStyleColor();
+
+		ImGui::End();
+		ImGui::PopStyleColor();
+
+		// show selected item
+		ImGui::SetNextWindowSize(ImVec2(200, 55));
+		ImGui::SetNextWindowPos(ImVec2(950, 695));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+		ImGui::Begin("SelectedItem", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+			ImGui::Text("Selected Item:");
+
+			if (camera.getSelectedSlot() == -1) {
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+				ImGui::Text("None");
+				ImGui::PopStyleColor();
+			}
+			else {
+				ImGui::Text((
+					"Block: " + std::to_string(camera.getInventory()[camera.getSelectedSlot()][1]) + " "
+					+ "Amount: " + std::to_string(camera.getInventory()[camera.getSelectedSlot()][0]))
+					.c_str());
+			}
+
+		ImGui::End();
+		ImGui::PopStyleColor();
+
+		//inventory
 		if (camera.isInventoryOpen()) {
 			ImGui::SetNextWindowSize(ImVec2(800, 400));
 			ImGui::SetNextWindowPos(ImVec2(200, 200)); 
@@ -429,6 +467,7 @@ int main()
 			ImGui::PopStyleColor();
 		}
 
+		//show menu
 		if (camera.isMenuOpen()) {
 			// Draw a black translucent overlay
 			ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -438,8 +477,8 @@ int main()
 			ImGui::End();
 
 			ImVec2 windowSize = ImVec2(200, 100);
-			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
-			ImGui::SetNextWindowPos(ImVec2(500, 400)); // Set window position to (100, 100)
+			ImGui::SetNextWindowSize(windowSize);
+			ImGui::SetNextWindowPos(ImVec2(500, 300));
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
 				// Calculate position for centering button
@@ -454,6 +493,15 @@ int main()
 				}
 		
 			ImGui::End();
+			ImGui::SetNextWindowPos(ImVec2(400, 425));
+			ImGui::SetNextWindowSize(ImVec2(400, 200));
+			ImGui::Begin("Instructions", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+				
+				ImGui::Text("Controls");
+
+
+			ImGui::End();
+
 		}
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
