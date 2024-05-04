@@ -28,70 +28,6 @@
 #include "backends/imgui_impl_glfw.h"
 #include "backends/imgui_impl_opengl3.h"
 
-/*
-GLfloat x = 0;
-GLfloat y = 0;
-GLfloat z = 0;
-Vertex vertices[] =
-{
-	// Top face
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-
-	// Bottom face
-	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, -1.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-
-	// Front face
-	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(0.0f, 0.0f, 1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-
-	// Right face
-	{glm::vec3(x + 0.5f, z - 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y + 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-
-	// Back face
-	{glm::vec3(x + 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x + 0.5f, z + 0.5f, y - 0.5f), glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)},
-
-	// Left face
-	{glm::vec3(x - 0.5f, z - 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 0.0f)},
-	{glm::vec3(x - 0.5f, z - 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(0.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y - 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 1.0f)},
-	{glm::vec3(x - 0.5f, z + 0.5f, y + 0.5f), glm::vec3(-1.0f, 0.0f, 0.0f), glm::vec3(0.83f, 0.70f, 0.44f), glm::vec2(1.0f, 0.0f)}
-};
-
-// Indices for vertices order
-GLint indices[] =
-{
-	// Top face
-	16, 17, 18, 18, 19, 16,
-
-	// Front face
-	0, 1, 2, 2, 3, 0,
-
-	// Left face
-	12, 13, 14, 14, 15, 12,
-
-	// Back face
-	4, 5, 6, 6, 7, 4,
-
-	// Right face
-	8, 9, 10, 10, 11, 8,
-
-	// Bottom face
-	20, 21, 22, 22, 23, 20
-};*/
 
 Vertex lightVertices[] =
 {
@@ -279,7 +215,6 @@ int main()
 		// %TODO: change in future to only due X number of actions per frame for performance purposes.
 		bool updateFlag = false;
 		if (updateQue.size() > 0) {
-			printf("%d \n", updateQue[0]->getActionID());
 			switch (updateQue[0]->getActionID()) {
 			case 1:
 				// Player Delete Block
@@ -453,7 +388,7 @@ int main()
 							{
 
 								camera.setSelectedSlot(i); // set selected state if clicked
-								printf("Item %d clicked!\n", camera.getSelectedSlot());
+								//printf("Item %d clicked!\n", camera.getSelectedSlot());
 							}
 					}
 					ImGui::NextColumn();
