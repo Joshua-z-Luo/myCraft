@@ -851,11 +851,14 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	Code below slaves mouse to center of screen.
 	*/
 	// -----------------------------------------------------------------------------------------------
+	// Unhides cursor since in inventory/menu
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+
 	// Prevents camera from jumping on the first click
 	if (menu == false and inventory == false)
 	{
 		// Hides mouse cursor
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
