@@ -231,6 +231,7 @@ int main()
 	ImFontAtlas* fontAtlas = io.Fonts;
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 16.0f);
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 40.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 24.0f);
 
 	style.WindowBorderSize = 0.0f;
 
@@ -325,9 +326,6 @@ int main()
 			posY = newY;
 			updateFlag = true;
 		}
-		// Update que
-		// % TODO: Chunks should not be all loading in one frame, this causes stutters.
-		// Chunk loading should be done block by block via the update que.
 		if (updateFlag == true) {
 			map->updateMap(0, 0);
 			blockCords = map->getBlockCordinates();
@@ -345,14 +343,11 @@ int main()
 			prevTime = crntTime;
 			counter = 0;
 
-			// Use this if you have disabled VSync
-			//camera.Inputs(window);
 		}
 
 
 
 		// update current position of player hitbox
-		camera.updateBoundingBox();
 		// Handles camera inputs
 		// Collision self contained with player class.
 		if (updateFlag != true) {
@@ -366,8 +361,7 @@ int main()
 			// controls
 			camera.Inputs(window, timeDiff, blockCords, playerVerts, &updateQue, posX, posY);
 		}
-		//playerVerts = map->getPlayerChunk(camera.Position);
-		//camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		camera.updateBoundingBox();
 		//%TODO: Player is gets stuck in blocks when a frame where new chunks must be loaded occurs.
 		// Why is this happening? We get the new block coordinates on chunk updates, so collision should carry over?
 		// Current work around is to NOT update the players position during a chunk loading frame.
@@ -427,8 +421,9 @@ int main()
 
 		//inventory
 		if (camera.isInventoryOpen()) {
-			ImGui::SetNextWindowSize(ImVec2(800, 400));
-			ImGui::SetNextWindowPos(ImVec2(200, 200)); 
+			ImGui::SetNextWindowSize(ImVec2(600, 270));
+			ImGui::SetNextWindowPos(ImVec2(300, 330));
+
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
 			ImGui::Begin("Inventory", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
@@ -478,7 +473,7 @@ int main()
 
 			ImVec2 windowSize = ImVec2(200, 100);
 			ImGui::SetNextWindowSize(windowSize);
-			ImGui::SetNextWindowPos(ImVec2(500, 300));
+			ImGui::SetNextWindowPos(ImVec2(500, 250));
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
 				// Calculate position for centering button
@@ -493,11 +488,26 @@ int main()
 				}
 		
 			ImGui::End();
-			ImGui::SetNextWindowPos(ImVec2(400, 425));
-			ImGui::SetNextWindowSize(ImVec2(400, 200));
+			ImGui::SetNextWindowPos(ImVec2(325, 375));
+			ImGui::SetNextWindowSize(ImVec2(550, 290));
 			ImGui::Begin("Instructions", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
 				
+				ImGui::PushFont(fontAtlas->Fonts[2]);
+				ImVec2 windowSize2 = ImVec2(550, 290);
+				ImVec2 textSize = ImGui::CalcTextSize("Controls");
+				float textWidth = textSize.x;
+				float windowWidth = windowSize2.x;
+				float paddingX = (windowWidth - textWidth) * 0.5f;
+				ImGui::SetCursorPosX(paddingX);
 				ImGui::Text("Controls");
+				ImGui::PopFont();
+				ImGui::Text("\nESC to open menu");
+				ImGui::Text("\nW, A, S, D to move forwards, left, backwards, right");
+				ImGui::Text("\nSpace to jump");
+				ImGui::Text("\nTAB to open inventory");
+				ImGui::Text("\nLeft click to break blocks and collect blocks \ninto your inventory");
+				ImGui::Text("\nIf a block in your inventory is selected, \nright click to place selected block");
+				
 
 
 			ImGui::End();

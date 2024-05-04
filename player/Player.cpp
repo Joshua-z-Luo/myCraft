@@ -729,7 +729,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 			*/
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false && menu == false) {
 				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+				Ray ray = GetMouseRay(window, getView(), getProjection(1.0f, 0.1f, 9.0f));
 				for (int i = 0; i < playerVerts.size() / 12; i++) {
 					std::vector<Triangle> temp(12);
 					std::copy(playerVerts.begin() + (i * 12) + 1,
@@ -751,7 +751,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				// place block
 				printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
 				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+				Ray ray = GetMouseRay(window, getView(), getProjection(1.0f, 0.1f, 9.0f));
 
 				// sort the player verts
 				for (int i = 0; i < playerVerts.size() / 12; i++) {
@@ -851,11 +851,11 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	Code below slaves mouse to center of screen.
 	*/
 	// -----------------------------------------------------------------------------------------------
-	// Hides mouse cursor
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	// Prevents camera from jumping on the first click
 	if (menu == false and inventory == false)
 	{
+		// Hides mouse cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
