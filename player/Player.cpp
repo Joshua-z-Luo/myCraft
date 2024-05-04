@@ -354,7 +354,7 @@ void Player::addItemToInventory(int blockID, int amount)
 			flag = true;
 			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
 		}	
-		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 8) {
+		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 16) {
 			inventoryArray[i][0] += amount;
 			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
 			return;
@@ -657,6 +657,50 @@ Handle player inputs
 */
 void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> blockCords, std::vector<Triangle> playerVerts, std::deque<std::unique_ptr<UpdatePacket>>* updateQue, int posX, int posY)
 {
+	/*
+	Code below slaves mouse to center of screen.
+	*/
+	// -----------------------------------------------------------------------------------------------
+	// Prevents camera from jumping on the first click
+	if (menu == false and inventory == false)
+	{
+		// Hides mouse cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		if (firstClick)
+		{
+			glfwSetCursorPos(window, (width / 2), (height / 2));
+			firstClick = false;
+		}
+		// Stores the coordinates of the cursor
+		double mouseX;
+		double mouseY;
+		// Fetches the coordinates of the cursor
+		glfwGetCursorPos(window, &mouseX, &mouseY);
+
+		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
+		// and then "transforms" them into degrees 
+		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
+
+		// Calculates upcoming vertical change in the Orientation
+		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
+
+		// Decides whether or not the next vertical Orientation is legal or not
+		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+		{
+			Orientation = newOrientation;
+		}
+		// Rotates the Orientation left and right
+		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
+
+		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
+		glfwSetCursorPos(window, (width / 2), (height / 2));
+	}
+	else {
+		// unhide cursor
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
+
 	if (!menu)
 	{
 		
@@ -729,7 +773,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 			*/
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS && pPressed == false && menu == false) {
 				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+				Ray ray = GetMouseRay(window, getView(), getProjection(1.0f, 0.1f, 9.0f));
 				for (int i = 0; i < playerVerts.size() / 12; i++) {
 					std::vector<Triangle> temp(12);
 					std::copy(playerVerts.begin() + (i * 12) + 1,
@@ -751,7 +795,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 				// place block
 				printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
 				pPressed = true;
-				Ray ray = GetMouseRay(window, getView(), getProjection(90.0f, 0.1f, 10.0f));
+				Ray ray = GetMouseRay(window, getView(), getProjection(1.0f, 0.1f, 9.0f));
 
 				// sort the player verts
 				for (int i = 0; i < playerVerts.size() / 12; i++) {
@@ -845,46 +889,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	}
 	if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE) {
 		tabPressed = false;
-	}
-
-	/*
-	Code below slaves mouse to center of screen.
-	*/
-	// -----------------------------------------------------------------------------------------------
-	// Hides mouse cursor
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-	// Prevents camera from jumping on the first click
-	if (menu == false and inventory == false)
-	{
-		if (firstClick)
-		{
-			glfwSetCursorPos(window, (width / 2), (height / 2));
-			firstClick = false;
-		}
-		// Stores the coordinates of the cursor
-		double mouseX;
-		double mouseY;
-		// Fetches the coordinates of the cursor
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-
-		// Normalizes and shifts the coordinates of the cursor such that they begin in the middle of the screen
-		// and then "transforms" them into degrees 
-		float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
-		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
-
-		// Calculates upcoming vertical change in the Orientation
-		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
-
-		// Decides whether or not the next vertical Orientation is legal or not
-		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
-		{
-			Orientation = newOrientation;
-		}
-		// Rotates the Orientation left and right
-		Orientation = glm::rotate(Orientation, glm::radians(-rotY), Up);
-
-		// Sets mouse cursor to the middle of the screen so that it doesn't end up roaming around
-		glfwSetCursorPos(window, (width / 2), (height / 2));
 	}
 
 	// -----------------------------------------------------------------------------------------------

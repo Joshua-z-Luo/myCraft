@@ -231,6 +231,10 @@ int main()
 	ImFontAtlas* fontAtlas = io.Fonts;
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 16.0f);
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 40.0f);
+	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 24.0f);
+
+	style.WindowBorderSize = 0.0f;
+	style.WindowMinSize = ImVec2(1, 1);
 
 
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
@@ -323,9 +327,6 @@ int main()
 			posY = newY;
 			updateFlag = true;
 		}
-		// Update que
-		// % TODO: Chunks should not be all loading in one frame, this causes stutters.
-		// Chunk loading should be done block by block via the update que.
 		if (updateFlag == true) {
 			map->updateMap(0, 0);
 			blockCords = map->getBlockCordinates();
@@ -343,14 +344,11 @@ int main()
 			prevTime = crntTime;
 			counter = 0;
 
-			// Use this if you have disabled VSync
-			//camera.Inputs(window);
 		}
 
 
 
 		// update current position of player hitbox
-		camera.updateBoundingBox();
 		// Handles camera inputs
 		// Collision self contained with player class.
 		if (updateFlag != true) {
@@ -364,8 +362,7 @@ int main()
 			// controls
 			camera.Inputs(window, timeDiff, blockCords, playerVerts, &updateQue, posX, posY);
 		}
-		//playerVerts = map->getPlayerChunk(camera.Position);
-		//camera.Inputs(window, timeDiff, blockCords, &playerVerts, &updateQue, posX, posY);
+		camera.updateBoundingBox();
 		//%TODO: Player is gets stuck in blocks when a frame where new chunks must be loaded occurs.
 		// Why is this happening? We get the new block coordinates on chunk updates, so collision should carry over?
 		// Current work around is to NOT update the players position during a chunk loading frame.
@@ -388,9 +385,46 @@ int main()
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
+		// hit esc
+		ImGui::SetNextWindowSize(ImVec2(250, 25));
+		ImGui::SetNextWindowPos(ImVec2(15, 15));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+		ImGui::Begin("HitEsc", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoDecoration);
+
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+			ImGui::Text("Press ESC for options");
+			ImGui::PopStyleColor();
+
+		ImGui::End();
+		ImGui::PopStyleColor();
+
+		// show selected item
+		ImGui::SetNextWindowSize(ImVec2(200, 55));
+		ImGui::SetNextWindowPos(ImVec2(950, 695));
+		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
+		ImGui::Begin("SelectedItem", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
+			ImGui::Text("Selected Item:");
+
+			if (camera.getSelectedSlot() == -1) {
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+				ImGui::Text("None");
+				ImGui::PopStyleColor();
+			}
+			else {
+				ImGui::Text((
+					"Block: " + std::to_string(camera.getInventory()[camera.getSelectedSlot()][1]) + " "
+					+ "Amount: " + std::to_string(camera.getInventory()[camera.getSelectedSlot()][0]))
+					.c_str());
+			}
+
+		ImGui::End();
+		ImGui::PopStyleColor();
+
+		//inventory
 		if (camera.isInventoryOpen()) {
-			ImGui::SetNextWindowSize(ImVec2(800, 400));
-			ImGui::SetNextWindowPos(ImVec2(200, 200)); 
+			ImGui::SetNextWindowSize(ImVec2(600, 270));
+			ImGui::SetNextWindowPos(ImVec2(300, 330));
+
 			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.6f, 0.6f, 0.6f, 1.0f));
 			ImGui::Begin("Inventory", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
@@ -429,6 +463,7 @@ int main()
 			ImGui::PopStyleColor();
 		}
 
+		//show menu
 		if (camera.isMenuOpen()) {
 			// Draw a black translucent overlay
 			ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -438,8 +473,8 @@ int main()
 			ImGui::End();
 
 			ImVec2 windowSize = ImVec2(200, 100);
-			ImGui::SetNextWindowSize(windowSize); // Set window size to 400x300
-			ImGui::SetNextWindowPos(ImVec2(500, 400)); // Set window position to (100, 100)
+			ImGui::SetNextWindowSize(windowSize);
+			ImGui::SetNextWindowPos(ImVec2(500, 250));
 			ImGui::Begin("Menu", NULL, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar);
 
 				// Calculate position for centering button
@@ -454,7 +489,42 @@ int main()
 				}
 		
 			ImGui::End();
+
+			ImGui::SetNextWindowPos(ImVec2(325, 375));
+			ImGui::SetNextWindowSize(ImVec2(550, 290));
+			ImGui::Begin("Instructions", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+				
+				ImGui::PushFont(fontAtlas->Fonts[2]);
+				ImVec2 windowSize2 = ImVec2(550, 290);
+				ImVec2 textSize = ImGui::CalcTextSize("Controls");
+				float textWidth = textSize.x;
+				float windowWidth = windowSize2.x;
+				float paddingX = (windowWidth - textWidth) * 0.5f;
+				ImGui::SetCursorPosX(paddingX);
+				ImGui::Text("Controls");
+				ImGui::PopFont();
+				ImGui::Text("\nESC to open menu");
+				ImGui::Text("\nW, A, S, D to move forwards, left, backwards, right");
+				ImGui::Text("\nSpace to jump");
+				ImGui::Text("\nTAB to open inventory");
+				ImGui::Text("\nLeft click to break blocks and collect blocks \ninto your inventory");
+				ImGui::Text("\nIf a block in your inventory is selected, \nright click to place selected block");
+				
+			ImGui::End();
+
 		}
+
+		// player cursor
+		if (!camera.isMenuOpen() and !camera.isInventoryOpen()) {
+			ImGui::SetNextWindowPos(ImVec2(597, 397));
+			ImGui::SetNextWindowSize(ImVec2(6, 6));
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+			ImGui::Begin("crosshair", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+			ImGui::End();
+			ImGui::PopStyleColor();
+		}	
+
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
