@@ -234,6 +234,7 @@ int main()
 	fontAtlas->AddFontFromFileTTF("libraries/include/mygui/misc/fonts/ProggyTiny.ttf", 24.0f);
 
 	style.WindowBorderSize = 0.0f;
+	style.WindowMinSize = ImVec2(1, 1);
 
 
 	// ----------------------------- Game Logic -----------------------------------------------------------------------------------------------
@@ -488,6 +489,7 @@ int main()
 				}
 		
 			ImGui::End();
+
 			ImGui::SetNextWindowPos(ImVec2(325, 375));
 			ImGui::SetNextWindowSize(ImVec2(550, 290));
 			ImGui::Begin("Instructions", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
@@ -508,11 +510,21 @@ int main()
 				ImGui::Text("\nLeft click to break blocks and collect blocks \ninto your inventory");
 				ImGui::Text("\nIf a block in your inventory is selected, \nright click to place selected block");
 				
-
-
 			ImGui::End();
 
 		}
+
+		// player cursor
+		if (!camera.isMenuOpen() and !camera.isInventoryOpen()) {
+			ImGui::SetNextWindowPos(ImVec2(597, 397));
+			ImGui::SetNextWindowSize(ImVec2(6, 6));
+			ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
+			ImGui::Begin("crosshair", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoInputs);
+			ImGui::End();
+			ImGui::PopStyleColor();
+		}	
+
+
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

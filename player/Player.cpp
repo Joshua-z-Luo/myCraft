@@ -662,7 +662,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	*/
 	// -----------------------------------------------------------------------------------------------
 	// Prevents camera from jumping on the first click
-	printf("%d %d bool \n", menu, inventory);
 	if (menu == false and inventory == false)
 	{
 		// Hides mouse cursor
