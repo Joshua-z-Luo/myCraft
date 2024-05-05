@@ -79,7 +79,7 @@
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;$(IncludePath)</IncludePath>
+    <IncludePath>libraries\lib;libraries\include;entities;libraries\textures;libraries\include\mygui;$(IncludePath)</IncludePath>
     <LibraryPath>libraries\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -650,6 +650,14 @@
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="libraries\include\mygui\misc\debuggers\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="libraries\include\mygui\misc\fonts\Cousine-Regular.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\DroidSans.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\Karla-Regular.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\ProggyClean.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\ProggyTiny.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\Roboto-Medium.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

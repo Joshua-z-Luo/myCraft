@@ -665,7 +665,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (menu == false and inventory == false)
 	{
 		// Hides mouse cursor
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
