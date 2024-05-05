@@ -66,6 +66,71 @@ Block::Block(GLfloat x, GLfloat y, GLfloat z, int id)
 
 }
 
+Block::Block(int x, int y, int z, int id)
+{
+	this->id = id;
+	z = round(z);
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	for (auto& baseVertex : baseVertices) {
+		baseVertex.position += glm::vec3(x, z, y);
+	}
+
+
+	// Indices for vertices order
+
+
+	// Front face
+	indices[0] = 16;
+	indices[1] = 17;
+	indices[2] = 18;
+	indices[3] = 16;
+	indices[4] = 18;
+	indices[5] = 19;
+
+	// Top face
+	indices[6] = 0;
+	indices[7] = 1;
+	indices[8] = 2;
+	indices[9] = 0;
+	indices[10] = 2;
+	indices[11] = 3;
+
+	// Back face
+	indices[12] = 12;
+	indices[13] = 13;
+	indices[14] = 14;
+	indices[15] = 12;
+	indices[16] = 14;
+	indices[17] = 15;
+
+	// Bottom face
+	indices[18] = 4;
+	indices[19] = 5;
+	indices[20] = 6;
+	indices[21] = 4;
+	indices[22] = 6;
+	indices[23] = 7;
+
+	// Right face
+	indices[24] = 8;
+	indices[25] = 9;
+	indices[26] = 10;
+	indices[27] = 8;
+	indices[28] = 10;
+	indices[29] = 11;
+
+	// Left face
+	indices[30] = 20;
+	indices[31] = 21;
+	indices[32] = 22;
+	indices[33] = 20;
+	indices[34] = 22;
+	indices[35] = 23;
+
+}
+
 int Block::getID()
 {
 	return id;

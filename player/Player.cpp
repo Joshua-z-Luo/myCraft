@@ -327,6 +327,7 @@ void Player::detectCollisonHelper(float delta, std::vector<glm::vec3> blockCords
 // That will we will be able to check all IMMEDIATE blocks under player.
 void Player::grounded(std::vector<glm::vec3> blockCords)
 {
+	//printf("%d check size \n", blockCords.size());
 	for (int i = blockCords.size() - 1; i >= 0; i--) {
 		glm::vec3 block = blockCords[i];
 		if (playerMinX < block.x + Constants::BLOCK_SIZE && playerMaxX > block.x) {
@@ -664,7 +665,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (menu == false and inventory == false)
 	{
 		// Hides mouse cursor
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		if (firstClick)
 		{
 			glfwSetCursorPos(window, (width / 2), (height / 2));
@@ -703,7 +704,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 	if (!menu)
 	{
 		
-
+			//printf("%d in air? \n", inAir);
 			//printf("%d number of triangles in playerverts \n", playerVerts->size());
 			// Binds speed to real time not frames per second.
 			speed = 0.0f;

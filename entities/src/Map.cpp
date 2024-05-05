@@ -73,6 +73,11 @@ void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 		y = 0;
 	}
 	//printf("%d %d %d final \n", x, y, z);
+
+	// add block to blocks vector
+	std::unique_ptr<Block> block = std::make_unique<Block>(x, y, z, id);
+	addBlock(move(block));
+	// add block to chunk
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
 }
 
@@ -113,6 +118,15 @@ int Map::removeBlockFromChunk(int xID, int yID, int x, int y, int z)
 
 	//fprintf(stdout, " remove: x: %d y: %d, %f %f floats \n", xID, yID, x / Constants::CHUNK_SIZE, y / Constants::CHUNK_SIZE);
 	//(*ChunksArray[playerChunkX])[playerChunkY]->removeBlock(x, y, z);
+
+	for (int i = 0; i < BlocksVec.size(); i++) {
+		glm::vec3 temp = BlocksVec[i]->getBlockCords();
+		if (temp.x == x and temp.y == y and temp.z == z) {
+			BlocksVec.erase(BlocksVec.begin() +	i);
+			numBlocks -= 1;
+		
+		}
+	}
 	return (*ChunksArray[xID + originX])[yID + originY]->removeBlock(x, y, z);
 }
 
