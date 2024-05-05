@@ -115,8 +115,6 @@ int main()
 	Shader shaderProgram("shaders/default.vert", "shaders/default.frag");
 
 	// Store mesh data in vectors for the mesh
-	//std::vector <Vertex> verts(vertices, vertices + sizeof(vertices) / sizeof(Vertex));
-	//std::vector <GLuint> ind(indices, indices + sizeof(indices) / sizeof(GLuint));
 	std::vector <Texture> tex(textures, textures + sizeof(textures) / sizeof(Texture));
 
 	// Shader for light cube
@@ -206,9 +204,24 @@ int main()
 	// Game loop
 	while (!glfwWindowShouldClose(window))
 	{
+
 		crntTime = glfwGetTime();
 		timeDiff = crntTime - prevTime;
 		counter++;
+
+		if (timeDiff >= 1.0 / 30.0)
+		{
+			// Creates new title
+			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
+			std::string ms = std::to_string((timeDiff / counter) * 1000);
+			std::string newTitle = "MyCraft - " + FPS + "FPS / " + ms + "ms";
+			glfwSetWindowTitle(window, newTitle.c_str());
+
+			// Resets times and counter
+			prevTime = crntTime;
+			counter = 0;
+
+		}
 
 		bool updateFlag = false;
 		if (updateQue.size() > 0) {
@@ -247,7 +260,7 @@ int main()
 			updateFlag = true;
 		}
 
-		// World Logic
+		// World Generation Logic
 		int newX = static_cast<int>(round((camera.Position.x - 16) / Constants::CHUNK_SIZE));
 		int newY = static_cast<int>(round((camera.Position.z - 16) / Constants::CHUNK_SIZE));
 		if (newX != posX || newY != posY) {
@@ -264,21 +277,6 @@ int main()
 			map->updateMap(0, 0);
 			blockCords = map->getBlockCordinates();
 		}
-
-		if (timeDiff >= 1.0 / 30.0)
-		{
-			// Creates new title
-			std::string FPS = std::to_string((1.0 / timeDiff) * counter);
-			std::string ms = std::to_string((timeDiff / counter) * 1000);
-			std::string newTitle = "MyCraft - " + FPS + "FPS / " + ms + "ms";
-			glfwSetWindowTitle(window, newTitle.c_str());
-
-			// Resets times and counter
-			prevTime = crntTime;
-			counter = 0;
-
-		}
-
 
 
 		// update current position of player hitbox

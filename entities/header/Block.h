@@ -71,6 +71,8 @@ protected:
 public:
 	Block(GLfloat x, GLfloat y, GLfloat z, int id);
 
+    Block(int x, int y, int z, int id);
+
     
     int getID();
     Vertex* getVert();
