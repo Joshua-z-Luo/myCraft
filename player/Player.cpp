@@ -352,19 +352,19 @@ void Player::addItemToInventory(int blockID, int amount)
 		if (inventoryArray[i][1] == -1 and flag == false) {
 			firstEmpty = i;
 			flag = true;
-			fprintf(stdout, " NOT NULLING FIRST EMPTY VALUE IS : %d ", firstEmpty);
+			
 		}	
 		else if (inventoryArray[i][1] == blockID and inventoryArray[i][0] < 16) {
 			inventoryArray[i][0] += amount;
-			fprintf(stdout, "%d inventory number", inventoryArray[i][0]);
+
 			return;
 		}
-		fprintf(stdout, "%d firstempty %d iteration \n", firstEmpty, i);
+
 	}
 	if (flag == true) {
 		inventoryArray[firstEmpty][1] = blockID;
 		inventoryArray[firstEmpty][0] = amount;
-		fprintf(stdout, " %d inventory number %d location ", inventoryArray[firstEmpty][0], firstEmpty);
+	
 	}
 }
 
@@ -433,7 +433,7 @@ bool Player::castRayForBlock(GLFWwindow* window, Ray ray, const glm::vec3& block
 
 int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& blockPosition, std::vector<Triangle> triangles)
 {
-	printf("new block\n");
+	
 	for (int i = 0; i < triangles.size(); i++)
 	{
 
@@ -445,14 +445,13 @@ int Player::castRayForBlockPlace(GLFWwindow* window, Ray ray, const glm::vec3& b
 		float t;
 		if (ray.rayIntersectsBlock(triangles[i], t))
 		{
-			printf("face %d \n", triangles[i].faceID);
 			// Intersection found with this triangle
 			glm::vec3 temp = triangles[i].getNormal();
 			//printf("face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
 
 			if (ray.rayNormalCheck(triangles[i])) {
 				glm::vec3 temp = triangles[i].getNormal();
-				printf("collided face face %d %f, %f, %f \n", triangles[i].faceID, temp.x, temp.y, temp.z);
+			
 				return i;
 			}
 		}
@@ -781,7 +780,7 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 						temp.begin());
 					if (castRayForBlock(window, ray, temp[0].origin, temp)) {
 						//IF FOUND CALL MAP SEND TO UPDATEQUE
-						printf("%f, %f, %f remove \n", temp[0].origin.x, temp[0].origin.y, temp[0].origin.z);
+						
 						updateQue->push_back(std::make_unique<DestroyPacket>(temp[0].origin));
 						break;
 					}
@@ -793,7 +792,6 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 			*/
 			if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS && pPressed == false && menu == false) {
 				// place block
-				printf("x %f y %f z %f \n", Position.x, Position.y, Position.z);
 				pPressed = true;
 				Ray ray = GetMouseRay(window, getView(), getProjection(1.0f, 0.1f, 9.0f));
 
@@ -822,15 +820,11 @@ void Player::Inputs(GLFWwindow* window, float delta, std::vector<glm::vec3> bloc
 
 						// convert from opengl cords to block space
 						glm::vec3 tnormal = glm::vec3(normal.x, normal.z, normal.y);
-						printf("%f, %f, %f normal \n", normal.x, normal.y, normal.z);
 
 						// adujust startblock for placement of new block.
 						glm::vec3 newBlock = temp[ind].origin + tnormal;
 
 
-
-
-						printf("%f %f %f oriinal block vs %f %f %f newBlock \n", temp[ind].origin.x, temp[ind].origin.y, temp[ind].origin.z, newBlock.x, newBlock.y, newBlock.z);
 						int blockID = 1;
 						updateQue->push_back(std::make_unique<AddPacket>(newBlock, blockID));
 						break;

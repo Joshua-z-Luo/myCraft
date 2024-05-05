@@ -71,8 +71,8 @@ bool Ray::rayNormalCheck(Triangle triangle)
     glm::vec3 normal = glm::normalize(triangle.getNormal());
     glm::vec3 normalRay = glm::normalize(direction);
     float dotProduct = glm::dot(normal, normalRay);
-    printf(" direction face %d %f, %f, %f \n", triangle.faceID, normalRay.x, normalRay.y, normalRay.z);
-    printf(" calc face %d %f, %f, %f, %f \n", triangle.faceID, normal.x, normal.y, normal.z, dotProduct);
+    //printf(" direction face %d %f, %f, %f \n", triangle.faceID, normalRay.x, normalRay.y, normalRay.z);
+    //printf(" calc face %d %f, %f, %f, %f \n", triangle.faceID, normal.x, normal.y, normal.z, dotProduct);
     return dotProduct > 0.0f;
 }
 

@@ -72,7 +72,7 @@ void Map::addBlockToChunk(int xID, int yID, int x, int y, int z, int id)
 	if (y == 32) {
 		y = 0;
 	}
-	printf("%d %d %d final \n", x, y, z);
+	//printf("%d %d %d final \n", x, y, z);
 	(*ChunksArray[xID + originX])[yID + originY]->addBlock(id, x, y, z);
 }
 

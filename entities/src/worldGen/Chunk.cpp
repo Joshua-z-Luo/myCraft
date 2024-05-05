@@ -167,11 +167,11 @@ void Chunk::addBlock(int id, int x, int y, int z)
 int Chunk::removeBlock(int x, int y, int z)
 {
 	if (BlocksArray[x][y][z] == -1) {
-		printf("u removed nothing \n");
+		//printf("u removed nothing \n");
 		return -1;
 	}
 	else {
-		printf("removed block \n");
+		//printf("removed block \n");
 		int blockID = BlocksArray[x][y][z];
 		BlocksArray[x][y][z] = -1;
 		numBlocks -= 1;
