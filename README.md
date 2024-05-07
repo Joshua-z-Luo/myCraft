@@ -48,9 +48,9 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 ### Built With
 
 ![C++](https://img.shields.io/badge/c++-%2300599C.svg?style=for-the-badge&logo=c%2B%2B&logoColor=white)
-![OpenGL](https://img.shields.io/badge/OpenGL-FFFFFF?style=for-the-badge&logo=opengl)
+![OpenGL](https://img.shields.io/badge/OpenGL-5586A4.svg?style=for-the-badge&logo=OpenGL&logoColor=white)
 
-
+Used imgui to develop GUI: https://github.com/ocornut/imgui
 
 <!-- GETTING STARTED -->
 ## Getting Started
