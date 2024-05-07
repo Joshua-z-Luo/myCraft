@@ -1498,11 +1498,7 @@
     <Natvis Include="libraries\include\mygui\misc\debuggers\imgui.natvis" />
   </ItemGroup>
   <ItemGroup>
-    <Font Include="libraries\include\mygui\misc\fonts\Cousine-Regular.ttf" />
-    <Font Include="libraries\include\mygui\misc\fonts\DroidSans.ttf" />
-    <Font Include="libraries\include\mygui\misc\fonts\Karla-Regular.ttf" />
-    <Font Include="libraries\include\mygui\misc\fonts\ProggyClean.ttf" />
     <Font Include="libraries\include\mygui\misc\fonts\ProggyTiny.ttf" />
-    <Font Include="libraries\include\mygui\misc\fonts\Roboto-Medium.ttf" />
+    <Font Include="libraries\include\mygui\misc\fonts\ProggyClean.ttf" />
   </ItemGroup>
 </Project>
