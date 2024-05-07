@@ -5,7 +5,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 -->
-<!-- README TOP -->
+
 <h3 align="center">myCraft</h3>
 
   <p align="center">
@@ -88,7 +88,8 @@ Note that the controls are displayed in-game in the menu!
 ## Patch Notes
 
 <details>
-<summary> 0.1 [LATEST PATCH] </summary>
+<summary> 0.2 [LATEST PATCH] </summary>
+<summary> 0.1 </summary>
 
 ### Release Patch!
 
