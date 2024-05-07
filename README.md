@@ -26,6 +26,9 @@
       <a href="#getting-started">Getting Started</a>
     </li>
     <li>
+      <a href="#controls">Controls</a>
+    </li>
+    <li>
       <a href="#patch-notes">Patch Notes</a>
     </li>
     <li><a href="#contact">Contact</a></li>
@@ -54,16 +57,30 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To try it out, please download, extract, and run myCraft.exe located in the zip file in the google drive folder below:
-https://drive.google.com/drive/folders/1IDa2FCzghfAotbLsF4xUDhqKfRIdcPF5?usp=sharing
+To try it out for yourself, please download a zip file of your prefered version from the google drive below:
+https://drive.google.com/drive/folders/1fvPoZl2YKkkZlZOwAT1dJBEqEvWAMplM?usp=sharing
 
+Extract and run myCraft.exe located in the extracted folder.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- Controls -->
+## Controls
 The basic control layout is:
 
 W, A, S, D - Forward, Left, Backwards, Right
 
 SPACEBAR - Jump
 
-Hold Leftclick - Rotate player camera
+ESC - Menu
+
+TAB - Inventory
+
+Left click - Destroy block from inventory
+
+Right click - Place block from inventory
+
+Note that the controls are displayed in-game in the menu!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
