@@ -12,6 +12,7 @@
     Minecraft style game built using C++ and OpenGL
     <br />
 
+
 <!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
@@ -42,6 +43,7 @@ This is an ongoing personal learning project to help us familiarize ourselves wi
 
 The game is a Minecraft style, procedurally generated voxel sandbox.
 
+![Example](images/hi.gif)
 
 https://github.com/Joshua-z-Luo/myCraft/assets/109507575/139c614b-c45f-463c-a878-c66004fecc69
 
