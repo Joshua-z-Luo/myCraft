@@ -81,9 +81,9 @@ ESC - Menu
 
 TAB - Inventory
 
-Left click - Destroy block from inventory
+Left click - Break block
 
-Right click - Place block from inventory
+Right click - Place block
 
 Note that the controls are displayed in-game in the menu!
 
