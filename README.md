@@ -45,8 +45,6 @@ The game is a Minecraft style, procedurally generated voxel sandbox.
 
 ![Example](images/hi.gif)
 
-https://github.com/Joshua-z-Luo/myCraft/assets/109507575/139c614b-c45f-463c-a878-c66004fecc69
-
 
 ### Built With
 
@@ -143,6 +141,8 @@ Hi! Here is some stuff we added.
 ## Basic Procedural Generation via Simplex Noise
 - Map is generated in chunks, 32 x 32 x 32 blocks in size.
 - The blocks in each chunk are all drawn as one mesh to reduce the number of draw calls sent to the GPU per frame. I started by rendering each block as an individual mesh, and this caused SIGNIFICANT performance issues. By switching to rendering chunks, performance has greatly increased, as we are only sending 9 draw calls, as only 9 chunks are ever loaded at the same time.
+
+https://github.com/Joshua-z-Luo/myCraft/assets/109507575/139c614b-c45f-463c-a878-c66004fecc69
 
 ## General Collision Detection using Swept AABB
 - Initially started with basic AABB for collision detection but could not create smooth 3D collision reactions with so many different possible collision objects in the gamespace.
