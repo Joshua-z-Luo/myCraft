@@ -85,7 +85,7 @@ Right click - Place block
 
 Note that the controls are displayed in-game in the menu!
 
-
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 <!-- PATCH NOTES -->
 ## Patch Notes
 
@@ -101,14 +101,13 @@ Added the nessecary core functionality and a proper HUD to make MyCraft feel mor
 - Added a crosshair to represent the center of the screen and the player cursor.
 
 ## Breaking and Placing Blocks
-- Improved upon from the previous patch, player can now place and break blocks using mouse left click and right click. 
+- Ray tracing was improved upon from the previous patch, player can now place and break blocks using mouse left click and right click. 
 - Breaking a block adds it to your invetory.
 - To place a block, the player must select a block from their inventory by clicking on a non-empty slot in the inventory interface.
 - The selected block is displayed in the bottom right of the players HUD.
 
 
 https://github.com/Joshua-z-Luo/myCraft/assets/109507575/b6b0341c-bbb2-4d6f-a049-9ea0197b0022
-
 
 ## Inventory
 - Added an inventory that can be accessed when player hits TAB. Allows the player to store destroyed blocks.
@@ -127,7 +126,6 @@ In the future, I plan to add an information section in the inventory that provid
 - Quick access to control scheme guide.
 
 ![menu](https://github.com/Joshua-z-Luo/myCraft/assets/109507575/fc290e56-a480-41df-afe0-9ce8551d0750)
-
 
 </details>
 
@@ -154,6 +152,7 @@ https://github.com/Joshua-z-Luo/myCraft/assets/109507575/139c614b-c45f-463c-a878
 
 </details>
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
@@ -161,5 +160,7 @@ Feel free to contact us at:
 
 @Kevin Chen - kevinz.chen@mail.utoronto.ca\
 @Joshua Luo - jla818@sfu.ca
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
