@@ -86,6 +86,7 @@ Right click - Place block
 Note that the controls are displayed in-game in the menu!
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- PATCH NOTES -->
 ## Patch Notes
 
