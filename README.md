@@ -102,7 +102,7 @@ Added the nessecary core functionality and a proper HUD to make MyCraft feel mor
 - Added a crosshair to represent the center of the screen and the player cursor.
 
 ## Breaking and Placing Blocks
-- Ray tracing was improved upon from the previous patch, player can now place and break blocks using mouse left click and right click. 
+- Improved upon from the previous patch, player can now place and break blocks via ray casting using mouse left click and right. 
 - Breaking a block adds it to your invetory.
 - To place a block, the player must select a block from their inventory by clicking on a non-empty slot in the inventory interface.
 - The selected block is displayed in the bottom right of the players HUD.
