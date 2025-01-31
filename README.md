@@ -57,6 +57,10 @@ Used Dear ImGui to develop GUI: https://github.com/ocornut/imgui
 ## Getting Started
 
 To try it out for yourself, 
+please download the zip file from the latest github release.
+
+OR
+
 please clone the project and run it in Visual Studio,
 
 OR
